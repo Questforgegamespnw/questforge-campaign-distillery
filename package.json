@@ -1,0 +1,17 @@
+{
+  "name": "questforge-campaign-distillery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "validate:example": "node src/index.js",
+    "test:form": "node src/testFormFlow.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "ajv": "^8.18.0"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "sourceType": "consult_notes",
+  "rawSummary": "A mythic, slightly eerie campaign with emotional character focus, moderate action, mystery elements, and accessible rules. The group appears to want tension and wonder without tipping into hopelessness.",
+  "toneTags": [
+    { "tag": "mythic", "weight": 5 },
+    { "tag": "eerie", "weight": 3 },
+    { "tag": "hopeful", "weight": 4 },
+    { "tag": "tense", "weight": 3 }
+  ],
+  "playstyleTags": [
+    { "tag": "character_drama", "weight": 5 },
+    { "tag": "setpiece_combat", "weight": 3 },
+    { "tag": "mystery", "weight": 4 },
+    { "tag": "exploration", "weight": 3 }
+  ],
+  "complexityTags": [
+    { "tag": "light", "weight": 4 },
+    { "tag": "medium", "weight": 2 }
+  ],
+  "preferenceTags": [
+    { "tag": "emotional_arcs", "weight": 5 },
+    { "tag": "boss_fights", "weight": 3 },
+    { "tag": "ruins", "weight": 4 },
+    { "tag": "home_base", "weight": 3 },
+    { "tag": "mystery_reveals", "weight": 4 }
+  ],
+  "avoidanceTags": [
+    { "tag": "hopeless_tone", "weight": 5 },
+    { "tag": "rules_overload", "weight": 5 },
+    { "tag": "combat_only", "weight": 3 }
+  ],
+  "genreTags": [
+    { "tag": "mythic_fantasy", "weight": 4 },
+    { "tag": "mystery_fantasy", "weight": 3 }
+  ],
+  "ambiguities": [
+    "The consult suggests spooky tone, but it is unclear whether that means horror-forward play or light eerie atmosphere."
+  ],
+  "confidenceNotes": [
+    "Character arcs are a dominant signal.",
+    "Combat is desired as punctuation rather than the main gameplay loop.",
+    "Complexity preference leans clearly away from heavy crunch."
+  ]
+}
