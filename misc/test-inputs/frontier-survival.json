@@ -1,0 +1,18 @@
+{
+  "overallExperience": "surviving_against_dangerous_odds",
+  "tone": "bleak_brutal_and_high_stakes",
+  "worldAesthetic": "western_frontier",
+  "environments": [
+    "mountains_and_wild_frontiers",
+    "deserts_and_wastelands"
+  ],
+  "conflict": "survival_against_overwhelming_enemies",
+  "choiceWeight": "strong_choices_with_lasting_consequences",
+  "gameplay": [
+    "resource_management_and_survival_pressure",
+    "tactical_combat"
+  ],
+  "playerFantasy": "surviving_impossible_odds",
+  "includeNotes": "Harsh travel, dwindling supplies, isolated communities.",
+  "excludeNotes": "No comedy focus."
+}

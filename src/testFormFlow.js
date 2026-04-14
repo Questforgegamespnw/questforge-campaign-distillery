@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { translateFormAnswers } = require("./parsers/translateFormAnswers");
-const { selectTopWeighted } = require("./selectors/selectTopWeighted");
+const { selectCampaignDirections } = require("./selectors/selectCampaignDirections");
 const { resolveSelections } = require("./utils/lookupById");
 const { generateCampaignPitch } = require("./renderers/generateCampaignPitch");
 
@@ -17,83 +17,49 @@ function loadFormAnswers() {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
-function buildSelectionBundle(translated) {
-  const topCore = resolveSelections(
-    selectTopWeighted(translated.coreFrames, 2),
-    coreFrames
-  );
-
-  const topSystem = resolveSelections(
-    selectTopWeighted(translated.systemFrames, 2),
-    systemFrames
-  );
-
-  const topGenre = resolveSelections(
-    selectTopWeighted(translated.genreSkins, 1),
-    genreSkins
-  );
-
-  const topTone = resolveSelections(
-    selectTopWeighted(translated.toneSkins, 1),
-    toneSkins
-  );
-
-  const topEnvironment = resolveSelections(
-    selectTopWeighted(translated.environmentSkins, 2),
-    environmentSkins
-  );
-
+function resolveDirectionBundle(direction) {
   return {
-    coreFrames: topCore,
-    systemFrames: topSystem,
-    genreSkin: topGenre,
-    toneSkin: topTone,
-    environmentSkins: topEnvironment
+    label: direction.label,
+    emphasis: direction.emphasis,
+    includeNotes: direction.includeNotes || "",
+    excludeNotes: direction.excludeNotes || "",
+    modifiers: direction.modifiers || {},
+    coreFrames: resolveSelections(direction.coreFrames || [], coreFrames),
+    systemFrames: resolveSelections(direction.systemFrames || [], systemFrames),
+    genreSkin: resolveSelections(direction.genreSkin || [], genreSkins),
+    toneSkin: resolveSelections(direction.toneSkin || [], toneSkins),
+    environmentSkins: resolveSelections(direction.environmentSkins || [], environmentSkins)
   };
 }
 
-function printRecommendations(bundle, pitchBlock) {
-  console.log("\n🎯 FORM RECOMMENDATION\n");
-
-  console.log("🧱 Core Frames:");
-  bundle.coreFrames.forEach((entry) => {
+function printSection(title, entries) {
+  console.log(`\n${title}`);
+  entries.forEach((entry) => {
     console.log(`- ${entry.name} (${entry.weight})`);
     if (entry.description) {
       console.log(`  ${entry.description}`);
     }
   });
+}
 
-  console.log("\n⚙️ System Frames:");
-  bundle.systemFrames.forEach((entry) => {
-    console.log(`- ${entry.name} (${entry.weight})`);
-    if (entry.description) {
-      console.log(`  ${entry.description}`);
-    }
-  });
+function printRecommendation(directionBundle, pitchBlock) {
+  const label = directionBundle.label
+    ? directionBundle.label.toUpperCase()
+    : "DIRECTION";
 
-  console.log("\n🎨 Genre:");
-  bundle.genreSkin.forEach((entry) => {
-    console.log(`- ${entry.name} (${entry.weight})`);
-    if (entry.description) {
-      console.log(`  ${entry.description}`);
-    }
-  });
+  console.log(`\n========================================`);
+  console.log(`🎯 ${label}`);
+  console.log(`========================================`);
 
-  console.log("\n🎭 Tone:");
-  bundle.toneSkin.forEach((entry) => {
-    console.log(`- ${entry.name} (${entry.weight})`);
-    if (entry.description) {
-      console.log(`  ${entry.description}`);
-    }
-  });
+  if (directionBundle.emphasis) {
+    console.log(`\n${directionBundle.emphasis}`);
+  }
 
-  console.log("\n🌍 Environment:");
-  bundle.environmentSkins.forEach((entry) => {
-    console.log(`- ${entry.name} (${entry.weight})`);
-    if (entry.description) {
-      console.log(`  ${entry.description}`);
-    }
-  });
+  printSection("🧱 Core Frames:", directionBundle.coreFrames);
+  printSection("⚙️ System Frames:", directionBundle.systemFrames);
+  printSection("🎨 Genre:", directionBundle.genreSkin);
+  printSection("🎭 Tone:", directionBundle.toneSkin);
+  printSection("🌍 Environment:", directionBundle.environmentSkins);
 
   console.log("\n📝 Campaign Pitch:");
   console.log(pitchBlock.pitch);
@@ -106,16 +72,38 @@ function printRecommendations(bundle, pitchBlock) {
 
   console.log("\n• What makes it distinct:");
   console.log(pitchBlock.distinctHook);
+
+  if (directionBundle.includeNotes) {
+    console.log("\n• Include notes:");
+    console.log(directionBundle.includeNotes);
+  }
+
+  if (directionBundle.excludeNotes) {
+    console.log("\n• Exclude notes:");
+    console.log(directionBundle.excludeNotes);
+  }
 }
 
 function main() {
   try {
     const answers = loadFormAnswers();
     const translated = translateFormAnswers(answers);
-    const bundle = buildSelectionBundle(translated);
-    const pitchBlock = generateCampaignPitch(bundle);
 
-    printRecommendations(bundle, pitchBlock);
+    const directions = selectCampaignDirections(translated);
+
+    const resolvedPrimary = resolveDirectionBundle(directions.primary);
+    const resolvedAdjacent = resolveDirectionBundle(directions.adjacent);
+    const resolvedWildcard = resolveDirectionBundle(directions.wildcard);
+
+    const primaryPitch = generateCampaignPitch(resolvedPrimary);
+    const adjacentPitch = generateCampaignPitch(resolvedAdjacent);
+    const wildcardPitch = generateCampaignPitch(resolvedWildcard);
+
+    console.log("\n🎲 FORM-DRIVEN CAMPAIGN DIRECTIONS");
+
+    printRecommendation(resolvedPrimary, primaryPitch);
+    printRecommendation(resolvedAdjacent, adjacentPitch);
+    printRecommendation(resolvedWildcard, wildcardPitch);
   } catch (error) {
     console.error("Form translation failed.");
     console.error(error.message);
