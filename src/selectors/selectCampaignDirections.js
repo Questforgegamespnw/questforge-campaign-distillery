@@ -410,7 +410,7 @@ const secondarySystem = pools.systemFrames
   .sort((a, b) => {
     return (
       scoreAdjacentSystemCandidate(b, primarySystem, resolvedCoreFrames, adjacentTone, usedSystemIds) -
-scoreAdjacentSystemCandidate(a, primarySystem, resolvedCoreFrames, adjacentTone, usedSystemIds)
+      scoreAdjacentSystemCandidate(a, primarySystem, resolvedCoreFrames, adjacentTone, usedSystemIds)
     );
   })[0];
 
