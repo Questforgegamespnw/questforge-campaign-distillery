@@ -6,7 +6,8 @@
   "scripts": {
     "validate:example": "node src/index.js",
     "test:form": "node src/testFormFlow.js",
-    "test:batch": "node src/testBatchForms.js"
+    "test:batch": "node src/testBatchForms.js",
+    "test:ai": "node src/testAiExpansion.js"
   },
   "keywords": [],
   "author": "",
