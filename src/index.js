@@ -1,44 +1,56 @@
-const { loadNormalizedIntake } = require("./parsers/loadNormalizedIntake");
-const { scoreCandidates } = require("./selectors/scoreCandidates");
-const { selectTopThree } = require("./selectors/selectTopThree");
+const { processFormSubmission } = require("./intake");
+const { translateFormAnswers } = require("./parsers/translateFormAnswers");
+const { selectCampaignDirections } = require("./selectors/selectCampaignDirections");
+const { resolveSelections } = require("./utils/lookupById");
+const { generateCampaignPitch } = require("./renderers/generateCampaignPitch");
+
 const coreFrames = require("./data/coreFrames");
+const systemFrames = require("./data/systemFrames");
+const genreSkins = require("./data/genreSkins");
+const toneSkins = require("./data/toneSkins");
+const environmentSkins = require("./data/environmentSkins");
 
-function main() {
-  try {
-    const intake = loadNormalizedIntake("misc/example-normalized-output.json");
 
-    console.log("✅ Normalized intake is valid.\n");
+function runCampaignPipelineFromForm(rawSubmission = {}) {
+    const { mapped, normalized, canonical } = processFormSubmission(rawSubmission);
 
-    const scoredCoreFrames = scoreCandidates(intake, coreFrames, "toneTags");
-    const topThreeCoreFrames = selectTopThree(scoredCoreFrames);
+    const translated = translateFormAnswers(canonical.pipelineInput);
+    const selected = selectCampaignDirections(translated);
+    function resolveDirection(direction) {
+        return {
+            ...direction,
+            coreFrames: resolveSelections(direction.coreFrames || [], coreFrames),
+            systemFrames: resolveSelections(direction.systemFrames || [], systemFrames),
+            genreSkin: resolveSelections(direction.genreSkin || [], genreSkins),
+            toneSkin: resolveSelections(direction.toneSkin || [], toneSkins),
+            environmentSkins: resolveSelections(direction.environmentSkins || [], environmentSkins)
+        };
+    }
 
-    console.log("🎯 Top Core Frame Options:");
-    console.log(
-      `Primary:  ${
-        topThreeCoreFrames.primary
-          ? `${topThreeCoreFrames.primary.id} (${topThreeCoreFrames.primary.score})`
-          : "None"
-      }`
-    );
-    console.log(
-      `Adjacent: ${
-        topThreeCoreFrames.adjacent
-          ? `${topThreeCoreFrames.adjacent.id} (${topThreeCoreFrames.adjacent.score})`
-          : "None"
-      }`
-    );
-    console.log(
-      `Wildcard: ${
-        topThreeCoreFrames.wildcard
-          ? `${topThreeCoreFrames.wildcard.id} (${topThreeCoreFrames.wildcard.score})`
-          : "None"
-      }`
-    );
-  } catch (error) {
-    console.error("Failed to run pipeline.");
-    console.error(error.message);
-    process.exit(1);
-  }
+    const resolved = {
+        primary: resolveDirection(selected.primary),
+        adjacent: resolveDirection(selected.adjacent),
+        wildcard: resolveDirection(selected.wildcard)
+    };
+    const pitch = {
+        primary: generateCampaignPitch(resolved.primary),
+        adjacent: generateCampaignPitch(resolved.adjacent),
+        wildcard: generateCampaignPitch(resolved.wildcard)
+    };
+
+    return {
+        intake: {
+            mapped,
+            normalized,
+            canonical
+        },
+        translated,
+        selected,
+        resolved,
+        pitch
+    };
 }
 
-main();
+module.exports = {
+    runCampaignPipelineFromForm
+};

@@ -1,0 +1,1064 @@
+<!--
+QuestForge Campaign Intake Form
+File: start-your-adventure.html
+Version: v1.2
+Last Updated: 2026-04-15
+Source of Truth: LOCAL (this file)
+-->
+<div class="qf-intake-builder-wrap">
+    <style>
+        .qf-intake-builder-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            color: #f4efe6;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .qf-intake-shell {
+            background: linear-gradient(180deg, #1f1b24 0%, #17141b 100%);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+
+        .qf-intake-hero {
+            padding: 28px 24px 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+        }
+
+        .qf-intake-title {
+            margin: 0 0 10px 0;
+            color: #f0d9a1;
+            font-size: 1.7rem;
+            line-height: 1.2;
+        }
+
+        .qf-intake-subtitle {
+            margin: 0;
+            color: #d8d0c2;
+            line-height: 1.65;
+            font-size: 1rem;
+            max-width: 820px;
+        }
+
+        .qf-intake-form {
+            padding: 22px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .qf-form-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
+        }
+
+        .qf-form-card-title {
+            margin: 0 0 8px 0;
+            color: #f0d9a1;
+            font-size: 1.06rem;
+            font-weight: bold;
+        }
+
+        .qf-form-card-help {
+            margin: 0 0 14px 0;
+            color: #d0c7b8;
+            line-height: 1.55;
+            font-size: 0.96rem;
+        }
+
+        .qf-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .qf-field-group label {
+            display: block;
+            color: #f0d9a1;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.96rem;
+        }
+
+        .qf-intake-builder-wrap input[type="text"],
+        .qf-intake-builder-wrap input[type="email"],
+        .qf-intake-builder-wrap textarea,
+        .qf-intake-builder-wrap select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: #121117;
+            color: #f5f1e8;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .qf-intake-builder-wrap input[type="text"]:focus,
+        .qf-intake-builder-wrap input[type="email"]:focus,
+        .qf-intake-builder-wrap textarea:focus,
+        .qf-intake-builder-wrap select:focus {
+            outline: none;
+            border-color: rgba(240, 217, 161, 0.45);
+            box-shadow: 0 0 0 3px rgba(240, 217, 161, 0.10);
+        }
+
+        .qf-intake-builder-wrap textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .qf-check-grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .qf-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #e3dbce;
+            line-height: 1.5;
+            font-size: 0.97rem;
+        }
+
+        .qf-check input[type="checkbox"] {
+            margin-top: 3px;
+            accent-color: #c89f52;
+            transform: scale(1.05);
+        }
+
+        .qf-note-line {
+            margin-top: 12px;
+            color: #bfb5a4;
+            font-size: 0.92rem;
+        }
+
+        .qf-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 4px;
+        }
+
+        .qf-btn {
+            appearance: none;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+            font-family: inherit;
+        }
+
+        .qf-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.96;
+        }
+
+        .qf-btn-primary {
+            background: #c89f52;
+            color: #151219;
+        }
+
+        .qf-btn-secondary {
+            background: transparent;
+            color: #e7decd;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .qf-progress {
+            height: 10px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 10px 0 0;
+        }
+
+        .qf-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #c89f52 0%, #e6c36a 100%);
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .qf-step {
+            display: none;
+        }
+
+        .qf-step.active {
+            display: block;
+        }
+
+        .qf-status {
+            display: none;
+            margin: 4px 22px 22px;
+            padding: 16px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            line-height: 1.6;
+        }
+
+        .qf-status-success {
+            background: rgba(86, 140, 94, 0.16);
+            border-color: rgba(120, 190, 130, 0.30);
+            color: #e7f6e8;
+        }
+
+        .qf-status-error {
+            background: rgba(140, 70, 70, 0.16);
+            border-color: rgba(210, 110, 110, 0.30);
+            color: #ffe9e9;
+        }
+
+        .qf-summary-wrap {
+            display: none;
+            margin: 0 22px 22px;
+            padding: 18px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .qf-summary-title {
+            margin: 0 0 10px 0;
+            color: #f0d9a1;
+            font-size: 1.1rem;
+        }
+
+        .qf-summary-text {
+            width: 100%;
+            min-height: 280px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #0f0e13;
+            color: #f1ebde;
+            padding: 14px;
+            box-sizing: border-box;
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.45;
+            resize: vertical;
+        }
+
+        @media (max-width: 760px) {
+            .qf-grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .qf-intake-hero,
+            .qf-intake-form {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .qf-status,
+            .qf-summary-wrap {
+                margin-left: 18px;
+                margin-right: 18px;
+            }
+
+            .qf-actions {
+                flex-direction: column;
+            }
+
+            .qf-actions .qf-btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="qf-intake-shell">
+        <div class="qf-intake-hero">
+            <h2 class="qf-intake-title">Start Your Adventure</h2>
+            <p class="qf-intake-subtitle">
+                Use this form to tell me what kind of campaign experience your group is looking for.
+                You do not need every detail figured out — just the direction, tone, and kinds of ideas that sound
+                exciting.
+                From there, I can shape it into a bespoke adventure built specifically for your table.
+            </p>
+
+            <div class="qf-progress" aria-hidden="true">
+                <div class="qf-progress-bar" id="qf-campaign-progress-bar" style="width: 16.6667%;"></div>
+            </div>
+            <p class="qf-note-line" id="qf-campaign-progress-text">Step 1 of 6</p>
+            <p class="qf-note-line" id="qf-intake-save-status">Progress saves automatically on this device.</p>
+        </div>
+
+        <form class="qf-intake-form" id="qf-intake-form-v4" action="https://formspree.io/f/meepwwzq" method="POST">
+            <input type="hidden" name="_subject" value="New Questforge Campaign Intake">
+            <input type="hidden" name="_format" value="plain">
+            <textarea name="campaign_summary" id="qf-campaign-summary-field" style="display:none;"></textarea>
+
+            <!-- STEP 1 -->
+            <div class="qf-step active" data-step="1">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Your Group</h3>
+                    <p class="qf-form-card-help">
+                        A little starting context helps me tailor the pitch to your table.
+                    </p>
+
+                    <div class="qf-grid-2">
+                        <div class="qf-field-group">
+                            <label for="qf-name">Your Name</label>
+                            <input type="text" id="qf-name" name="name" placeholder="Your name" required>
+                        </div>
+                    
+                        <div class="qf-field-group">
+                            <label for="qf-email">Email</label>
+                            <input type="email" id="qf-email" name="email" placeholder="you@example.com" required>
+                        </div>
+                    
+                        <div class="qf-field-group">
+                            <label for="qf-group-size">Expected Group Size</label>
+                            <input type="text" id="qf-group-size" name="group_size" placeholder="Example: 4–6 players">
+                        </div>
+                    
+                        <div class="qf-field-group">
+                            <label for="qf-system">Preferred System (if any)</label>
+                            <input type="text" id="qf-system" name="system" placeholder="D&D 5e, flexible, unsure, etc.">
+                        </div>
+                    
+                        <div class="qf-field-group">
+                            <label for="qf-audience">Who is this game mainly for?</label>
+                            <select id="qf-audience" name="audience">
+                                <option value="">Select one...</option>
+                                <option>Adults</option>
+                                <option>Teens (13–17)</option>
+                                <option>Mixed ages</option>
+                                <option>Kids (under 13)</option>
+                                <option>Family-friendly / kid-safe experience</option>
+                            </select>
+                        </div>
+                    
+                        <div class="qf-field-group">
+                            <label for="qf-age-band">Age Band (if relevant)</label>
+                            <select id="qf-age-band" name="age_band">
+                                <option value="">Select one...</option>
+                                <option value="adult">Adults</option>
+                                <option value="teens_14_17">Teens 14–17</option>
+                                <option value="kids_11_13">Kids 11–13</option>
+                                <option value="kids_8_10">Kids 8–10</option>
+                                <option value="kids_5_7">Kids 5–7</option>
+                                <option value="mixed_age">Mixed ages</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="qf-check-grid" style="margin-top:16px;">
+                        <label class="qf-check">
+                            <input type="checkbox" name="youth_mode" value="Yes">
+                            Keep this experience family-friendly / youth-safe
+                        </label>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="1" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
+                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="qf-step" data-step="2">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Overall Experience</h3>
+                    <p class="qf-form-card-help">Pick up to 3.</p>
+
+                    <div class="qf-check-grid">
+                        <label class="qf-check"><input type="checkbox" name="experience[]"
+                                value="Surviving against dangerous odds">Surviving against dangerous odds</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]"
+                                value="Solving mysteries and uncovering secrets">Solving mysteries and uncovering
+                            secrets</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]"
+                                value="Big heroic action and epic moments">Big heroic action and epic moments</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]"
+                                value="Political tension, factions, and tough choices">Political tension, factions, and
+                            tough choices</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]"
+                                value="Exploration and discovering strange places">Exploration and discovering strange
+                            places</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]"
+                                value="Horror, tension, and unsettling threats">Horror, tension, and unsettling
+                            threats</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]"
+                                value="Character-driven drama and meaningful personal arcs">Character-driven drama and
+                            meaningful personal arcs</label>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="2" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary"
+                            onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
+                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="qf-step" data-step="3">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Story Setup</h3>
+                    <p class="qf-form-card-help">Pick the starting roles or campaign setups that sound the most fun.</p>
+
+                    <div class="qf-check-grid">
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Treasure Hunters">Treasure
+                            Hunters</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Mercenaries for Hire">Mercenaries for Hire</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Haunted Investigators">Haunted Investigators</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Wandering Adventurers">Wandering Adventurers</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Rebels and Resistance">Rebels and Resistance</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Expedition Team">Expedition
+                            Team</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Starship Crew">Starship
+                            Crew</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Monster Hunters">Monster
+                            Hunters</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Nobles, Envoys, or Court Operatives">Nobles, Envoys, or Court Operatives</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Escaped or Chosen Survivors">Escaped or Chosen Survivors</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Relic Bearers or Marked Ones">Relic Bearers or Marked Ones</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]"
+                                value="Criminal Crew or Heist Team">Criminal Crew or Heist Team</label>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="3" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary"
+                            onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
+                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="qf-step" data-step="4">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">World Style &amp; Tone</h3>
+                    <p class="qf-form-card-help">Choose the aesthetic skin and emotional feel you want your campaign to
+                        carry.</p>
+
+                    <div class="qf-grid-2">
+                        <div class="qf-field-group">
+                            <label for="qf-tone">Tone</label>
+                            <select id="qf-tone" name="tone">
+                                <option value="">Select one...</option>
+                                <option>Heroic</option>
+                                <option>Gritty</option>
+                                <option>Dark & Foreboding</option>
+                                <option>Mystery / Noir</option>
+                                <option>Horror</option>
+                                <option>Mythic</option>
+                                <option>Political / Intrigue</option>
+                                <option>Chaotic / Lighthearted</option>
+                                <option>Emotional / Character-Driven</option>
+                            </select>
+                        </div>
+
+                        <div class="qf-field-group">
+                            <label for="qf-choice-weight">Choice Weight</label>
+                            <select id="qf-choice-weight" name="choice_weight">
+                                <option value="">Select one...</option>
+                                <option>Mostly along for the ride</option>
+                                <option>Some meaningful choices</option>
+                                <option>Strong choices with lasting consequences</option>
+                                <option>We want our decisions to define the campaign</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="qf-check-grid" style="margin-top:16px;">
+                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Classic Fantasy">Classic
+                            Fantasy</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Dark Fantasy">Dark
+                            Fantasy</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]"
+                                value="Heroic / Mythic Fantasy">Heroic / Mythic Fantasy</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Gothic / Victorian">Gothic
+                            / Victorian</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Western Frontier">Western
+                            Frontier</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Feudal Eastern">Feudal
+                            Eastern</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]"
+                                value="Sci-Fi / Spacefaring">Sci-Fi / Spacefaring</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]"
+                                value="Post-Apocalyptic">Post-Apocalyptic</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Mythic / Divine">Mythic /
+                            Divine</label>
+                        <label class="qf-check"><input type="checkbox" name="genre[]"
+                                value="Weird / Surreal / Otherworldly">Weird / Surreal / Otherworldly</label>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="4" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary"
+                            onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
+                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="qf-step" data-step="5">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Environments &amp; Gameplay</h3>
+                    <p class="qf-form-card-help">Pick the places that sound exciting to explore and the types of play
+                        your group enjoys most.</p>
+
+                    <div class="qf-grid-2">
+                        <div>
+                            <div class="qf-field-group"><label>Key Environments</label></div>
+                            <div class="qf-check-grid">
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Dense Cities & Urban Intrigue">Dense Cities & Urban Intrigue</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Jungles & Overgrown Ruins">Jungles & Overgrown Ruins</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Frozen Wastes">Frozen Wastes</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Deserts & Wastelands">Deserts & Wastelands</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Coastlines, Islands & Oceans">Coastlines, Islands & Oceans</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Mountains & Wild Frontiers">Mountains & Wild Frontiers</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Underground Caverns & Deep Places">Underground Caverns & Deep
+                                    Places</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Ancient Ruins & Fallen Civilizations">Ancient Ruins & Fallen
+                                    Civilizations</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Dreamlike or Reality-Warped Places">Dreamlike or Reality-Warped
+                                    Places</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]"
+                                        value="Volcanic Lands & Fire-Scarred Regions">Volcanic Lands & Fire-Scarred
+                                    Regions</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="qf-field-group"><label>Gameplay Interests</label></div>
+                            <div class="qf-check-grid">
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Tactical combat">Tactical combat</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Dangerous boss fights">Dangerous boss fights</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Investigation and clue-solving">Investigation and clue-solving</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Exploration and discovery">Exploration and discovery</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Social intrigue and negotiations">Social intrigue and
+                                    negotiations</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Resource management and survival pressure">Resource management and
+                                    survival pressure</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Building alliances or choosing factions">Building alliances or choosing
+                                    factions</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
+                                        value="Character growth and transformation">Character growth and
+                                    transformation</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="5" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary"
+                            onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
+                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 6 -->
+            <div class="qf-step" data-step="6">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Player Fantasy &amp; Boundaries</h3>
+                    <p class="qf-form-card-help">Tell me what kind of fantasy your group wants to live out, along with
+                        anything you definitely want included or avoided.</p>
+
+                    <div class="qf-check-grid" style="margin-bottom:16px;">
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Becoming heroes">Becoming
+                            heroes</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
+                                value="Surviving impossible odds">Surviving impossible odds</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
+                                value="Mastering dangerous power">Mastering dangerous power</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
+                                value="Uncovering forbidden truth">Uncovering forbidden truth</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
+                                value="Changing the world">Changing the world</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
+                                value="Holding the line against disaster">Holding the line against disaster</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
+                                value="Deciding who to trust and betray">Deciding who to trust and betray</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
+                                value="Discovering who we really are">Discovering who we really are</label>
+                    </div>
+
+                    <div class="qf-grid-2">
+                        <div class="qf-field-group">
+                            <label for="qf-must-haves">Must-Haves</label>
+                            <textarea id="qf-must-haves" name="must_haves"
+                                placeholder="Examples: dragons, tragic NPCs, sea travel, horror elements, ancient ruins, political tension..."></textarea>
+                        </div>
+
+                        <div class="qf-field-group">
+                            <label for="qf-avoid">Avoid / Do-Not-Wants</label>
+                            <textarea id="qf-avoid" name="avoid"
+                                placeholder="Examples: spiders, body horror, PvP, excessive gore, permanent character loss..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="qf-note-line">
+                        <div class="qf-field-group" style="margin-top:16px;">
+                            <label>Content Boundaries</label>
+                            <div class="qf-check-grid">
+                                <label class="qf-check">
+                                    <input type="checkbox" name="content_boundaries[]" value="Keep it family-friendly / kid-safe">
+                                    Keep it family-friendly / kid-safe
+                                </label>
+                                <label class="qf-check">
+                                    <input type="checkbox" name="content_boundaries[]" value="Avoid horror or anything too scary">
+                                    Avoid horror or anything too scary
+                                </label>
+                                <label class="qf-check">
+                                    <input type="checkbox" name="content_boundaries[]" value="Avoid dark or hopeless themes">
+                                    Avoid dark or hopeless themes
+                                </label>
+                                <label class="qf-check">
+                                    <input type="checkbox" name="content_boundaries[]" value="Focus on teamwork and positive outcomes">
+                                    Focus on teamwork and positive outcomes
+                                </label>
+                                <label class="qf-check">
+                                    <input type="checkbox" name="content_boundaries[]" value="Keep conflict non-lethal or low danger">
+                                    Keep conflict non-lethal or low danger
+                                </label>
+                            </div>
+                        </div>
+                        Broad preferences are enough — you do not need to have every detail locked in.
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="6" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary"
+                            onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
+                            Continue Later</button>
+                        <button type="submit" class="qf-btn qf-btn-primary" id="qf-submit-btn">Send Campaign
+                            Request</button>
+                        <button type="reset" class="qf-btn qf-btn-secondary" id="qf-reset-btn">Reset Form</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="qf-status" id="qf-status-box"></div>
+
+        <div class="qf-summary-wrap" id="qf-summary-wrap">
+            <h3 class="qf-summary-title">Submission Preview</h3>
+            <textarea class="qf-summary-text" id="qf-summary-preview" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const STORAGE_KEY = "qfCampaignBuilderDraft";
+            const STEP_KEY = "qfCampaignBuilderStep";
+            const MAX_EXPERIENCE = 3;
+            const totalSteps = 6;
+
+            const form = document.getElementById("qf-intake-form-v4");
+            const statusBox = document.getElementById("qf-status-box");
+            const submitBtn = document.getElementById("qf-submit-btn");
+            const summaryField = document.getElementById("qf-campaign-summary-field");
+            const summaryWrap = document.getElementById("qf-summary-wrap");
+            const summaryPreview = document.getElementById("qf-summary-preview");
+            const progressBar = document.getElementById("qf-campaign-progress-bar");
+            const progressText = document.getElementById("qf-campaign-progress-text");
+            const saveStatus = document.getElementById("qf-intake-save-status");
+            const resetBtn = document.getElementById("qf-reset-btn");
+
+            let currentStep = 1;
+
+            if (!form) return;
+
+            function setSaveStatus(msg) {
+                if (saveStatus) saveStatus.textContent = msg;
+            }
+
+            function getSteps() {
+                return form.querySelectorAll(".qf-step");
+            }
+
+            function showStep(step) {
+                getSteps().forEach((el) => el.classList.remove("active"));
+                const target = form.querySelector('.qf-step[data-step="' + step + '"]');
+                if (target) target.classList.add("active");
+
+                currentStep = step;
+
+                if (progressBar) {
+                    progressBar.style.width = ((step / totalSteps) * 100) + "%";
+                }
+
+                if (progressText) {
+                    progressText.textContent = "Step " + step + " of " + totalSteps;
+                }
+
+                try {
+                    localStorage.setItem(STEP_KEY, String(step));
+                } catch (e) { }
+
+                const shell = document.querySelector(".qf-intake-builder-wrap");
+                if (shell) {
+                    shell.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }
+
+            function clearStepError(step) {
+                const errorEl = form.querySelector('[data-step-error="' + step + '"]');
+                if (errorEl) {
+                    errorEl.style.display = "none";
+                    errorEl.textContent = "";
+                }
+            }
+
+            function setStepError(step, message) {
+                const errorEl = form.querySelector('[data-step-error="' + step + '"]');
+                if (errorEl) {
+                    errorEl.textContent = message;
+                    errorEl.style.display = "block";
+                }
+            }
+
+            function checkedValues(name) {
+                return Array.from(form.querySelectorAll('input[name="' + name + '"]:checked')).map(el => el.value);
+            }
+
+            function fieldValue(name) {
+                const field = form.querySelector('[name="' + name + '"]');
+                return field ? field.value.trim() : "";
+            }
+
+            function formatList(values) {
+                if (!values.length) return "- None selected";
+                return values.map(v => "- " + v).join("\n");
+            }
+
+            function buildSummary() {
+                return [
+                    "QUESTFORGE CAMPAIGN INTAKE",
+                    "==========================",
+                    "",
+                    "GROUP INFO",
+                    "----------",
+                    "Name: " + (fieldValue("name") || "Not provided"),
+                    "Email: " + (fieldValue("email") || "Not provided"),
+                    "Group Size: " + (fieldValue("group_size") || "Not provided"),
+                    "Preferred System: " + (fieldValue("system") || "Not provided"),
+                    "Audience: " + (fieldValue("audience") || "Not provided"),
+                    "Age Band: " + (fieldValue("age_band") || "Not provided"),
+                    "Youth-Safe Requested: " + (checkedValues("youth_mode").length ? "Yes" : "No"),
+                    "",
+                    "OVERALL EXPERIENCE",
+                    "------------------",
+                    formatList(checkedValues("experience[]")),
+                    "",
+                    "STORY SETUP",
+                    "-----------",
+                    formatList(checkedValues("setup[]")),
+                    "",
+                    "TONE",
+                    "----",
+                    fieldValue("tone") || "Not selected",
+                    "",
+                    "CHOICE WEIGHT",
+                    "-------------",
+                    fieldValue("choice_weight") || "Not selected",
+                    "",
+                    "WORLD STYLE",
+                    "-----------",
+                    formatList(checkedValues("genre[]")),
+                    "",
+                    "KEY ENVIRONMENTS",
+                    "----------------",
+                    formatList(checkedValues("environment[]")),
+                    "",
+                    "GAMEPLAY INTERESTS",
+                    "------------------",
+                    formatList(checkedValues("gameplay[]")),
+                    "",
+                    "PLAYER FANTASY",
+                    "--------------",
+                    formatList(checkedValues("fantasy[]")),
+                    "",
+                    "MUST-HAVES",
+                    "----------",
+                    fieldValue("must_haves") || "None provided",
+                    "",
+                    "AVOIDS / DO-NOT-WANTS",
+                    "---------------------",
+                    fieldValue("avoid") || "None provided",
+                    "",
+                    "CONTENT BOUNDARIES",
+                    "------------------",
+                    formatList(checkedValues("content_boundaries[]"))
+                ].join("\n");
+            }
+
+            function showStatus(type, message) {
+                statusBox.className = "qf-status " + (type === "success" ? "qf-status-success" : "qf-status-error");
+                statusBox.style.display = "block";
+                statusBox.innerHTML = message;
+            }
+
+            function saveCampaignDraft() {
+                const data = {};
+                form.querySelectorAll("input, select, textarea").forEach((field) => {
+                    if (!field.name) return;
+
+                    if (field.type === "checkbox") {
+                        if (!data[field.name]) data[field.name] = [];
+                        if (field.checked) data[field.name].push(field.value);
+                    } else {
+                        data[field.name] = field.value;
+                    }
+                });
+
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                    localStorage.setItem(STEP_KEY, String(currentStep));
+                    setSaveStatus("Progress saved.");
+                } catch (e) {
+                    setSaveStatus("Unable to save progress.");
+                }
+            }
+
+            function restoreCampaignDraft() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (!saved) return;
+
+                    const data = JSON.parse(saved);
+
+                    Object.keys(data).forEach((name) => {
+                        const fields = form.querySelectorAll('[name="' + name + '"]');
+
+                        fields.forEach((field) => {
+                            if (field.type === "checkbox") {
+                                field.checked = Array.isArray(data[name]) && data[name].includes(field.value);
+                            } else {
+                                field.value = data[name];
+                            }
+                        });
+                    });
+
+                    const savedStep = parseInt(localStorage.getItem(STEP_KEY), 10);
+                    if (savedStep && savedStep >= 1 && savedStep <= totalSteps) {
+                        currentStep = savedStep;
+                    }
+
+                    setSaveStatus("Saved progress restored.");
+                } catch (e) {
+                    setSaveStatus("Could not restore saved progress.");
+                }
+            }
+
+            function clearCampaignDraft() {
+                try {
+                    localStorage.removeItem(STORAGE_KEY);
+                    localStorage.removeItem(STEP_KEY);
+                } catch (e) { }
+            }
+
+            function validateCurrentStep() {
+                clearStepError(currentStep);
+
+                if (currentStep === 1) {
+                    const name = fieldValue("name");
+                    const email = fieldValue("email");
+
+                    if (!name) {
+                        setStepError(1, "Please enter your name before continuing.");
+                        const field = document.getElementById("qf-name");
+                        if (field) field.focus();
+                        return false;
+                    }
+
+                    if (!email) {
+                        setStepError(1, "Please enter your email before continuing.");
+                        const field = document.getElementById("qf-email");
+                        if (field) field.focus();
+                        return false;
+                    }
+
+                    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                    if (!emailOk) {
+                        setStepError(1, "Please enter a valid email address before continuing.");
+                        const field = document.getElementById("qf-email");
+                        if (field) field.focus();
+                        return false;
+                    }
+                }
+
+                if (currentStep === 2) {
+                    const experience = checkedValues("experience[]");
+                    if (experience.length === 0) {
+                        setStepError(2, "Please choose at least one overall experience before continuing.");
+                        return false;
+                    }
+                    if (experience.length > MAX_EXPERIENCE) {
+                        setStepError(2, "Please choose no more than 3 overall experience options.");
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            window.qfCampaignNextStep = function () {
+                if (!validateCurrentStep()) return;
+                saveCampaignDraft();
+                if (currentStep < totalSteps) {
+                    showStep(currentStep + 1);
+                }
+            };
+
+            window.qfCampaignPrevStep = function () {
+                clearStepError(currentStep);
+                if (currentStep > 1) {
+                    showStep(currentStep - 1);
+                }
+            };
+
+            window.qfSaveCampaignDraft = function () {
+                saveCampaignDraft();
+            };
+
+            form.addEventListener("input", function () {
+                saveCampaignDraft();
+            });
+
+            form.addEventListener("change", function () {
+                saveCampaignDraft();
+            });
+
+            if (resetBtn) {
+                resetBtn.addEventListener("click", function () {
+                    clearCampaignDraft();
+                    setTimeout(function () {
+                        showStep(1);
+                        setSaveStatus("Draft cleared.");
+                        summaryWrap.style.display = "none";
+                        statusBox.style.display = "none";
+                    }, 0);
+                });
+            }
+
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                if (!validateCurrentStep()) return;
+
+                const summary = buildSummary();
+                summaryField.value = summary;
+                summaryPreview.value = summary;
+                summaryWrap.style.display = "block";
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Sending...";
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        body: new FormData(form),
+                        headers: {
+                            "Accept": "application/json"
+                        }
+                    });
+
+                    if (response.ok) {
+                        clearCampaignDraft();
+                        showStatus(
+                            "success",
+                            "Your campaign request has been sent successfully. I’ve got your group’s preferences and can use them to shape a bespoke adventure proposal."
+                        );
+                        form.reset();
+                        showStep(1);
+                        setSaveStatus("Progress saves automatically on this device.");
+                    } else {
+                        let data = {};
+                        try {
+                            data = await response.json();
+                        } catch (err) { }
+
+                        if (data && data.errors && data.errors.length) {
+                            showStatus(
+                                "error",
+                                "There was a problem sending your request:<br>" +
+                                data.errors.map(err => err.message).join("<br>")
+                            );
+                        } else {
+                            showStatus(
+                                "error",
+                                "Something went wrong while sending your request. Please try again in a moment."
+                            );
+                        }
+                    }
+                } catch (error) {
+                    showStatus(
+                        "error",
+                        "Unable to submit right now. Please check your connection and try again."
+                    );
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Send Campaign Request";
+                    statusBox.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            });
+
+            restoreCampaignDraft();
+            showStep(currentStep);
+        })();
+    </script>
+</div>

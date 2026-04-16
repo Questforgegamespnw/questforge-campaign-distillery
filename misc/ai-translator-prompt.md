@@ -26,6 +26,22 @@ Your job is to:
 8. If the consult clearly avoids something, place it in `avoidanceTags`.
 9. If a category is not clearly represented, return an empty array for that category.
 10. The output must conform to the schema exactly.
+11. Detect whether the consult should use `experienceProfile: "youth"` or `experienceProfile: "standard"`.
+12. Use `experienceProfile: "youth"` when the notes clearly indicate:
+   - children
+   - kids
+   - family-friendly play
+   - Hero Kids
+   - younger players
+   - age-appropriate or gentle framing
+13. Do not assign `experienceProfile: "youth"` based only on light tone words like hopeful, cozy, or whimsical.
+14. If youth signals are present, prefer lighter, cooperative, and emotionally clear interpretation choices.
+15. If the audience signal is uncertain, keep `experienceProfile: "standard"` and record the uncertainty in `ambiguities`.
+16. Prefer the fewest tags that capture the consult accurately.
+17. Do not stack near-duplicate tags in the same category unless each one is clearly justified.
+18. Do not use genre tags to carry tone meaning when a tone tag is a better fit.
+19. Do not use avoidance tags unless the consult clearly rejects or limits something.
+20. When the consult includes a soft boundary such as "spooky but not horror" or "dark but not hopeless," preserve that distinction explicitly in `ambiguities` or `confidenceNotes`.
 
 ## Allowed tag lists
 
@@ -130,6 +146,7 @@ Your job is to:
 Return an object with exactly these fields:
 
 - sourceType
+- experienceProfile
 - rawSummary
 - toneTags
 - playstyleTags
@@ -147,6 +164,12 @@ String. Usually:
 - "consult_notes"
 - "form_response"
 - "manual_entry"
+
+### experienceProfile
+String.
+Allowed values:
+- "standard"
+- "youth"
 
 ### rawSummary
 A concise 1-3 sentence summary of the consult intent.

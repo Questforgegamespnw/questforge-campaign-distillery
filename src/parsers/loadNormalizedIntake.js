@@ -22,6 +22,11 @@ function loadNormalizedIntake(relativeFilePath) {
   try {
     const raw = fs.readFileSync(filePath, "utf-8");
     parsed = JSON.parse(raw);
+    // Backward compatibility: ensure experienceProfile exists
+    if (!parsed.experienceProfile) {
+      parsed.experienceProfile = "standard";
+    }
+    
   } catch (error) {
     throw new Error(
       `Failed to read or parse JSON file: ${filePath}\n${error.message}`
