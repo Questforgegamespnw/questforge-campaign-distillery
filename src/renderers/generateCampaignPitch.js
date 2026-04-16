@@ -54,6 +54,46 @@ function sentenceCase(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+function isYouthProfile(experienceProfile) {
+  return cleanName(experienceProfile, "").toLowerCase() === "youth";
+}
+
+function softenYouthText(text) {
+  if (!text || typeof text !== "string") {
+    return "";
+  }
+
+  return text
+    .replace(
+      /the world is not what it seems/gi,
+      "there is more to the world than it first appears"
+    )
+    .replace(/the worse the truth becomes/gi, "the more surprising the truth becomes")
+    .replace(/comes with consequences/gi, "opens up new choices")
+    .replace(/never meant to stay buried/gi, "has been waiting to be discovered")
+    .replace(
+      /understanding what is really happening opens up new choices/gi,
+      "figuring things out helps the players decide what to do next"
+    )
+    .replace(
+      /understanding what is really happening/gi,
+      "figuring out what’s going on"
+    )
+    .replace(
+      /the deeper the players dig/gi,
+      "as the players explore further"
+    )
+  
+    .replace(/learning the truth feels dangerous in its own right/gi, "learning the truth feels exciting and important")
+    .replace(/something that was never meant to stay buried/gi, "something that has been hidden for a long time")
+    .replace(/dangerous truths and meaningful consequences/gi, "mysteries, discovery, and meaningful choices")
+    .replace(/more dangerous edge/gi, "more adventurous edge")
+    .replace(/the more surprising the truth becomes/gi, "the more interesting things they discover")
+    .replace(/cannot ignore/gi, "need to understand")
+    .replace(/was has been/gi, "has been")
+    .replace(/\. figuring/gi, ". Figuring");
+}
+
 function joinNatural(items = []) {
   const cleaned = items.filter(Boolean);
 
@@ -110,7 +150,7 @@ function buildTitle({ genreName, coreAName, systemAName, label }) {
   return titlesByLabel[label] || `${corePart} and ${systemPart}`;
 }
 
-function buildOpening({ label, genreName, toneName, envNames, coreIds = [] }) {
+function buildOpening({ label, genreName, toneName, envNames, coreIds = [], experienceProfile }) {
   const envText = joinNatural(envNames);
   const genreText = genreName ? humanizeName(genreName) : "fantasy";
   const toneText = toneName ? humanizeName(toneName) : "dangerous";
@@ -166,17 +206,20 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [] }) {
       Math.floor(Math.random() * adjacentOpeners.length)
     ];
 
-  return `${opener} a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+    const base = `${opener} a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+    return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
 }
 
   if (label === "wildcard") {
-    return `This version pushes toward a stranger and more dangerous edge, turning the campaign into a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+    const base = `This version pushes toward a stranger and more dangerous edge, turning the campaign into a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+    return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
   }
 
-  return `At its strongest, this campaign feels like a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+  const base = `At its strongest, this campaign feels like a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+  return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
 }
 
-function buildAbout(coreA, coreB, includeNotes) {
+function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
   const coreADesc = normalizeDescription(
     coreA?.description,
     "The world is not what it seems, and the deeper the players dig, the worse the truth becomes"
@@ -196,10 +239,10 @@ function buildAbout(coreA, coreB, includeNotes) {
     }
   }
 
-  return text;
+  return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
-function buildPlayersDo(systemA, systemB) {
+function buildPlayersDo(systemA, systemB, experienceProfile) {
   const systemADesc = normalizeDescription(
     systemA?.description,
     "Players investigate, connect hidden information, and push deeper into the campaign's central conflict"
@@ -210,10 +253,11 @@ function buildPlayersDo(systemA, systemB) {
     "Their choices, alliances, and leverage shape how the world responds"
   );
 
-  return `${systemADesc} ${systemBDesc}`.trim();
+  const text = `${systemADesc} ${systemBDesc}`.trim();
+  return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
-function buildDistinctHook({ genre, tone, environments, label }) {
+function buildDistinctHook({ genre, tone, environments, label, experienceProfile }) {
   const genreDesc = normalizeDescription(
     genre?.description,
     "The setting's identity comes from the way atmosphere, conflict, and player pressure reinforce one another"
@@ -238,10 +282,12 @@ function buildDistinctHook({ genre, tone, environments, label }) {
     wildcard: "What makes this version stand out is that learning the truth feels dangerous in its own right."
   };
 
-  return [genreDesc, labelHooks[label] || ""]
+  const text = [genreDesc, labelHooks[label] || ""]
     .filter(Boolean)
     .join(" ")
     .trim();
+
+  return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
 function buildPitchParagraph({
@@ -256,15 +302,18 @@ function buildPitchParagraph({
   envNames,
   coreIds,
   includeNotes,
-  excludeNotes
+  excludeNotes,
+  experienceProfile
 }) {
+
   const opening = buildOpening({
-  label,
-  genreName,
-  toneName,
-  envNames,
-  coreIds
-});
+    label,
+    genreName,
+    toneName,
+    envNames,
+    coreIds,
+    experienceProfile
+  });
 
   const coreText = joinNatural(
   [coreAName, coreBName].filter(Boolean).map((name) => humanizeName(name))
@@ -292,7 +341,8 @@ const excludeText = excludeClean
 
 secondParagraph += includeText + excludeText;
 
-  return `${opening}\n\n${secondParagraph}`;
+  const text = `${opening}\n\n${secondParagraph}`;
+  return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
 function buildAIBrief({
@@ -356,6 +406,7 @@ function generateCampaignPitch(selections = {}) {
   const emphasis = cleanName(selections.emphasis, "");
   const includeNotes = cleanName(selections.includeNotes, "");
   const excludeNotes = cleanName(selections.excludeNotes, "");
+  const experienceProfile = cleanName(selections.experienceProfile, "standard").toLowerCase();
 
   const coreAName = cleanName(coreA?.name, "Hidden Truth");
 const coreBName = cleanName(coreB?.name, "");
@@ -375,32 +426,33 @@ const envNames = environmentSkins
   });
 
   const coreIds = extractIds(coreFrames);
-  const about = sentenceCase(buildAbout(coreA, coreB, includeNotes));
-  const playersDo = sentenceCase(buildPlayersDo(systemA, systemB));
+  const about = sentenceCase(buildAbout(coreA, coreB, includeNotes, experienceProfile));
+  const playersDo = sentenceCase(buildPlayersDo(systemA, systemB, experienceProfile));
   const distinctHook = sentenceCase(
     buildDistinctHook({
       genre,
       tone,
       environments: environmentSkins,
-      label
+      label,
+      experienceProfile
     })
   );
 
   const pitch = buildPitchParagraph({
-  label,
-  title,
-  coreAName,
-  coreBName,
-  systemAName,
-  systemBName,
-  genreName,
-  toneName,
-  envNames,
-  coreIds,
-  includeNotes,
-  excludeNotes
-});
-
+    label,
+    title,
+    coreAName,
+    coreBName,
+    systemAName,
+    systemBName,
+    genreName,
+    toneName,
+    envNames,
+    coreIds,
+    includeNotes,
+    excludeNotes,
+    experienceProfile
+  });
   const aiBrief = buildAIBrief({
     label,
     emphasis,

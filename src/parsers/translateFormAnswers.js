@@ -57,9 +57,25 @@ function applyMappedAnswer(mappingGroup, answerId, buckets) {
 }
 
 /**
+ * Infers the experience profile from explicit form answers.
+ * Defaults to "standard" unless there is a clear youth signal.
+ * @param {object} answers
+ * @returns {"standard" | "youth"}
+ */
+function inferExperienceProfile(answers) {
+  const explicitYouth =
+    answers?.youthMode === true ||
+    (answers?.ageBand && answers.ageBand !== "adult") ||
+    answers?.system === "hero_kids";
+
+  return explicitYouth ? "youth" : "standard";
+}
+
+/**
  * Translates structured form answers into weighted candidate pools.
  * @param {object} answers
  * @returns {{
+ *   experienceProfile: "standard" | "youth",
  *   coreFrames: Array<{id: string, weight: number}>,
  *   systemFrames: Array<{id: string, weight: number}>,
  *   genreSkins: Array<{id: string, weight: number}>,
@@ -70,7 +86,7 @@ function applyMappedAnswer(mappingGroup, answerId, buckets) {
  *   excludeNotes: string
  * }}
  */
-function translateFormAnswers(answers) {
+function translateFormAnswers(answers = {}) {
   const buckets = {
     coreFrames: new Map(),
     systemFrames: new Map(),
@@ -98,6 +114,7 @@ function translateFormAnswers(answers) {
   }
 
   return {
+    experienceProfile: inferExperienceProfile(answers),
     coreFrames: finalizeBucket(buckets.coreFrames),
     systemFrames: finalizeBucket(buckets.systemFrames),
     genreSkins: finalizeBucket(buckets.genreSkins),

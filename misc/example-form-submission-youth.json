@@ -1,0 +1,38 @@
+{
+    "name": "Test Parent",
+    "email": "test@example.com",
+    "group_size": "4 players",
+    "system": "hero_kids",
+    "audience": "Family-friendly / kid-safe experience",
+    "age_band": "kids_8_10",
+    "youth_mode": [
+        "Yes"
+    ],
+    "experience[]": [
+        "Solving mysteries and uncovering secrets"
+    ],
+    "setup[]": [
+        "Haunted Investigators"
+    ],
+    "tone": "Chaotic / Lighthearted",
+    "choice_weight": "Some meaningful choices",
+    "genre[]": [
+        "Classic Fantasy"
+    ],
+    "environment[]": [
+        "Ancient Ruins & Fallen Civilizations"
+    ],
+    "gameplay[]": [
+        "Investigation and clue-solving",
+        "Exploration and discovery"
+    ],
+    "fantasy[]": [
+        "Discovering who we really are"
+    ],
+    "must_haves": "Keep it light and kid-safe.",
+    "avoid": "No horror.",
+    "content_boundaries[]": [
+        "Keep it family-friendly / kid-safe",
+        "Avoid horror or anything too scary"
+    ]
+}

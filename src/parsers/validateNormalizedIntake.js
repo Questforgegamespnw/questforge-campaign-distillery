@@ -19,6 +19,7 @@ function loadSchema() {
  * Creates and returns a compiled Ajv validator.
  */
 function createValidator() {
+  
   const ajv = new Ajv2020({
   allErrors: true,
   strict: false

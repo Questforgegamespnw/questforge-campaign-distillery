@@ -5,6 +5,7 @@
   "additionalProperties": false,
   "required": [
     "sourceType",
+    "experienceProfile",
     "rawSummary",
     "toneTags",
     "playstyleTags",
@@ -17,6 +18,14 @@
   ],
   "properties": {
     "sourceType": {
+      "type": "string",
+      "enum": [
+        "consult_notes",
+        "form_response",
+        "manual_entry"
+      ]
+    },
+    "experienceProfile": {
       "type": "string",
       "enum": [
         "consult_notes",

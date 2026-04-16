@@ -1,0 +1,21 @@
+{
+    "system": "hero_kids",
+    "audience": "Family-friendly / kid-safe experience",
+    "age_band": "kids_8_10",
+    "youth_mode": "Yes",
+    "overallExperience": "solving_mysteries_and_uncovering_secrets",
+    "tone": "lighthearted_and_fun",
+    "worldAesthetic": "classic_fantasy",
+    "environments": [
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "conflict": "a_hidden_truth_that_must_be_uncovered",
+    "choiceWeight": "some_meaningful_choices",
+    "gameplay": [
+        "investigation_and_clue_solving",
+        "exploration_and_discovery"
+    ],
+    "playerFantasy": "discovering_who_we_really_are",
+    "includeNotes": "Keep it light and kid-safe.",
+    "excludeNotes": "No horror."
+}

@@ -196,5 +196,4 @@ module.exports = [
   description: "The world is vast, strange, and beautiful, and uncovering it is its own reward.",
   tags: ["exploration", "wonder", "discovery", "awe"]
 }
-
-];
+]

@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 ---
+## v0.4.0
+added structured intake layer for raw form submissions
+added mapFormSubmission, normalizeSubmission, and toCanonicalIntake
+created end-to-end pipeline runner in src/index.js
+moved test and smoke runners into scripts/
+added canonical pipeline bridge from form-shaped input to translator pipeline
+enabled full end-to-end resolution and pitch generation from raw intake JSON
+organized roadmap tickets into milestone-based development phases
+
 
 ## v0.3.0 - Stable Builder + AI Prompt Layer
 
