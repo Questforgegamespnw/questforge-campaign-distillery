@@ -258,31 +258,89 @@ const toneVoiceMap = {
   grimdark: {
     adjectives: ["fraying", "harsh", "failing", "compromised", "costly"],
     verbs: ["endure", "cling", "deteriorate", "withstand"],
-    cadence: "heavy"
+    cadence: "heavy",
+    sentenceStyle: "sharp",
+    intensity: 5
   },
 
   horror: {
     adjectives: ["unsettling", "distorted", "unnerving", "forbidden", "unwelcome"],
     verbs: ["uncover", "disturb", "linger", "haunt"],
-    cadence: "slow_burn"
+    cadence: "slow_burn",
+    sentenceStyle: "tight",
+    intensity: 5
   },
 
   mythic: {
     adjectives: ["ancient", "consequential", "sacred", "world-shaping", "legendary"],
     verbs: ["rise", "awaken", "claim", "transform"],
-    cadence: "elevated"
+    cadence: "elevated",
+    sentenceStyle: "flowing",
+    intensity: 4
   },
 
   heroic: {
     adjectives: ["bold", "rising", "defiant", "hard-won", "luminous"],
     verbs: ["stand", "protect", "answer", "overcome"],
-    cadence: "driving"
+    cadence: "driving",
+    sentenceStyle: "clean",
+    intensity: 4
   },
 
   psychological: {
     adjectives: ["fractured", "personal", "uncertain", "internal", "destabilizing"],
     verbs: ["doubt", "unravel", "interpret", "withstand"],
-    cadence: "intimate"
+    cadence: "intimate",
+    sentenceStyle: "layered",
+    intensity: 4
+  },
+
+  noir: {
+    adjectives: ["smoky", "uncertain", "compromised"],
+    verbs: ["probe", "question", "uncover"],
+    cadence: "measured",
+    sentenceStyle: "lean",
+    intensity: 3
+  },
+
+  political_intrigue: {
+    adjectives: ["calculated", "delicate", "layered", "strategic"],
+    verbs: ["maneuver", "influence", "position", "negotiate"],
+    cadence: "controlled",
+    sentenceStyle: "precise",
+    intensity: 3
+  },
+
+  lighthearted_chaotic: {
+    adjectives: ["wild", "ridiculous", "unpredictable"],
+    verbs: ["leap", "improvise", "collide"],
+    cadence: "fast",
+    sentenceStyle: "bouncy",
+    intensity: 3
+  },
+
+  melancholic: {
+    adjectives: ["quiet", "fading", "heavy", "bittersweet"],
+    verbs: ["linger", "remember", "fade", "reflect"],
+    cadence: "slow",
+    sentenceStyle: "gentle",
+    intensity: 2
+  },
+
+  tense: {
+    adjectives: ["tight", "pressured", "uncertain", "fragile"],
+    verbs: ["brace", "hold", "react", "strain"],
+    cadence: "urgent",
+    sentenceStyle: "tight",
+    intensity: 4
+  },
+
+  hopeful: {
+    adjectives: ["rising", "steady", "resilient", "warm"],
+    verbs: ["endure", "grow", "restore", "stand"],
+    cadence: "steady",
+    sentenceStyle: "clear",
+    intensity: 2
   }
 };
 
@@ -330,6 +388,26 @@ function pickOne(arr, fallback = "") {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function resolveToneVoice(toneIds, toneSkins, toneVoiceMap) {
+  const selected = toneIds
+    .map(id => toneSkins.find(t => t.id === id))
+    .filter(Boolean);
+
+  if (selected.length === 0) return null;
+
+  return {
+    intensity: Math.max(...selected.map(t => t.profile.intensity)),
+    darkness: Math.max(...selected.map(t => t.profile.darkness)),
+    optimism: Math.min(...selected.map(t => t.profile.optimism)),
+
+    humorAllowed: selected.every(t => t.constraints.humorAllowed),
+
+    cadence: toneVoiceMap[selected[0].id]?.cadence || "neutral",
+    sentenceStyle: toneVoiceMap[selected[0].id]?.sentenceStyle || "neutral"
+  };
+}
+
+
 module.exports = {
   coreVoiceMap,
   systemVoiceMap,
@@ -338,5 +416,6 @@ module.exports = {
   genreVoiceMap,
   getVoiceEntry,
   collectVoiceLines,
-  pickOne
+  pickOne,
+  resolveToneVoice
 };
