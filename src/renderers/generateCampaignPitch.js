@@ -17,6 +17,10 @@
  * }
  */
 
+// ==================================================
+// BASIC HELPERS
+// ==================================================
+
 function first(array) {
   return Array.isArray(array) && array.length > 0 ? array[0] : null;
 }
@@ -53,6 +57,10 @@ function sentenceCase(value) {
 
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
+
+// ==================================================
+// PROFILE + SAFETY TEXT HELPERS
+// ==================================================
 
 function isYouthProfile(experienceProfile) {
   return cleanName(experienceProfile, "").toLowerCase() === "youth";
@@ -93,6 +101,10 @@ function softenYouthText(text) {
     .replace(/was has been/gi, "has been")
     .replace(/\. figuring/gi, ". Figuring");
 }
+
+// ==================================================
+// LIST / TEXT NORMALIZATION HELPERS
+// ==================================================
 
 function joinNatural(items = []) {
   const cleaned = items.filter(Boolean);
@@ -136,6 +148,54 @@ function normalizeDescription(text, fallback = "") {
   return cleaned.endsWith(".") ? cleaned : `${cleaned}.`;
 }
 
+function cleanIncludeText(text = "") {
+  return text
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .filter((s) => !/^avoid\s+/i.test(s) && !/^no\s+/i.test(s))
+    .map((s) => s.replace(/\.$/, ""))
+    .join(", ");
+}
+
+function cleanExcludeText(text = "") {
+  return text
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => s.replace(/^avoid\s+/i, "").replace(/^no\s+/i, ""))
+    .map((s) => s.replace(/\.$/, ""))
+    .filter((s) => s.length > 2) // 🔥 kills empty garbage
+    .join(", ");
+}
+
+function formatToneLabel(toneName = "") {
+  const tone = humanizeName(toneName);
+
+  if (!tone) return "";
+  if (tone === "lighthearted chaotic") return "playful, lighthearted";
+  if (tone === "political intrigue") return "tense, intrigue-heavy";
+
+  return tone;
+}
+
+function dedupePhrases(text = "") {
+  const parts = text.split(",").map((p) => p.trim().toLowerCase());
+  const unique = [];
+
+  for (const part of parts) {
+    if (!unique.some((u) => u.includes(part) || part.includes(u))) {
+      unique.push(part);
+    }
+  }
+
+  return unique.join(", ");
+}
+
+// ==================================================
+// TITLE + SECTION BUILDERS
+// ==================================================
+
 function buildTitle({ genreName, coreAName, systemAName, label }) {
   const corePart = coreAName || "Hidden Truth";
   const genrePart = genreName || "Campaign";
@@ -153,7 +213,7 @@ function buildTitle({ genreName, coreAName, systemAName, label }) {
 function buildOpening({ label, genreName, toneName, envNames, coreIds = [], experienceProfile }) {
   const envText = joinNatural(envNames);
   const genreText = genreName ? humanizeName(genreName) : "fantasy";
-  const toneText = toneName ? humanizeName(toneName) : "dangerous";
+  const toneText = formatToneLabel(toneName);
   const safeToneText =
   genreText.toLowerCase().includes(toneText.toLowerCase()) ? "" : toneText;
 
@@ -192,7 +252,11 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [], expe
     campaignShape = "discovery-driven adventure";
   }
 
+  const tonePrefix = safeToneText ? `${safeToneText} ` : "";
+  const genrePhrase = `${genreText} ${campaignShape}`;  
+
   if (label === "adjacent") {
+    
   const adjacentOpeners = [
     "This direction reframes the campaign as",
     "This version shifts the focus toward",
@@ -200,22 +264,28 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [], expe
     "This take emphasizes",
     "This direction leans into"
   ];
-
+  
   const opener =
     adjacentOpeners[
       Math.floor(Math.random() * adjacentOpeners.length)
     ];
 
-    const base = `${opener} a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+    const base = `${opener} a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
     return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
 }
 
   if (label === "wildcard") {
-    const base = `This version pushes toward a stranger and more dangerous edge, turning the campaign into a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+    const toneAdjustedEdge =
+      toneName && toneName.toLowerCase().includes("lighthearted")
+        ? "more playful and unexpected direction"
+        : "a stranger and more intense direction";
+
+    const base = `This version pushes toward a ${toneAdjustedEdge}, turning the campaign into a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
+
     return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
   }
 
-  const base = `At its strongest, this campaign feels like a ${safeToneText ? safeToneText + " " : ""}${genreText} ${campaignShape}${envText ? ` shaped by ${envText}` : ""}.`;
+  const base = `At its strongest, this campaign feels like a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
   return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
 }
 
@@ -232,8 +302,17 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
 
   let text = `${coreADesc} ${coreBDesc}`.trim();
 
-  if (includeNotes) {
-    text += ` The campaign should make room for ${includeNotes.trim()}`;
+  const includeCleanRaw = cleanIncludeText(includeNotes);
+  const includeClean = dedupePhrases(includeCleanRaw);
+
+  const includePhrase = includeClean
+    .toLowerCase()
+    .replace(/keep it\s*/g, "")
+    .replace(/\/\s*kid-safe/g, "")
+    .trim();
+
+  if (includePhrase) {
+    text += ` The campaign should leave room for a ${includePhrase} tone`;
     if (!text.endsWith(".")) {
       text += ".";
     }
@@ -316,34 +395,60 @@ function buildPitchParagraph({
   });
 
   const coreText = joinNatural(
-  [coreAName, coreBName].filter(Boolean).map((name) => humanizeName(name))
-);
+    [coreAName, coreBName]
+      .filter(Boolean)
+      .map((name) => humanizeName(name))
+      .map((name) => name.replace(/_/g, " "))
+  );
 
   const systemText = joinNatural(
-  [systemAName, systemBName].filter(Boolean).map((name) => humanizeName(name))
-);
+    [systemAName, systemBName]
+      .filter(Boolean)
+      .map((name) => humanizeName(name))
+      .map((name) => name.replace(/_/g, " "))
+      .map((name) => name.replace("loop", "").trim())
+  );
 
-  let secondParagraph = `The campaign revolves around ${coreText || "dangerous truths and meaningful consequences"}, with players most often engaging through ${systemText || "investigation, pressure, and difficult choices"}.`;
+  const sentenceOptions = [
+    `At the table, this plays out through ${systemText}, as players navigate ${coreText}.`,
+    `Play centers on ${systemText}, with players gradually uncovering ${coreText}.`,
+    `Most sessions revolve around ${systemText}, while the story pushes into ${coreText}.`
+  ];
 
-  const includeText = includeNotes
-  ? ` It should explicitly include ${includeNotes.trim().toLowerCase().replace(/\.$/, "")}.`
-  : "";
+  let secondParagraph =
+    sentenceOptions[Math.floor(Math.random() * sentenceOptions.length)];
+  const includeCleanRaw = cleanIncludeText(includeNotes);
+  const includeClean = dedupePhrases(includeCleanRaw);
+  const excludeClean = cleanExcludeText(excludeNotes);
 
-  const excludeClean = excludeNotes
-  ? excludeNotes.trim().toLowerCase().replace(/\.$/, "")
-  : "";
+  const includePhrase = includeClean
+    .toLowerCase()
+    .replace(/keep it\s*/g, "")
+    .replace(/\/\s*kid-safe/g, "")
+    .trim();
 
-const excludeText = excludeClean
-  ? ` It should avoid ${excludeClean.startsWith("no ")
-      ? excludeClean.slice(3)
-      : excludeClean}.`
-  : "";
+  const includeText = includePhrase
+    ? ` It keeps the tone ${includePhrase}.`
+    : "";
+  
+  const finalExcludeText =
+    excludeClean && excludeClean.length > 2
+      ? ` It should avoid ${excludeClean.toLowerCase()}.`
+      : "";
 
-secondParagraph += includeText + excludeText;
+  secondParagraph += includeText;
 
-  const text = `${opening}\n\n${secondParagraph}`;
-  return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
+  if (finalExcludeText) {
+    secondParagraph += finalExcludeText;
+  }
+
+  const text = `${opening}\n\n${secondParagraph}`.trim();
+  return isYouthProfile(experienceProfile) ? softenYouthText(text).trim() : text;
 }
+
+// ==================================================
+// AI HANDOFF BLOCK
+// ==================================================
 
 function buildAIBrief({
   label,
@@ -388,6 +493,51 @@ function buildAIBrief({
   };
 }
 
+// ==================================================
+// TONE / SAFETY POST-PROCESSING
+// ==================================================
+
+function applyToneFilters(text, toneName = "", excludeNotes = "") {
+  if (!text) return "";
+
+  let result = text;
+
+  const tone = (toneName || "").toLowerCase();
+  const exclude = (excludeNotes || "").toLowerCase();
+
+  // Safety first
+  if (exclude.includes("no horror")) {
+    result = result
+      .replace(/dangerous/gi, "unexpected")
+      .replace(/terrifying/gi, "surprising")
+      .replace(/horror/gi, "")
+      .replace(/dark/gi, "mysterious")
+       .replace(/,?\s*or anything too scary/gi, "")
+      .replace(/avoid\s*\./gi, "")
+      .replace(/It should\s*\./gi, "")
+      .replace(/\.\./g, ".")
+      .replace(/It should\s*$/gi, "")
+      .replace(/hidden beneath/gi, "beneath the surface")
+      .replace(/uncovering/gi, "discovering");
+      }
+
+  // Lighthearted tone adjustments
+  if (tone.includes("lighthearted")) {
+    result = result
+      .replace(/dangerous/gi, "playful")
+      .replace(/buried/gi, "hidden")
+      .replace(/serious/gi, "fun")
+      .replace(/consequences/gi, "outcomes")
+      .replace(/the real danger is/gi, "the real mystery is");
+  }
+
+  return result;
+}
+
+// ==================================================
+// MAIN RENDERER
+// ==================================================
+
 function generateCampaignPitch(selections = {}) {
   const coreFrames = uniqueByName(selections.coreFrames || []);
   const systemFrames = uniqueByName(selections.systemFrames || []);
@@ -413,7 +563,7 @@ const coreBName = cleanName(coreB?.name, "");
 const systemAName = cleanName(systemA?.name, "Investigation");
 const systemBName = cleanName(systemB?.name, "");
 const genreName = cleanName(genre?.name, "Fantasy");
-const toneName = cleanName(tone?.name, "Dangerous");
+  const toneName = cleanName(tone?.name, "");
 const envNames = environmentSkins
   .map((entry) => humanizeName(entry?.name))
   .filter(Boolean);
@@ -471,13 +621,17 @@ const envNames = environmentSkins
 
   return {
     title,
-    pitch,
-    about,
-    playersDo,
-    distinctHook,
+    pitch: applyToneFilters(pitch, toneName, excludeNotes),
+    about: applyToneFilters(about, toneName, excludeNotes),
+    playersDo: applyToneFilters(playersDo, toneName, excludeNotes),
+    distinctHook: applyToneFilters(distinctHook, toneName, excludeNotes),
     aiBrief
   };
 }
+
+// ==================================================
+// EXPORTS
+// ==================================================
 
 module.exports = {
   generateCampaignPitch

@@ -117,7 +117,12 @@ module.exports = {
       toneSkins: [
         { id: "grimdark", weight: 5 }
       ]
-    }
+    },
+    chaotic_lighthearted: {
+      toneSkins: [
+        { id: "lighthearted_chaotic", weight: 5 }
+      ]
+    },
   },
 
   worldAesthetic: {

@@ -1,4 +1,8 @@
 const intakeMappings = require("../data/intakeMappings");
+const toneIdMap = {
+  chaotic_lighthearted: "lighthearted_chaotic",
+  lighthearted_chaotic: "lighthearted_chaotic"
+};
 
 /**
  * Adds weighted entries into a score map.
@@ -86,7 +90,16 @@ function inferExperienceProfile(answers) {
  *   excludeNotes: string
  * }}
  */
+
+function normalizeAnswers(answers = {}) {
+  return {
+    ...answers,
+    };
+}
+
 function translateFormAnswers(answers = {}) {
+  const normalizedAnswers = normalizeAnswers(answers);
+
   const buckets = {
     coreFrames: new Map(),
     systemFrames: new Map(),
@@ -96,25 +109,25 @@ function translateFormAnswers(answers = {}) {
     modifiers: {}
   };
 
-  applyMappedAnswer(intakeMappings.overallExperience, answers.overallExperience, buckets);
-  applyMappedAnswer(intakeMappings.tone, answers.tone, buckets);
-  applyMappedAnswer(intakeMappings.worldAesthetic, answers.worldAesthetic, buckets);
-  applyMappedAnswer(intakeMappings.conflict, answers.conflict, buckets);
-  applyMappedAnswer(intakeMappings.choiceWeight, answers.choiceWeight, buckets);
-  applyMappedAnswer(intakeMappings.playerFantasy, answers.playerFantasy, buckets);
+  applyMappedAnswer(intakeMappings.overallExperience, normalizedAnswers.overallExperience, buckets);
+  applyMappedAnswer(intakeMappings.tone, normalizedAnswers.tone, buckets);
+  applyMappedAnswer(intakeMappings.worldAesthetic, normalizedAnswers.worldAesthetic, buckets);
+  applyMappedAnswer(intakeMappings.conflict, normalizedAnswers.conflict, buckets);
+  applyMappedAnswer(intakeMappings.choiceWeight, normalizedAnswers.choiceWeight, buckets);
+  applyMappedAnswer(intakeMappings.playerFantasy, normalizedAnswers.playerFantasy, buckets);
 
-  const gameplayAnswers = Array.isArray(answers.gameplay) ? answers.gameplay : [];
+  const gameplayAnswers = Array.isArray(normalizedAnswers.gameplay) ? normalizedAnswers.gameplay : [];
   for (const gameplayAnswer of gameplayAnswers) {
     applyMappedAnswer(intakeMappings.gameplay, gameplayAnswer, buckets);
   }
 
-  const environmentAnswers = Array.isArray(answers.environments) ? answers.environments : [];
+  const environmentAnswers = Array.isArray(normalizedAnswers.environments) ? normalizedAnswers.environments : [];
   for (const environmentAnswer of environmentAnswers) {
     applyMappedAnswer(intakeMappings.environments, environmentAnswer, buckets);
   }
 
   return {
-    experienceProfile: inferExperienceProfile(answers),
+        experienceProfile: inferExperienceProfile(normalizedAnswers),
     coreFrames: finalizeBucket(buckets.coreFrames),
     systemFrames: finalizeBucket(buckets.systemFrames),
     genreSkins: finalizeBucket(buckets.genreSkins),
