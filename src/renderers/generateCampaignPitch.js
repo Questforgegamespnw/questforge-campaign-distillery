@@ -42,12 +42,20 @@ function humanizeName(name) {
     return "";
   }
 
-  return name
+  const cleaned = name
     .replace(/\//g, " ")
     .replace(/_/g, " ")
     .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
+    .trim();
+
+  const words = cleaned.split(" ");
+
+  return words
+    .map((word, index) => {
+      if (index === 0) return word.charAt(0).toUpperCase() + word.slice(1);
+      return word.toLowerCase();
+    })
+    .join(" ");
 }
 
 function sentenceCase(value) {
@@ -100,6 +108,47 @@ function softenYouthText(text) {
     .replace(/cannot ignore/gi, "need to understand")
     .replace(/was has been/gi, "has been")
     .replace(/\. figuring/gi, ". Figuring");
+}
+
+function getAdjudication(selections = {}) {
+  return selections.adjudication || {};
+}
+
+function getSafetyProfile(selections = {}) {
+  return getAdjudication(selections).constraints?.safetyProfile || {};
+}
+
+function getHandoffGuidance(selections = {}) {
+  return getAdjudication(selections).handoffGuidance || {};
+}
+
+function collectGuardrailText(selections = {}) {
+  const guidance = getHandoffGuidance(selections);
+
+  return {
+    mustInclude: Array.isArray(guidance.mustInclude)
+      ? guidance.mustInclude.map(s => s.replace(/\s+/g, " ").trim())
+      : [],
+    avoid: Array.isArray(guidance.avoid) ? guidance.avoid.filter(Boolean) : [],
+    toneGuardrails: Array.isArray(guidance.toneGuardrails) ? guidance.toneGuardrails.filter(Boolean) : [],
+    audienceGuardrails: Array.isArray(guidance.audienceGuardrails) ? guidance.audienceGuardrails.filter(Boolean) : [],
+    notes: Array.isArray(guidance.notes) ? guidance.notes.filter(Boolean) : []
+  };
+}
+
+function appendAudienceGuidance(text = "", selections = {}) {
+  const safetyProfile = getSafetyProfile(selections);
+  const guidance = collectGuardrailText(selections);
+
+  let result = text;
+
+  if (safetyProfile.youthSafeMode) {
+    if (!/kid-safe|family-friendly|wonder|curiosity|adventure/i.test(result)) {
+      result += " The tone stays light, family-friendly, and rooted in wonder and curiosity.";
+    }
+  }
+
+  return result.trim();
 }
 
 // ==================================================
@@ -159,18 +208,21 @@ function cleanIncludeText(text = "") {
 }
 
 function cleanExcludeText(text = "") {
-  return text
+  const cleaned = text
     .split(";")
     .map((s) => s.trim())
     .filter(Boolean)
     .map((s) => s.replace(/^avoid\s+/i, "").replace(/^no\s+/i, ""))
     .map((s) => s.replace(/\.$/, ""))
-    .filter((s) => s.length > 2) // 🔥 kills empty garbage
-    .join(", ");
+    .map((s) => s.replace(/or anything too scary/gi, ""))
+    .map((s) => s.replace(/\s+/g, " ").trim())
+    .filter((s) => s.length > 2);
+
+  return cleaned.join(", ");
 }
 
 function formatToneLabel(toneName = "") {
-  const tone = humanizeName(toneName);
+  const tone = humanizeName(toneName).toLowerCase();
 
   if (!tone) return "";
   if (tone === "lighthearted chaotic") return "playful, lighthearted";
@@ -190,6 +242,49 @@ function dedupePhrases(text = "") {
   }
 
   return unique.join(", ");
+}
+
+function chooseByLabel(label, options = {}) {
+  if (options[label] && Array.isArray(options[label]) && options[label].length) {
+    return options[label][Math.floor(Math.random() * options[label].length)];
+  }
+
+  const fallback = options.default || [];
+  return fallback[Math.floor(Math.random() * fallback.length)] || "";
+}
+
+function stripTrailingPeriod(text = "") {
+  return cleanName(text).replace(/\.$/, "");
+}
+
+function cleanOutputText(text = "") {
+  return text
+    .replace(/\.\.+/g, ".")
+    .replace(/\s+/g, " ")
+    .replace(/\s([.,!?;:])/g, "$1")
+    .replace(/\.\s+\./g, ".")
+    .replace(/(divided,\s*or incomplete,\s*and incomplete|divided,\s*or incomplete)/gi, "divided and incomplete")
+    .replace(/family-friendly\.\s+It stays approachable and family-friendly\./gi, "family-friendly.")
+    .replace(/The mood stays rooted in wonder, curiosity, and adventure\.\s+The mood stays rooted in wonder, curiosity, and adventure\./gi, "The mood stays rooted in wonder, curiosity, and adventure.")
+    .replace(/It stays approachable and family-friendly\.\s+The mood stays rooted in wonder, curiosity, and adventure\./gi, "It stays approachable and family-friendly, with a tone rooted in wonder and curiosity.")
+    .replace(/The tone stays light and kid-safe, family-friendly\.\s+It stays approachable and family-friendly\./gi, "The tone stays light, kid-safe, and approachable.")
+    .trim();
+}
+
+function isPluralConcept(text = "") {
+  return /\band\b/i.test(text);
+}
+
+function softenIdentityPhrase(text = "", experienceProfile = "standard") {
+  if (!isYouthProfile(experienceProfile)) {
+    return text;
+  }
+
+    return text
+    .replace(/fractured self/gi, "shifting sense of self")
+    .replace(/fragmented self/gi, "shifting sense of self")
+    .replace(/becoming something else/gi, "changing in unexpected ways")
+    .replace(/what is humanity/gi, "what makes someone who they are");
 }
 
 // ==================================================
@@ -252,7 +347,7 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [], expe
     campaignShape = "discovery-driven adventure";
   }
 
-  const tonePrefix = safeToneText ? `${safeToneText} ` : "";
+  const tonePrefix = safeToneText ? `${safeToneText.toLowerCase()} ` : "";
   const genrePhrase = `${genreText} ${campaignShape}`;  
 
   if (label === "adjacent") {
@@ -290,88 +385,149 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [], expe
 }
 
 function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
-  const coreADesc = normalizeDescription(
-    coreA?.description,
-    "The world is not what it seems, and the deeper the players dig, the worse the truth becomes"
+  const coreADesc = stripTrailingPeriod(
+    normalizeDescription(
+      coreA?.description,
+      "The world is not what it seems, and the deeper the players dig, the worse the truth becomes"
+    )
   );
 
-  const coreBDesc = normalizeDescription(
-    coreB?.description,
-    "Understanding what is really happening comes with consequences"
+  let coreBDesc = stripTrailingPeriod(
+    normalizeDescription(
+      coreB?.description,
+      "Understanding what is really happening comes with consequences"
+    )
   );
 
-  let text = `${coreADesc} ${coreBDesc}`.trim();
+  // remove duplicated trailing clause BEFORE rendering
+  coreBDesc = coreBDesc
+    .replace(/divided,\s*or incomplete,\s*and incomplete/gi, "divided and incomplete")
+    .replace(/divided,\s*or incomplete/gi, "divided")
+    .replace(/,\s*and incomplete/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
   const includeCleanRaw = cleanIncludeText(includeNotes);
   const includeClean = dedupePhrases(includeCleanRaw);
 
-  const includePhrase = includeClean
+  const tonePhrase = includeClean
     .toLowerCase()
     .replace(/keep it\s*/g, "")
     .replace(/\/\s*kid-safe/g, "")
     .trim();
 
-  if (includePhrase) {
-    text += ` The campaign should leave room for a ${includePhrase} tone`;
-    if (!text.endsWith(".")) {
-      text += ".";
-    }
+  const joiner = chooseByLabel("about", {
+    default: [
+      "Alongside that,",
+      "At the same time,",
+      "Running underneath it all,",
+      "What gives it extra weight is that"
+    ]
+  });
+
+  let text = `${coreADesc}. ${joiner} ${coreBDesc.toLowerCase()}.`;
+
+  if (tonePhrase) {
+    text += ` The overall feel stays ${tonePhrase}.`;
   }
+
+  text = softenIdentityPhrase(text, experienceProfile);
+  text = cleanOutputText(text);
 
   return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
-function buildPlayersDo(systemA, systemB, experienceProfile) {
-  const systemADesc = normalizeDescription(
-    systemA?.description,
-    "Players investigate, connect hidden information, and push deeper into the campaign's central conflict"
+function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") {
+  const systemADesc = stripTrailingPeriod(
+    normalizeDescription(
+      systemA?.description,
+      "Players investigate, connect hidden information, and push deeper into the campaign's central conflict"
+    )
   );
 
-  const systemBDesc = normalizeDescription(
-    systemB?.description,
-    "Their choices, alliances, and leverage shape how the world responds"
+  const systemBDesc = stripTrailingPeriod(
+    normalizeDescription(
+      systemB?.description,
+      "Their choices, alliances, and leverage shape how the world responds"
+    )
   );
 
-  const text = `${systemADesc} ${systemBDesc}`.trim();
+  const startsLikeSentence = /^(players|progress|their|the group|the players|discovery|exploration)\b/i.test(systemADesc);
+
+  const lead = chooseByLabel(label, {
+    primary: [
+      "Most sessions revolve around this loop:",
+      "At the table, the experience tends to unfold like this:",
+      "The core rhythm of play looks like this:"
+    ],
+    adjacent: [
+      "This version shifts the table experience in a slightly different direction:",
+      "Here, the play loop tilts more toward this structure:",
+      "This take changes the rhythm at the table in a useful way:"
+    ],
+    wildcard: [
+      "The wildcard energy shows up most clearly in how play unfolds:",
+      "This version feels bolder at the table because of this loop:",
+      "What gives this take its edge is the way play actually works:"
+    ],
+    default: [
+      "Play tends to unfold like this:"
+    ]
+  });
+
+  let text = startsLikeSentence
+    ? `${lead} ${systemADesc}. ${sentenceCase(systemBDesc)}.`
+    : `${lead} ${systemADesc.toLowerCase()}. ${sentenceCase(systemBDesc)}.`;
+
+  text = cleanOutputText(text);
   return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
 function buildDistinctHook({ genre, tone, environments, label, experienceProfile }) {
-  const genreDesc = normalizeDescription(
-    genre?.description,
-    "The setting's identity comes from the way atmosphere, conflict, and player pressure reinforce one another"
-  );
-
-  const toneDesc = normalizeDescription(
-    tone?.description,
-    "The tone keeps pressure on every victory and weight behind every choice"
+  const genreDesc = stripTrailingPeriod(
+    normalizeDescription(
+      genre?.description,
+      "The setting's identity comes from the way atmosphere, conflict, and player pressure reinforce one another"
+    )
   );
 
   const envDescs = uniqueByName(environments)
     .map((env) => cleanName(env?.description))
     .filter(Boolean);
 
-  const envText = envDescs.length
-    ? `The strongest scenes come from ${joinNatural(envDescs.map((text) => humanizeName(text)))}.`
+  const envFragment = envDescs.length
+    ? `The world draws a lot of its identity from ${joinNatural(
+      envDescs.map((text) => humanizeName(text))
+    )}.`
     : "";
 
   const labelHooks = {
-    primary: "It should feel like the players are uncovering something that was never meant to stay buried.",
-    adjacent: "What makes this version pop is that conversation, leverage, and partial knowledge matter just as much as discovery itself.",
-    wildcard: "What makes this version stand out is that learning the truth feels dangerous in its own right."
+    primary: [
+      "It should feel like every discovery opens the door to something larger.",
+      "The strongest version of this campaign makes discovery feel momentum-building rather than static.",
+      "The hook here is the sense that the world is always holding one more answer just out of reach."
+    ],
+    adjacent: [
+      "What sets this version apart is how much progress comes from following threads, leverage, and layered discovery.",
+      "This take stands out when the players are constantly choosing which clue, lead, or opportunity to chase next.",
+      "Its identity really sharpens when exploration and information start feeding each other."
+    ],
+    wildcard: [
+      "This version stands out when the truth feels strange, exciting, and just a little larger than expected.",
+      "The wildcard energy comes from letting discovery reshape how the players understand the world around them.",
+      "Its best moments come when each answer changes the meaning of the next question."
+    ]
   };
 
-  const text = [genreDesc, labelHooks[label] || ""]
-    .filter(Boolean)
-    .join(" ")
-    .trim();
+  let text = `${genreDesc}. ${chooseByLabel(label, labelHooks)} ${envFragment}`.trim();
+  text = softenIdentityPhrase(text, experienceProfile);
+  text = cleanOutputText(text);
 
   return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
 function buildPitchParagraph({
   label,
-  title,
   coreAName,
   coreBName,
   systemAName,
@@ -383,8 +539,8 @@ function buildPitchParagraph({
   includeNotes,
   excludeNotes,
   experienceProfile
-}) {
 
+}) {
   const opening = buildOpening({
     label,
     genreName,
@@ -394,29 +550,56 @@ function buildPitchParagraph({
     experienceProfile
   });
 
-  const coreText = joinNatural(
-    [coreAName, coreBName]
-      .filter(Boolean)
-      .map((name) => humanizeName(name))
-      .map((name) => name.replace(/_/g, " "))
+  const coreText = softenIdentityPhrase(
+    joinNatural(
+      [coreAName, coreBName]
+        .filter(Boolean)
+        .map((name) => humanizeName(name).replace(/_/g, " ").toLowerCase())
+    ),
+    experienceProfile
   );
 
   const systemText = joinNatural(
     [systemAName, systemBName]
       .filter(Boolean)
-      .map((name) => humanizeName(name))
-      .map((name) => name.replace(/_/g, " "))
-      .map((name) => name.replace("loop", "").trim())
+      .map((name) => {
+        const cleaned = humanizeName(name)
+          .replace(/Clue web/i, "a network of clues")
+          .replace(/Exploration discovery/i, "exploration and discovery")
+          .replace(/Hidden information/i, "hidden information")
+          .replace(/loop/gi, "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        return cleaned.toLowerCase();
+      })
   );
 
-  const sentenceOptions = [
-    `At the table, this plays out through ${systemText}, as players navigate ${coreText}.`,
-    `Play centers on ${systemText}, with players gradually uncovering ${coreText}.`,
-    `Most sessions revolve around ${systemText}, while the story pushes into ${coreText}.`
-  ];
+  const coreVerb = isPluralConcept(coreText) ? "give" : "gives";
+  const coreKeepVerb = isPluralConcept(coreText) ? "keep" : "keeps";
+  const systemVerb = isPluralConcept(systemText) ? "shape" : "shapes";
 
-  let secondParagraph =
-    sentenceOptions[Math.floor(Math.random() * sentenceOptions.length)];
+  const secondParagraph = chooseByLabel(label, {
+    primary: [
+      `Most sessions are driven by ${systemText}, while the larger story keeps pulling the players toward ${coreText}.`,
+      `${systemText} ${systemVerb} the moment-to-moment play, while ${coreText} ${coreVerb} the campaign its larger sense of direction.`,
+      `At the table, ${systemText} keeps things moving, while ${coreText} ${coreVerb} each discovery more meaning.`
+    ],
+    adjacent: [
+      `This version puts more weight on ${systemText}, letting ${coreText} build gradually underneath it.`,
+      `${systemText} takes the lead here, with ${coreText} unfolding over time rather than all at once.`,
+      `The campaign breathes through ${systemText}, while ${coreText} slowly ${coreKeepVerb} shaping the bigger picture.`
+    ],
+    wildcard: [
+      `This take leans harder into ${systemText}, with ${coreText} giving the campaign its stranger edge.`,
+      `${systemText} does more of the heavy lifting here, while ${coreText} ${coreKeepVerb} the campaign feeling slightly off-center in a good way.`,
+      `The wildcard version gets its energy from ${systemText}, while ${coreText} ${coreKeepVerb} expanding what the players think they understand.`
+    ],
+    default: [
+      `${systemText} and ${coreText} work together to define the campaign's rhythm.`
+    ]
+  });
+
   const includeCleanRaw = cleanIncludeText(includeNotes);
   const includeClean = dedupePhrases(includeCleanRaw);
   const excludeClean = cleanExcludeText(excludeNotes);
@@ -427,25 +610,24 @@ function buildPitchParagraph({
     .replace(/\/\s*kid-safe/g, "")
     .trim();
 
-  const includeText = includePhrase
-    ? ` It keeps the tone ${includePhrase}.`
-    : "";
-  
-  const finalExcludeText =
-    excludeClean && excludeClean.length > 2
-      ? ` It should avoid ${excludeClean.toLowerCase()}.`
-      : "";
+  let closer = "";
 
-  secondParagraph += includeText;
-
-  if (finalExcludeText) {
-    secondParagraph += finalExcludeText;
+  if (includePhrase) {
+    closer = ` The tone stays ${includePhrase}.`;
   }
 
-  const text = `${opening}\n\n${secondParagraph}`.trim();
+  const shouldRenderExclude =
+    excludeClean &&
+    !/^horror$/i.test(excludeClean) &&
+    excludeClean.split(" ").length > 1;
+
+  if (shouldRenderExclude) {
+    closer += ` It avoids ${excludeClean.toLowerCase()}.`;
+  }
+
+  const text = cleanOutputText(`${opening}\n\n${secondParagraph}${closer}`);
   return isYouthProfile(experienceProfile) ? softenYouthText(text).trim() : text;
 }
-
 // ==================================================
 // AI HANDOFF BLOCK
 // ==================================================
@@ -463,8 +645,13 @@ function buildAIBrief({
   excludeNotes,
   about,
   playersDo,
-  distinctHook
+  distinctHook,
+  selections
 }) {
+  const adjudication = getAdjudication(selections);
+  const safetyProfile = getSafetyProfile(selections);
+  const handoffGuidance = getHandoffGuidance(selections);
+
   return {
     directionType: label || "direction",
     emphasis: emphasis || "",
@@ -488,6 +675,15 @@ function buildAIBrief({
     })),
     includeNotes: cleanName(includeNotes, ""),
     excludeNotes: cleanName(excludeNotes, ""),
+    experienceProfile: adjudication.experienceProfile || cleanName(selections?.experienceProfile, "standard"),
+    safetyProfile,
+    toneGuardrails: handoffGuidance.toneGuardrails || [],
+    audienceGuardrails: handoffGuidance.audienceGuardrails || [],
+    mustInclude: handoffGuidance.mustInclude || [],
+    avoid: handoffGuidance.avoid || [],
+    suppressedSignals: adjudication.suppressed || [],
+    confidence: adjudication.confidence || {},
+
     rewriteGoal:
       "Rewrite this into polished, consult-ready campaign prose that sounds natural, cinematic, and specific without contradicting the structured intent."
   };
@@ -497,11 +693,12 @@ function buildAIBrief({
 // TONE / SAFETY POST-PROCESSING
 // ==================================================
 
-function applyToneFilters(text, toneName = "", excludeNotes = "") {
+function applyToneFilters(text, toneName = "", excludeNotes = "", selections = {}) {
   if (!text) return "";
 
   let result = text;
-
+  const safetyProfile = getSafetyProfile(selections);
+  const guidance = collectGuardrailText(selections);
   const tone = (toneName || "").toLowerCase();
   const exclude = (excludeNotes || "").toLowerCase();
 
@@ -530,8 +727,24 @@ function applyToneFilters(text, toneName = "", excludeNotes = "") {
       .replace(/consequences/gi, "outcomes")
       .replace(/the real danger is/gi, "the real mystery is");
   }
+  if (safetyProfile.youthSafeMode) {
+    result = result
+      .replace(/dangerous in its own right/gi, "important in its own right")
+      .replace(/uncertainty becomes part of the tension/gi, "uncertainty becomes part of the discovery and exploration")
+      .replace(/divided,\s*or fractured/gi, "divided and incomplete")
+      .replace(/fractured/gi, "incomplete")
+      .replace(/burden/gi, "challenge")
+      .replace(/dark/gi, "mysterious");
+  }
 
-  return result;
+  if (guidance.toneGuardrails.some((line) => /avoid dread-heavy|avoid scary/i.test(line))) {
+    result = result
+      .replace(/dread-heavy/gi, "wonder-filled")
+      .replace(/scary/gi, "intense");
+  }
+
+  return result.trim();
+  
 }
 
 // ==================================================
@@ -557,6 +770,9 @@ function generateCampaignPitch(selections = {}) {
   const includeNotes = cleanName(selections.includeNotes, "");
   const excludeNotes = cleanName(selections.excludeNotes, "");
   const experienceProfile = cleanName(selections.experienceProfile, "standard").toLowerCase();
+  const adjudication = getAdjudication(selections);
+  const safetyProfile = getSafetyProfile(selections);
+  const handoffGuidance = getHandoffGuidance(selections);
 
   const coreAName = cleanName(coreA?.name, "Hidden Truth");
 const coreBName = cleanName(coreB?.name, "");
@@ -577,7 +793,7 @@ const envNames = environmentSkins
 
   const coreIds = extractIds(coreFrames);
   const about = sentenceCase(buildAbout(coreA, coreB, includeNotes, experienceProfile));
-  const playersDo = sentenceCase(buildPlayersDo(systemA, systemB, experienceProfile));
+  const playersDo = sentenceCase(buildPlayersDo(systemA, systemB, experienceProfile, label));
   const distinctHook = sentenceCase(
     buildDistinctHook({
       genre,
@@ -616,16 +832,24 @@ const envNames = environmentSkins
     excludeNotes,
     about,
     playersDo,
-    distinctHook
+    distinctHook,
+    selections
   });
 
   return {
     title,
-    pitch: applyToneFilters(pitch, toneName, excludeNotes),
-    about: applyToneFilters(about, toneName, excludeNotes),
-    playersDo: applyToneFilters(playersDo, toneName, excludeNotes),
-    distinctHook: applyToneFilters(distinctHook, toneName, excludeNotes),
-    aiBrief
+    pitch: applyToneFilters(appendAudienceGuidance(pitch, selections), toneName, excludeNotes, selections),
+    about: applyToneFilters(about, toneName, excludeNotes, selections),
+    playersDo: applyToneFilters(playersDo, toneName, excludeNotes, selections),
+    distinctHook: applyToneFilters(distinctHook, toneName, excludeNotes, selections),
+    aiBrief,
+    adjudicationSummary: {
+      experienceProfile,
+      safetyProfile,
+      handoffGuidance,
+      confidence: adjudication.confidence || {},
+      suppressed: adjudication.suppressed || []
+    }
   };
 }
 

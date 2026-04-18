@@ -1,7 +1,36 @@
+const { adjudicateSignals } = require("./adjudicateSignals");
 const { selectTopWeighted } = require("./selectTopWeighted");
 const systemFrameLibrary = require("../data/systemFrames");
 const coreFrameLibrary = require("../data/coreFrames");
 
+
+function isAdjudicatedInput(input = {}) {
+  return Boolean(input.signals && input.constraints);
+}
+
+function flattenAdjudicatedSignals(adjudicated = {}) {
+  function flattenBucket(entries = []) {
+    return entries
+      .filter((entry) => entry.status !== "suppressed")
+      .map((entry) => ({
+        id: entry.id,
+        weight: entry.adjustedWeight
+      }));
+  }
+
+  return {
+    experienceProfile: adjudicated.experienceProfile || "standard",
+    coreFrames: flattenBucket(adjudicated.signals?.coreFrames),
+    systemFrames: flattenBucket(adjudicated.signals?.systemFrames),
+    genreSkins: flattenBucket(adjudicated.signals?.genreSkins),
+    toneSkins: flattenBucket(adjudicated.signals?.toneSkins),
+    environmentSkins: flattenBucket(adjudicated.signals?.environmentSkins),
+    modifiers: adjudicated.modifiers || {},
+    includeNotes: adjudicated.constraints?.includeNotes || "",
+    excludeNotes: adjudicated.constraints?.excludeNotes || "",
+    adjudication: adjudicated
+  };
+}
 /**
  * Returns the first item in pool whose id is not already used.
  * Falls back to the first item in the pool if no unique item exists.
@@ -135,7 +164,7 @@ function systemMatchesCore(system, coreFrames = []) {
   });
 }
 
-function scoreSystemCandidate(candidate, primarySystem, resolvedCoreFrames, toneSelection, usedSystemIds) {
+function scoreSystemCandidate(candidate, primarySystem, resolvedCoreFrames, toneSelection) {
   const resolvedCandidate = resolveSystemFrame(candidate);
   const resolvedPrimary = resolveSystemFrame(primarySystem);
 
@@ -151,17 +180,13 @@ function scoreSystemCandidate(candidate, primarySystem, resolvedCoreFrames, tone
     score += 2;
   }
 
-  if (usedSystemIds?.has(candidate.id)) {
-    score -= 2;
-  }
-
   score += getToneSystemBonus(candidate, toneSelection);
   score += candidate.weight || 0;
 
   return score;
 }
 
-function scoreAdjacentSystemCandidate(candidate, primarySystem, resolvedCoreFrames, toneSelection, usedSystemIds) {
+function scoreAdjacentSystemCandidate(candidate, primarySystem, resolvedCoreFrames, toneSelection) {
   const resolvedCandidate = resolveSystemFrame(candidate);
   const resolvedPrimary = resolveSystemFrame(primarySystem);
 
@@ -177,10 +202,6 @@ function scoreAdjacentSystemCandidate(candidate, primarySystem, resolvedCoreFram
     score += 2;
   }
 
-    if (usedSystemIds?.has(candidate.id)) {
-    score -= 2;
-  }
-  74
   score += getToneSystemBonus(candidate, toneSelection);
   score += candidate.weight || 0;
 
@@ -320,8 +341,13 @@ function backfillDirection(direction, pools) {
  *   wildcard: object
  * }}
  */
-function selectCampaignDirections(weightedPools = {}) {
-  const usedSystemIds = new Set();
+function selectCampaignDirections(input = {}, canonicalIntake = {}) {
+  const adjudicated = isAdjudicatedInput(input)
+    ? input
+    : adjudicateSignals(input, canonicalIntake);
+
+  const weightedPools = flattenAdjudicatedSignals(adjudicated);
+
   const pools = {
     coreFrames: selectTopWeighted(weightedPools.coreFrames || [], 5),
     systemFrames: selectTopWeighted(weightedPools.systemFrames || [], 5),
@@ -344,23 +370,22 @@ function selectCampaignDirections(weightedPools = {}) {
       ].filter(Boolean),
       systemFrames: (() => {
     const primarySystem = pickByRank(pools.systemFrames, 0);
-const primaryTone = pickByRank(pools.toneSkins, 0);
 
-const resolvedPrimary = resolveSystemFrame(primarySystem);
-const resolvedCoreFrames = [
-  pickByRank(pools.coreFrames, 0),
-  pickByRank(pools.coreFrames, 1)
-]
-  .filter(Boolean)
-  .map(resolveCoreFrame)
-  .filter(Boolean);
+    const resolvedPrimary = resolveSystemFrame(primarySystem);
+    const resolvedCoreFrames = [
+      pickByRank(pools.coreFrames, 0),
+      pickByRank(pools.coreFrames, 1)
+    ]
+      .filter(Boolean)
+      .map(resolveCoreFrame)
+      .filter(Boolean);
 
-const secondarySystem = pools.systemFrames
+    const secondarySystem = pools.systemFrames
   .filter((candidate) => candidate && candidate.id !== primarySystem?.id)
   .sort((a, b) => {
     return (
-      scoreSystemCandidate(b, primarySystem, resolvedCoreFrames, primaryTone, usedSystemIds) -
-      scoreSystemCandidate(a, primarySystem, resolvedCoreFrames, primaryTone, usedSystemIds)
+      scoreSystemCandidate(b, primarySystem, resolvedCoreFrames) -
+      scoreSystemCandidate(a, primarySystem, resolvedCoreFrames)
     );
   })[0];
 
@@ -395,27 +420,23 @@ const envB = pickByRank(pools.environmentSkins, 1) || pickByRank(pools.environme
       coreFrames: [adjacentCoreA, adjacentCoreB].filter(Boolean),
       systemFrames: (() => {
   const primarySystem = pickByRank(pools.systemFrames, 1) || pickByRank(pools.systemFrames, 0);
-const adjacentTone = pickByRank(pools.toneSkins, 1) || pickByRank(pools.toneSkins, 0);
 
-const resolvedCoreFrames = [
-  pickByRank(pools.coreFrames, 0),
-  pickByRank(pools.coreFrames, 2) || pickByRank(pools.coreFrames, 1)
-]
-  .filter(Boolean)
-  .map(resolveCoreFrame)
-  .filter(Boolean);
+  const resolvedCoreFrames = [
+    pickByRank(pools.coreFrames, 0),
+    pickByRank(pools.coreFrames, 2) || pickByRank(pools.coreFrames, 1)
+  ]
+    .filter(Boolean)
+    .map(resolveCoreFrame)
+    .filter(Boolean);
 
-const secondarySystem = pools.systemFrames
-  .filter((candidate) => candidate && candidate.id !== primarySystem?.id)
-  .sort((a, b) => {
-    return (
-      scoreAdjacentSystemCandidate(b, primarySystem, resolvedCoreFrames, adjacentTone, usedSystemIds) -
-      scoreAdjacentSystemCandidate(a, primarySystem, resolvedCoreFrames, adjacentTone, usedSystemIds)
-    );
-  })[0];
-
-  usedSystemIds.add(primarySystem?.id);
-  usedSystemIds.add(secondarySystem?.id);
+  const secondarySystem = pools.systemFrames
+    .filter((candidate) => candidate && candidate.id !== primarySystem?.id)
+    .sort((a, b) => {
+      return (
+        scoreAdjacentSystemCandidate(b, primarySystem, resolvedCoreFrames) -
+        scoreAdjacentSystemCandidate(a, primarySystem, resolvedCoreFrames)
+      );
+    })[0];
 
   return [primarySystem, secondarySystem].filter(Boolean);
 })(),
@@ -464,9 +485,18 @@ const secondarySystem = pools.systemFrames
   );
 
   return {
-    primary,
-    adjacent,
-    wildcard
+    primary: {
+      ...primary,
+      adjudication: weightedPools.adjudication
+    },
+    adjacent: {
+      ...adjacent,
+      adjudication: weightedPools.adjudication
+    },
+    wildcard: {
+      ...wildcard,
+      adjudication: weightedPools.adjudication
+    }
   };
 }
 

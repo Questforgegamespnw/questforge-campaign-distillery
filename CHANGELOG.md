@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+
+---
+## v0.5.0 — Intelligence & Signal Quality Layer
+
+### Added
+
+- Signal adjudication system with priority tiers
+- Constraint-aware decision logic (safety, tone, exclusions)
+- Confidence scoring across all domains
+- Suppression tracking for filtered signals
+- Structured AI handoff (`aiBrief`) output block
+- Tone guardrails and audience safety propagation
+
+### Improved
+
+- Campaign pitch renderer readability and structure
+- System label normalization into natural language
+- Tone handling and youth-safe phrasing consistency
+- Grammar correctness and sentence flow
+- Deduplication of repeated phrasing and punctuation cleanup
+
+### Fixed
+
+- Duplicate phrase artifacts (e.g. "divided, or incomplete, and incomplete")
+- Tone label casing inconsistencies
+- System phrase composition issues ("Exploration Discovery" → natural phrasing)
+- Double punctuation and malformed sentence joins
+- Safety filter conflicts with tone rendering
+
+### Notes
+
+- This version introduces the system’s **decision-making layer**
+- Output is now stable, interpretable, and safe for downstream AI expansion
+- Marks transition from **pipeline correctness → intelligent interpretation**
+
 ---
 ## v0.4.0
 added structured intake layer for raw form submissions
