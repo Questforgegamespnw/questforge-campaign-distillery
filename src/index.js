@@ -15,7 +15,7 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
     const { mapped, normalized, canonical } = processFormSubmission(rawSubmission);
 
     const translated = translateFormAnswers(canonical.pipelineInput);
-    const selected = selectCampaignDirections(translated);
+    const selected = selectCampaignDirections(translated, canonical);
     function resolveDirection(direction) {
         return {
             ...direction,

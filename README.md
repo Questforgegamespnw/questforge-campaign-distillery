@@ -133,18 +133,50 @@ Raw Intake
 
 ---
 
-## Current State (v0.4.0)
+## Current State (v0.5.0)
 
-- End-to-end pipeline is functional
-- Batch testing is operational
-- Modular data and selection systems are in place
-- Voice layer exists but needs refinement
-- Tone system is incomplete
-- Renderer output shows repetition
-- No live intake → pipeline integration yet
+## Current State (v0.5.0)
+
+- End-to-end pipeline is stable and fully operational
+- Signal translation, weighting, and adjudication are implemented
+- Safety and youth-safe inference integrated into decision layer
+- Renderer produces structured, human-readable campaign pitches
+- AI handoff layer outputs rich, structured expansion input
+- Output is consistent, deterministic, and safe for downstream use
 
 - This version marks the transition from:
-**System construction → Output quality refinement**
+**Functional system → Intelligent interpretation layer**
+
+---
+
+## v0.5 Highlights
+
+### Intelligence Layer
+- Introduced signal adjudication system
+- Added priority tiers and override rules
+- Integrated safety constraints into selection and output
+- Implemented confidence scoring and suppression tracking
+
+### Output Quality
+- Cleaned renderer phrasing and repetition
+- Reduced system-label leakage into prose
+- Normalized tone handling and safety language
+- Improved grammar and sentence structure consistency
+
+### AI Handoff
+- Added structured `aiBrief` output
+- Included guardrails, tone constraints, and safety profile
+- Enabled reliable downstream AI expansion
+
+---
+
+## What Changed Conceptually
+
+v0.4:
+> “The system works”
+
+v0.5:
+> “The system understands intent and makes decisions”
 
 ---
 ## Design Principles
