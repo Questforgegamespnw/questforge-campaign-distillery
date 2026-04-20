@@ -9,8 +9,9 @@ It is designed to:
 - Normalize that input into a controlled schema
 - Select and resolve campaign direction components
 - Render a cohesive, sellable narrative output
+- Prioritizes deterministic, safety-aware interpretation over generative ambiguity.
 
-As of **v0.4.0**, the full core loop is functional end-to-end.
+As of **v0.6.0**, the full intake-to-output pipeline is stable, validated, and safety-aware.
 
 ---
 
@@ -19,21 +20,70 @@ As of **v0.4.0**, the full core loop is functional end-to-end.
 The system operates as a staged transformation pipeline:
 
 Raw Intake  
-→ Intake Processing  
-→ Normalization  
+→ Intake Normalization  
+→ Canonical Validation  
 → Translation  
 → Selection  
 → Resolution  
 → Rendering  
 → Voice Shaping  
 
+---
+
+## 🛡️ Intake & Safety System (v0.6)
+
+The system now includes a fully normalized intake and safety inference layer that ensures consistent downstream behavior even with imperfect user input.
+
+### Normalization
+
+Human-readable inputs are normalized using:
+- `normalizeLabelText()` (shared preprocessing)
+- Enum alias maps (`/src/config/intakeEnums.js`)
+
+This handles:
+- casing inconsistencies
+- punctuation differences (`&`, `/`, etc.)
+- varied user phrasing
+
+---
+
+### Safety Model
+
+The system distinguishes between:
+
+| Field | Meaning |
+|------|--------|
+| `explicitYouthMode` | User explicitly selected youth-safe mode |
+| `inferredYouthSafe` | Derived from audience, boundaries, and text |
+| `youthSafeMode` | Final enforcement flag used downstream |
+
+---
+
+### Behavior
+
+- Automatically detects youth-safe intent even if not explicitly selected
+- Applies safety constraints during adjudication
+- Softens sensitive content instead of removing it
+- Generates tone and audience guardrails for downstream systems
+
+---
+
 ### Flow Breakdown
 
 1. **Intake Layer (`/src/intake`)**
-   - `mapFormSubmission.js` → maps raw form data
-   - `normalizeSubmission.js` → cleans and structures input
-   - `toCanonicalIntake.js` → produces canonical pipeline input
-   - `inferSafetySignals.js` → derives safety and tone constraints
+   - `mapFormSubmission.js` → maps and normalizes raw form data
+   - `inferSafetySignals.js` → derives safety signals and enforcement flags
+   - `toCanonicalIntake.js` → produces canonical validated input
+
+   **Key Behaviors (v0.6):**
+   - Shared normalization via `normalizeLabelText()`
+   - Enum alias resolution using `/src/config/intakeEnums.js`
+   - Handles inconsistent casing, punctuation, and phrasing
+   - Produces canonical values before validation
+   - Separates:
+     - explicit user intent
+     - inferred safety signals
+     - final enforcement flags (`youthSafeMode`)
 
 2. **Parser Layer (`/src/parsers`)**
    - `validateNormalizedIntake.js` → ensures structural integrity
@@ -79,6 +129,9 @@ Raw Intake
 /src
   /ai
   - AI-assisted expansion helpers
+
+  /config
+  - intakeEnums.js
 
   /data
   - coreFrames.js
@@ -133,19 +186,18 @@ Raw Intake
 
 ---
 
-## Current State (v0.5.0)
-
-## Current State (v0.5.0)
+## Current State (v0.6.0)
 
 - End-to-end pipeline is stable and fully operational
-- Signal translation, weighting, and adjudication are implemented
-- Safety and youth-safe inference integrated into decision layer
-- Renderer produces structured, human-readable campaign pitches
+- Intake normalization layer is fully implemented and centralized
+- Canonical schema validation enforced at intake boundary (AJV)
+- Safety system distinguishes explicit vs inferred vs enforced modes
+- Adjudication layer applies safety-aware signal shaping
+- Renderer produces structured, client-ready campaign pitches
 - AI handoff layer outputs rich, structured expansion input
-- Output is consistent, deterministic, and safe for downstream use
 
 - This version marks the transition from:
-**Functional system → Intelligent interpretation layer**
+**Intelligent interpretation → Reliable, constraint-aware system**
 
 ---
 
@@ -178,6 +230,9 @@ v0.4:
 v0.5:
 > “The system understands intent and makes decisions”
 
+v0.6:
+> “The system normalizes messy input and safely enforces constraints”
+
 ---
 ## Design Principles
 
@@ -191,11 +246,31 @@ v0.5:
 
 ## Known Gaps
 
-- Tone system lacks depth and consistency (toneSkins)
-- Voice and renderer produce repetitive phrasing
-- Limited phrasing variation across outputs
-- No real-time form integration
-- AI expansion layer not fully tuned
+- Voice layer still produces some repetitive sentence structures
+- Phrase variation is limited across multiple outputs
+- Some system-generated phrasing still feels mechanical
+- No real-time intake → pipeline execution yet
+- AI expansion layer not fully tuned for tone variation
+- Pitch phrasing still has minor repetition and wording duplication
+
+---
+
+## Next Focus (v0.7)
+
+### Voice Layer (Primary)
+- Improve sentence rhythm and variation
+- Reduce repeated structural patterns
+- Introduce stronger hooks and narrative flow
+- Align output with QuestForge brand voice
+
+### Output Polish
+- Smooth remaining mechanical phrasing
+- Improve transitions between ideas
+- Increase readability and “sellability”
+
+### Integration
+- Connect Formspree → pipeline execution
+- Format outputs for client-ready delivery
 
 ---
 
@@ -244,9 +319,11 @@ Input files are located in:
 ## Versioning 
 
 - v0.3.x → Pipeline construction
-- **v0.4.0 → Core loop complete (stable)
+- v0.4.0 → Core loop complete (stable)
 - v0.4.x → Output quality refinement
-- v0.5.x → Live integration
+- v0.5.x → Intelligence & signal quality layer
+- **v0.6.x** → Intake normalization, validation, and safety enforcement
+- v0.7.x → Voice and premium output layer
 
 ## Future Vision
 

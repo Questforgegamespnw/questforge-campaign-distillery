@@ -19,6 +19,7 @@ function normalizeValue(value) {
 }
 
 function toCanonicalIntake(normalized = {}) {
+    const source = normalized.source || {};
     const groupInfo = normalized.groupInfo || {};
     const selections = normalized.selections || {};
     const freeText = normalized.freeText || {};
@@ -27,16 +28,17 @@ function toCanonicalIntake(normalized = {}) {
     const safetySignals = normalized.safetySignals || {};
     const resolvedFlags = normalized.resolvedFlags || {};
     const diagnostics = normalized.diagnostics || {};
-    const source = normalized.source || {};
 
     return {
+        schemaVersion: "1.0",
+
         source: {
             type: source.type || "unknown",
             formId: source.formId || "",
             subject: source.subject || ""
         },
 
-        groupInfo: {
+        group: {
             name: groupInfo.name || "",
             email: groupInfo.email || "",
             groupSize: groupInfo.groupSize || "",
@@ -56,7 +58,7 @@ function toCanonicalIntake(normalized = {}) {
             playerFantasy: selections.playerFantasy || []
         },
 
-        freeText: {
+        notes: {
             mustHaves: freeText.mustHaves || "",
             avoid: freeText.avoid || "",
             campaignSummary: freeText.campaignSummary || ""
@@ -89,32 +91,13 @@ function toCanonicalIntake(normalized = {}) {
 
         diagnostics: {
             hasMinimumViableSignal: Boolean(diagnostics.hasMinimumViableSignal)
-        },
-
-        pipelineInput: {
-            youthMode: Boolean(resolvedFlags.youthSafeMode),
-            ageBand: groupInfo.ageBand || "",
-            system: groupInfo.systemPreference || "",
-
-            overallExperience: normalizeValue(firstItem(selections.experiences)),
-            tone: normalizeValue(selections.tone),
-            worldAesthetic: normalizeValue(firstItem(selections.genres)),
-            conflict: normalizeValue(firstItem(selections.setups)),
-            choiceWeight: normalizeValue(selections.choiceWeight),
-            playerFantasy: normalizeValue(firstItem(selections.playerFantasy)),
-
-            gameplay: (selections.gameplayInterests || []).map(normalizeValue),
-            environments: (selections.environments || []).map(normalizeValue),
-
-            includeNotes: joinNotes(
-                freeText.mustHaves,
-                ...(boundaries.contentBoundaries || [])
-            ),
-
-            excludeNotes: joinNotes(freeText.avoid)
-    }       
-};
+        }
+    };
 }
+
+module.exports = {
+    toCanonicalIntake
+};
 module.exports = {
     toCanonicalIntake
 };

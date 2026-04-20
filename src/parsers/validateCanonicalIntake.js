@@ -3,12 +3,12 @@ const path = require("path");
 const Ajv2020 = require("ajv/dist/2020");
 
 /**
- * Loads the normalized intake schema from disk.
+ * Loads the canonical intake schema from disk.
  */
 function loadSchema() {
   const schemaPath = path.resolve(
     __dirname,
-    "../../misc/normalized-intake-schema.json"
+    "../schemas/canonical-intake.schema.json"
   );
 
   const rawSchema = fs.readFileSync(schemaPath, "utf-8");
@@ -19,11 +19,10 @@ function loadSchema() {
  * Creates and returns a compiled Ajv validator.
  */
 function createValidator() {
-  
   const ajv = new Ajv2020({
-  allErrors: true,
-  strict: false
-});
+    allErrors: true,
+    strict: false
+  });
 
   const schema = loadSchema();
   return ajv.compile(schema);
@@ -74,7 +73,7 @@ function formatErrors(errors) {
 }
 
 /**
- * Validates a normalized intake object.
+ * Validates a canonical intake object.
  * @param {unknown} intake
  * @returns {{
  *   isValid: boolean,
@@ -82,7 +81,7 @@ function formatErrors(errors) {
  *   data: any | null
  * }}
  */
-function validateNormalizedIntake(intake) {
+function validateCanonicalIntake(intake) {
   const validator = createValidator();
   const isValid = validator(intake);
 
@@ -94,5 +93,5 @@ function validateNormalizedIntake(intake) {
 }
 
 module.exports = {
-  validateNormalizedIntake
+  validateCanonicalIntake
 };

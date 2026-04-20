@@ -13,8 +13,8 @@ function includesAny(text, phrases) {
 }
 
 function inferSafetySignals(raw = {}) {
-    const audience = String(raw.audience || "").trim();
-    const ageBand = String(raw.age_band || "").trim();
+    const normalizedAudience = normalizeText(raw.audience);
+    const normalizedAgeBand = normalizeText(raw.age_band);
     const youthModeValues = toArray(raw.youth_mode);
     const contentBoundaries = toArray(raw.content_boundaries);
     const mustHaves = String(raw.must_haves || "").trim();
@@ -27,22 +27,20 @@ function inferSafetySignals(raw = {}) {
     const explicitYouthMode =
         youthModeValues.some((value) => normalizeText(value) === "yes");
 
-    const audienceSuggestsYouth =
-        [
-            "teens (13–17)",
-            "mixed ages",
-            "kids (under 13)",
-            "family-friendly / kid-safe experience"
-        ].includes(normalizeText(audience));
+    const audienceSuggestsYouth = [
+        "teens (13–17)",
+        "mixed ages",
+        "kids (under 13)",
+        "family-friendly / kid-safe experience"
+    ].includes(normalizedAudience);
 
-    const ageBandSuggestsYouth =
-        [
-            "teens_14_17",
-            "kids_11_13",
-            "kids_8_10",
-            "kids_5_7",
-            "mixed_age"
-        ].includes(normalizeText(ageBand));
+    const ageBandSuggestsYouth = [
+        "teens_14_17",
+        "kids_11_13",
+        "kids_8_10",
+        "kids_5_7",
+        "mixed_age"
+    ].includes(normalizedAgeBand);
 
     const familyFriendlyBoundary =
         includesAny(normalizedBoundaryText, [
@@ -88,10 +86,12 @@ function inferSafetySignals(raw = {}) {
         softYouthCueCount >= 2 ||
         (softYouthCueCount >= 1 && textSuggestsYouth);
 
+    const youthSafeMode = explicitYouthMode || inferredYouthSafe;
+
     const contradictionNotes = [];
 
     if (
-        normalizeText(audience) === "adults" &&
+        normalizedAudience === "adults" &&
         (explicitYouthMode || familyFriendlyBoundary || ageBandSuggestsYouth)
     ) {
         contradictionNotes.push(
@@ -100,7 +100,7 @@ function inferSafetySignals(raw = {}) {
     }
 
     if (
-        ["adult"].includes(normalizeText(ageBand)) &&
+        normalizedAgeBand === "adult" &&
         (explicitYouthMode || familyFriendlyBoundary)
     ) {
         contradictionNotes.push(
@@ -115,6 +115,7 @@ function inferSafetySignals(raw = {}) {
         familyFriendlyBoundary,
         textSuggestsYouth,
         inferredYouthSafe,
+        youthSafeMode,
         softYouthCueCount,
         contradictionNotes
     };

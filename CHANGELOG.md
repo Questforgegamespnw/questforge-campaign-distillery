@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 
 
+## v0.6.0 — Intake Normalization & Safety Enforcement Pass
+
+### 🚧 Core Milestone: "Lock It Down Before Scale"
+
+This release establishes a stable, validated intake pipeline from raw form submission through canonical normalization, safety inference, adjudication, and pitch generation.
+
+---
+
+## ✅ Added
+
+### Intake Normalization Layer
+- Introduced `normalizeLabelText()` for consistent preprocessing of human-readable inputs
+  - Handles casing, punctuation (`&`, `/`, `,`, `-`, etc.), and whitespace normalization
+- Implemented explicit normalization functions:
+  - `normalizeTone()`
+  - `normalizeGenre()`
+  - `normalizeEnvironment()`
+
+### Centralized Enum Configuration
+- Added `src/config/intakeEnums.js`
+  - Canonical enum definitions for:
+    - tones
+    - genres
+    - environments
+  - Alias maps for human-readable → canonical translation
+- Replaced inline normalization maps with shared config usage
+
+### Safety Signal Inference System
+- Expanded `inferSafetySignals()` to include:
+  - `explicitYouthMode`
+  - `inferredYouthSafe`
+  - `youthSafeMode` (final enforcement flag)
+  - signal breakdown (audience, age band, boundaries, text cues)
+  - `softYouthCueCount`
+  - `contradictionNotes`
+
+### Enforcement Model
+- Introduced clear separation of:
+  - explicit user intent
+  - inferred safety signals
+  - final enforcement flag (`youthSafeMode`)
+
+### Adjudication Integration
+- Safety signals now properly influence:
+  - tone shaping
+  - content suppression (e.g. horror restrictions)
+  - signal softening instead of removal
+
+---
+
+## 🔧 Changed
+
+### mapFormSubmission.js
+- Integrated shared enum config (`intakeEnums`)
+- Replaced direct mappings with normalized + alias-driven resolution
+- Updated `resolvedFlags.youthSafeMode` to use `safetySignals.youthSafeMode`
+- Removed duplication of `contradictionNotes` from diagnostics
+
+### Diagnostics Cleanup
+- `diagnostics` now only contains:
+  - `hasMinimumViableSignal`
+- Safety-related reasoning moved fully into safety signals layer
+
+---
+
+## 🧠 Behavioral Improvements
+
+- Handles imperfect or inconsistent form input:
+  - missing fields
+  - mismatched casing
+  - punctuation differences
+  - descriptive text instead of structured selection
+- Prevents schema rejection from minor formatting differences
+- Maintains strong signal fidelity while enforcing safety constraints
+- Implements "softening" instead of hard removal for sensitive content
+
+---
+
+## 🧪 Validation
+
+- Canonical schema validation (AJV) now enforced at intake boundary
+- End-to-end pipeline confirmed:
+
+
+form → normalization → canonical validation → crosswalk → adjudication → pitch
+
+
+---
+
+## 📌 Notes
+
+- Output phrasing polish is pending (minor repetition/wording improvements)
+- Future work may include:
+- schema ↔ enum config synchronization
+- expanded signal weighting
+- richer crosswalk mappings
+
+---
+
+## 🚀 Result
+
+v0.6.0 establishes a stable, scalable intake architecture capable of handling messy human input while producing structured, safety-aware campaign outputs.
+
+
 ---
 ## v0.5.0 — Intelligence & Signal Quality Layer
 

@@ -1,5 +1,11 @@
 const { inferSafetySignals } = require("./inferSafetySignals");
 
+const {
+    TONE_ALIASES,
+    GENRE_ALIASES,
+    ENVIRONMENT_ALIASES
+} = require("../config/intakeEnums");
+
 function toArray(value) {
     if (Array.isArray(value)) {
         return value
@@ -15,6 +21,30 @@ function toArray(value) {
 
 function toString(value) {
     return String(value || "").trim();
+}
+
+function normalizeLabelText(value) {
+    return toString(value)
+        .toLowerCase()
+        .replace(/&/g, " and ")
+        .replace(/[\/,()-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function normalizeTone(value) {
+    const normalized = normalizeLabelText(value);
+    return TONE_ALIASES[normalized] || normalized;
+}
+
+function normalizeGenre(value) {
+    const normalized = normalizeLabelText(value);
+    return GENRE_ALIASES[normalized] || normalized;
+}
+
+function normalizeEnvironment(value) {
+    const normalized = normalizeLabelText(value);
+    return ENVIRONMENT_ALIASES[normalized] || normalized;
 }
 
 function unique(values) {
@@ -41,10 +71,12 @@ function mapFormSubmission(raw = {}) {
         selections: {
             experiences: unique(toArray(raw.experience || raw["experience[]"])),
             setups: unique(toArray(raw.setup || raw["setup[]"])),
-            tone: toString(raw.tone),
+            tone: normalizeTone(raw.tone),
             choiceWeight: toString(raw.choice_weight),
-            genres: unique(toArray(raw.genre || raw["genre[]"])),
-            environments: unique(toArray(raw.environment || raw["environment[]"])),
+            genres: unique(toArray(raw.genre || raw["genre[]"]).map(normalizeGenre)),
+            environments: unique(
+                toArray(raw.environment || raw["environment[]"]).map(normalizeEnvironment)
+            ),
             gameplayInterests: unique(toArray(raw.gameplay || raw["gameplay[]"])),
             playerFantasy: unique(toArray(raw.fantasy || raw["fantasy[]"]))
         },
@@ -86,7 +118,7 @@ function mapFormSubmission(raw = {}) {
         ...mapped,
         safetySignals,
         resolvedFlags: {
-            youthSafeMode: safetySignals.inferredYouthSafe
+            youthSafeMode: safetySignals.youthSafeMode
         },
         diagnostics: {
             hasMinimumViableSignal:
@@ -95,8 +127,7 @@ function mapFormSubmission(raw = {}) {
                 mapped.selections.genres.length > 0 ||
                 mapped.selections.environments.length > 0 ||
                 mapped.selections.gameplayInterests.length > 0 ||
-                mapped.selections.playerFantasy.length > 0,
-            contradictionNotes: safetySignals.contradictionNotes
+                mapped.selections.playerFantasy.length > 0
         }
     };
 }
