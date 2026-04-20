@@ -35,7 +35,7 @@ function normalizeSignalBucket(entries = [], domain = "unknown") {
 
 function buildSafetyProfile(translated = {}, canonicalIntake = {}) {
     const safety = canonicalIntake.safety || {};
-    const pipelineInput = canonicalIntake.pipelineInput || {};
+    const group = canonicalIntake.group || {};
     const excludeNotes = translated.excludeNotes || "";
 
     const horrorRestricted =
@@ -44,12 +44,12 @@ function buildSafetyProfile(translated = {}, canonicalIntake = {}) {
         safety.youthSafeMode === true;
 
     return {
-        experienceProfile: translated.experienceProfile || "standard",
+        audienceMode: safety.youthSafeMode === true ? "youth_safe" : "standard",
         youthSafeMode: translated.experienceProfile === "youth" || safety.youthSafeMode === true,
         familyFriendly:
             safety.familyFriendlyBoundary === true ||
             safety.audienceSuggestsYouth === true ||
-            pipelineInput.youthMode === true,
+            group.ageBand !== "adult",
         horrorRestricted
     };
 }
@@ -205,6 +205,8 @@ function buildConfidence(adjudicated = {}) {
         ...domainScores
     };
 }
+// Intent profile: represents the campaign style inferred from translated inputs.
+// This is distinct from safety/audience enforcement.
 
 function adjudicateSignals(translated = {}, canonicalIntake = {}) {
     const adjudicated = {

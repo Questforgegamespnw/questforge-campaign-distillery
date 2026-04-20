@@ -18,8 +18,17 @@ function main() {
 
     console.log("\n🎲 FORM-DRIVEN CAMPAIGN PIPELINE");
 
+    if (result.error) {
+      console.log("\n=== VALIDATION FAILED ===");
+      console.log(JSON.stringify(result.validation, null, 2));
+      process.exit(1);
+    }
+
     console.log("\n=== CANONICAL INTAKE ===");
     console.log(JSON.stringify(result.intake.canonical, null, 2));
+
+    console.log("\n=== TRANSLATOR INPUT ===");
+    console.log(JSON.stringify(result.intake.translatorInput, null, 2));
 
     console.log("\n=== TRANSLATED ===");
     console.log(JSON.stringify(result.translated, null, 2));

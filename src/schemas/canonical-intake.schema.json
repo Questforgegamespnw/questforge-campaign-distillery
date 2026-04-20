@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuestForge Canonical Intake v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "source",
+    "group",
+    "preferences",
+    "notes",
+    "boundaries",
+    "safety",
+    "rawSignals",
+    "diagnostics"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "group": {
+      "$ref": "#/$defs/group"
+    },
+    "preferences": {
+      "$ref": "#/$defs/preferences"
+    },
+    "notes": {
+      "$ref": "#/$defs/notes"
+    },
+    "boundaries": {
+      "$ref": "#/$defs/boundaries"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    },
+    "rawSignals": {
+      "$ref": "#/$defs/rawSignals"
+    },
+    "diagnostics": {
+      "$ref": "#/$defs/diagnostics"
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "formId",
+        "subject"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "website_form",
+            "consult_notes",
+            "manual_entry",
+            "unknown"
+          ]
+        },
+        "formId": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        }
+      }
+    },
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "email",
+        "groupSize",
+        "systemPreference",
+        "audience",
+        "ageBand"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "groupSize": {
+          "type": "string"
+        },
+        "systemPreference": {
+          "type": "string"
+        },
+        "audience": {
+          "type": "string"
+        },
+        "ageBand": {
+          "type": "string",
+          "enum": [
+            "adult",
+            "teens_14_17",
+            "kids_11_13",
+            "kids_8_10",
+            "kids_5_7",
+            "mixed_age",
+            ""
+          ]
+        
+        }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "experiences",
+        "setups",
+        "tone",
+        "choiceWeight",
+        "genres",
+        "environments",
+        "gameplayInterests",
+        "playerFantasy"
+      ],
+      "properties": {
+        "experiences": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "setups": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "tone": {
+          "type": "string",
+          "enum": [
+            "lighthearted_and_fun",
+            "adventurous_with_some_serious_moments",
+            "dramatic_and_emotionally_weighty",
+            "dark_and_dangerous",
+            "bleak_brutal_and_high_stakes",
+            "chaotic_lighthearted",
+            ""
+          ]
+        },
+        "choiceWeight": {
+          "type": "string"
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "classic_fantasy",
+              "dark_fantasy",
+              "gothic_victorian",
+              "western_frontier",
+              "feudal_eastern",
+              "sci_fi_spacefaring",
+              "post_apocalyptic",
+              "mythic_divine",
+              "weird_surreal_otherworldly"
+            ]
+          }
+        },
+
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "cities_and_urban_intrigue",
+              "jungles_and_overgrown_ruins",
+              "frozen_wastes",
+              "deserts_and_wastelands",
+              "coastlines_islands_and_oceans",
+              "mountains_and_wild_frontiers",
+              "underground_caverns_and_deep_places",
+              "ancient_ruins_and_fallen_civilizations",
+              "strange_dreamlike_or_reality_warped_places"
+            ]
+          }
+        },
+        "gameplayInterests": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "playerFantasy": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mustHaves",
+        "avoid",
+        "campaignSummary"
+      ],
+      "properties": {
+        "mustHaves": {
+          "type": "string"
+        },
+        "avoid": {
+          "type": "string"
+        },
+        "campaignSummary": {
+          "type": "string"
+        }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contentBoundaries"
+      ],
+      "properties": {
+        "contentBoundaries": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "explicitYouthMode",
+        "audienceSuggestsYouth",
+        "ageBandSuggestsYouth",
+        "familyFriendlyBoundary",
+        "textSuggestsYouth",
+        "inferredYouthSafe",
+        "youthSafeMode",
+        "softYouthCueCount",
+        "contradictionNotes"
+      ],
+      "properties": {
+        "explicitYouthMode": {
+          "type": "boolean"
+        },
+        "audienceSuggestsYouth": {
+          "type": "boolean"
+        },
+        "ageBandSuggestsYouth": {
+          "type": "boolean"
+        },
+        "familyFriendlyBoundary": {
+          "type": "boolean"
+        },
+        "textSuggestsYouth": {
+          "type": "boolean"
+        },
+        "inferredYouthSafe": {
+          "type": "boolean"
+        },
+        "youthSafeMode": {
+          "type": "boolean"
+        },
+        "softYouthCueCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "contradictionNotes": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "rawSignals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "youthMode",
+        "audience",
+        "ageBand",
+        "contentBoundaries",
+        "mustHaves",
+        "avoid"
+      ],
+      "properties": {
+        "youthMode": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "audience": {
+          "type": "string"
+        },
+        "ageBand": {
+          "type": "string"
+        },
+        "contentBoundaries": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "mustHaves": {
+          "type": "string"
+        },
+        "avoid": {
+          "type": "string"
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hasMinimumViableSignal"
+      ],
+      "properties": {
+        "hasMinimumViableSignal": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
