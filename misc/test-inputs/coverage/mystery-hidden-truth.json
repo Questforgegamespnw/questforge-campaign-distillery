@@ -1,0 +1,18 @@
+{
+    "overallExperience": "solving_mysteries_and_uncovering_secrets",
+    "tone": "dramatic_and_emotionally_weighty",
+    "worldAesthetic": "gothic_victorian",
+    "environments": [
+        "cities_and_urban_intrigue",
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "conflict": "a_hidden_truth_that_must_be_uncovered",
+    "choiceWeight": "some_meaningful_choices",
+    "gameplay": [
+        "investigation_and_clue_solving",
+        "social_intrigue_and_negotiations"
+    ],
+    "playerFantasy": "uncovering_forbidden_truth",
+    "includeNotes": "Layered clues, buried history, tense revelations.",
+    "excludeNotes": "No slapstick or cartoon energy."
+}

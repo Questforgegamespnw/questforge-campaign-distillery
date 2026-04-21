@@ -1,0 +1,18 @@
+{
+    "overallExperience": "character_driven_drama_and_meaningful_personal_arcs",
+    "tone": "dramatic_and_emotionally_weighty",
+    "worldAesthetic": "gothic_victorian",
+    "environments": [
+        "ancient_ruins_and_fallen_civilizations",
+        "cities_and_urban_intrigue"
+    ],
+    "conflict": "a_hidden_truth_that_must_be_uncovered",
+    "choiceWeight": "strong_choices_with_lasting_consequences",
+    "gameplay": [
+        "character_growth_and_transformation",
+        "investigation_and_clue_solving"
+    ],
+    "playerFantasy": "discovering_who_we_really_are",
+    "includeNotes": "Broken memory, unstable identity, emotional truth.",
+    "excludeNotes": "No slapstick tone."
+}

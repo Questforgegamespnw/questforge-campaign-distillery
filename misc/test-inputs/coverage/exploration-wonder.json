@@ -1,0 +1,19 @@
+{
+    "overallExperience": "exploration_and_discovering_strange_places",
+    "tone": "adventurous_with_some_serious_moments",
+    "worldAesthetic": "mythic_divine",
+    "environments": [
+        "coastlines_islands_and_oceans",
+        "ancient_ruins_and_fallen_civilizations",
+        "mountains_and_wild_frontiers"
+    ],
+    "conflict": "ancient_forces_returning",
+    "choiceWeight": "some_meaningful_choices",
+    "gameplay": [
+        "exploration_and_discovery",
+        "investigation_and_clue_solving"
+    ],
+    "playerFantasy": "becoming_heroes",
+    "includeNotes": "Wonder, discovery, hidden places, ancient significance.",
+    "excludeNotes": "No grimdark hopelessness."
+}

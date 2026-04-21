@@ -1,0 +1,18 @@
+{
+    "overallExperience": "exploration_and_discovering_strange_places",
+    "tone": "dramatic_and_emotionally_weighty",
+    "worldAesthetic": "weird_surreal_otherworldly",
+    "environments": [
+        "strange_dreamlike_or_reality_warped_places",
+        "underground_caverns_and_deep_places"
+    ],
+    "conflict": "a_hidden_truth_that_must_be_uncovered",
+    "choiceWeight": "some_meaningful_choices",
+    "gameplay": [
+        "exploration_and_discovery",
+        "investigation_and_clue_solving"
+    ],
+    "playerFantasy": "discovering_who_we_really_are",
+    "includeNotes": "Unreliable reality, symbolic spaces, eerie wonder.",
+    "excludeNotes": "No gore and no grimdark hopelessness."
+}

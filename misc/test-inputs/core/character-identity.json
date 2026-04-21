@@ -1,0 +1,18 @@
+{
+    "overallExperience": "character_driven_drama_and_meaningful_personal_arcs",
+    "tone": "dramatic_and_emotionally_weighty",
+    "worldAesthetic": "classic_fantasy",
+    "environments": [
+        "coastlines_islands_and_oceans",
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "conflict": "dangerous_powers_with_a_heavy_cost",
+    "choiceWeight": "strong_choices_with_lasting_consequences",
+    "gameplay": [
+        "character_growth_and_transformation",
+        "social_intrigue_and_negotiations"
+    ],
+    "playerFantasy": "discovering_who_we_really_are",
+    "includeNotes": "Identity pressure, personal stakes, inherited burdens.",
+    "excludeNotes": "No random comedy and no shallow power fantasy."
+}

@@ -51,10 +51,39 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
         wildcard: resolveDirection(selected.wildcard)
     };
 
-    const pitch = {
+    function toClientPitchBlock(pitch = {}) {
+        return {
+            title: pitch.title || "",
+            pitch: pitch.pitch || "",
+            about: pitch.about || "",
+            playersDo: pitch.playersDo || "",
+            distinctHook: pitch.distinctHook || ""
+        };
+    }
+
+    function toAuditPitchBlock(pitch) {
+        return {
+            aiBrief: pitch.aiBrief,
+            adjudicationSummary: pitch.adjudicationSummary
+        };
+    }
+
+    const fullPitch = {
         primary: generateCampaignPitch(resolved.primary),
         adjacent: generateCampaignPitch(resolved.adjacent),
         wildcard: generateCampaignPitch(resolved.wildcard)
+    };
+
+    const clientPitch = {
+        primary: toClientPitchBlock(fullPitch.primary),
+        adjacent: toClientPitchBlock(fullPitch.adjacent),
+        wildcard: toClientPitchBlock(fullPitch.wildcard)
+    };
+
+    const auditPitch = {
+        primary: toAuditPitchBlock(fullPitch.primary),
+        adjacent: toAuditPitchBlock(fullPitch.adjacent),
+        wildcard: toAuditPitchBlock(fullPitch.wildcard)
     };
 
     return {
@@ -67,7 +96,10 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
         translated,
         selected,
         resolved,
-        pitch
+        clientPitch,
+        auditPitch
+        // debug only
+        // fullPitch
     };
 }
 

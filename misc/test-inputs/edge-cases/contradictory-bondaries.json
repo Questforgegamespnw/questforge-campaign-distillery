@@ -1,0 +1,16 @@
+{
+    "overallExperience": "horror_tension_and_unsettling_threats",
+    "tone": "dark_and_dangerous",
+    "worldAesthetic": "gothic_victorian",
+    "environments": [
+        "cities_and_urban_intrigue"
+    ],
+    "conflict": "a_curse_corruption_or_spreading_madness",
+    "choiceWeight": "strong_choices_with_lasting_consequences",
+    "gameplay": [
+        "investigation_and_clue_solving"
+    ],
+    "playerFantasy": "uncovering_forbidden_truth",
+    "includeNotes": "Intense atmosphere, creeping dread, dangerous secrets.",
+    "excludeNotes": "No horror, no scary content, family-friendly."
+}

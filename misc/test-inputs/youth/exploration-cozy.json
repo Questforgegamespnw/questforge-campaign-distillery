@@ -1,0 +1,17 @@
+{
+    "overallExperience": "exploration_and_discovering_strange_places",
+    "tone": "lighthearted_and_fun",
+    "worldAesthetic": "mythic_divine",
+    "environments": [
+        "coastlines_islands_and_oceans",
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "conflict": "ancient_forces_returning",
+    "choiceWeight": "mostly_along_for_the_ride",
+    "gameplay": [
+        "exploration_and_discovery"
+    ],
+    "playerFantasy": "becoming_heroes",
+    "includeNotes": "Cozy adventure, curiosity, discovery, warm tone.",
+    "excludeNotes": "No horror, no cruelty, nothing too intense."
+}

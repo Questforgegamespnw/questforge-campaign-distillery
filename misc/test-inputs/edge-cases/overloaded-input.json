@@ -1,0 +1,24 @@
+{
+    "overallExperience": "surviving_against_dangerous_odds",
+    "tone": "bleak_brutal_and_high_stakes",
+    "worldAesthetic": "western_frontier",
+    "environments": [
+        "cities_and_urban_intrigue",
+        "deserts_and_wastelands",
+        "coastlines_islands_and_oceans",
+        "mountains_and_wild_frontiers",
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "conflict": "survival_against_overwhelming_enemies",
+    "choiceWeight": "we_want_our_decisions_to_define_the_campaign",
+    "gameplay": [
+        "resource_management_and_survival_pressure",
+        "tactical_combat",
+        "investigation_and_clue_solving",
+        "social_intrigue_and_negotiations",
+        "exploration_and_discovery"
+    ],
+    "playerFantasy": "surviving_impossible_odds",
+    "includeNotes": "Hard choices, mysteries, war pressure, travel danger, faction drama, discovery, ancient ruins.",
+    "excludeNotes": "No comedy."
+}

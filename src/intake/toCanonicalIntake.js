@@ -98,6 +98,3 @@ function toCanonicalIntake(normalized = {}) {
 module.exports = {
     toCanonicalIntake
 };
-module.exports = {
-    toCanonicalIntake
-};

@@ -1,0 +1,18 @@
+{
+    "overallExperience": "political_tension_factions_and_tough_choices",
+    "tone": "dark_and_dangerous",
+    "worldAesthetic": "western_frontier",
+    "environments": [
+        "cities_and_urban_intrigue",
+        "mountains_and_wild_frontiers"
+    ],
+    "conflict": "war_between_major_factions",
+    "choiceWeight": "strong_choices_with_lasting_consequences",
+    "gameplay": [
+        "building_alliances_or_choosing_factions",
+        "tactical_combat"
+    ],
+    "playerFantasy": "deciding_who_to_trust_and_betray",
+    "includeNotes": "Open conflict, unstable power blocs, hard tradeoffs.",
+    "excludeNotes": "No goofy comedy."
+}

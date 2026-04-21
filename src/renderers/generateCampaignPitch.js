@@ -66,6 +66,13 @@ function sentenceCase(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+
+function stripLeadingWhile(text) {
+  if (!text) return "";
+  return text.replace(/^while\s+/i, "").trim();
+}
+
+
 // ==================================================
 // PROFILE + SAFETY TEXT HELPERS
 // ==================================================
@@ -253,6 +260,14 @@ function chooseByLabel(label, options = {}) {
   return fallback[Math.floor(Math.random() * fallback.length)] || "";
 }
 
+function pickOne(array = [], fallback = "") {
+  if (!Array.isArray(array) || array.length === 0) {
+    return fallback;
+  }
+
+  return array[Math.floor(Math.random() * array.length)] || fallback;
+}
+
 function stripTrailingPeriod(text = "") {
   return cleanName(text).replace(/\.$/, "");
 }
@@ -268,7 +283,8 @@ function cleanOutputText(text = "") {
     .replace(/The mood stays rooted in wonder, curiosity, and adventure\.\s+The mood stays rooted in wonder, curiosity, and adventure\./gi, "The mood stays rooted in wonder, curiosity, and adventure.")
     .replace(/It stays approachable and family-friendly\.\s+The mood stays rooted in wonder, curiosity, and adventure\./gi, "It stays approachable and family-friendly, with a tone rooted in wonder and curiosity.")
     .replace(/The tone stays light and kid-safe, family-friendly\.\s+It stays approachable and family-friendly\./gi, "The tone stays light, kid-safe, and approachable.")
-    .trim();
+    .trim()
+    .replace(/divided and incomplete,\s*and/gi, "divided and incomplete. ");
 }
 
 function isPluralConcept(text = "") {
@@ -365,7 +381,7 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [], expe
       Math.floor(Math.random() * adjacentOpeners.length)
     ];
 
-    const base = `${opener} a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
+    const base = `${opener} a ${tonePrefix}${genrePhrase}${envText ? `, set against ${envText}` : ""}.`;
     return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
 }
 
@@ -375,7 +391,7 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [], expe
         ? "more playful and unexpected direction"
         : "a stranger and more intense direction";
 
-    const base = `This version pushes toward a ${toneAdjustedEdge}, turning the campaign into a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
+    const base = `This version pushes toward ${toneAdjustedEdge}, turning the campaign into a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
 
     return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
   }
@@ -401,10 +417,14 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
 
   // remove duplicated trailing clause BEFORE rendering
   coreBDesc = coreBDesc
-    .replace(/divided,\s*or incomplete,\s*and incomplete/gi, "divided and incomplete")
-    .replace(/divided,\s*or incomplete/gi, "divided")
-    .replace(/,\s*and incomplete/gi, "")
+    .replace(/divided,\s*or\s*incomplete,\s*and\s*incomplete/gi, "divided and incomplete")
+    .replace(/divided,\s*or\s*incomplete/gi, "divided and incomplete")
+    .replace(/divided and incomplete,\s*and/gi, "divided and incomplete. ")
+    .replace(/incomplete,\s*divided and incomplete/gi, "divided and incomplete")
+    .replace(/the self is incomplete,\s*divided and incomplete/gi, "the self is divided and incomplete")
     .replace(/\s+/g, " ")
+    .replace(/the self is incomplete,\s*divided and incomplete/gi, "the self is divided and incomplete")
+    .replace(/self is incomplete,\s*divided and incomplete/gi, "self is divided and incomplete")
     .trim();
 
   const includeCleanRaw = cleanIncludeText(includeNotes);
@@ -455,6 +475,7 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
   const startsLikeSentence = /^(players|progress|their|the group|the players|discovery|exploration)\b/i.test(systemADesc);
 
   const lead = chooseByLabel(label, {
+    
     primary: [
       "Most sessions revolve around this loop:",
       "At the table, the experience tends to unfold like this:",
@@ -495,10 +516,17 @@ function buildDistinctHook({ genre, tone, environments, label, experienceProfile
     .map((env) => cleanName(env?.description))
     .filter(Boolean);
 
-  const envFragment = envDescs.length
-    ? `The world draws a lot of its identity from ${joinNatural(
-      envDescs.map((text) => humanizeName(text))
-    )}.`
+  const cleanedEnvDescs = envDescs
+    .map((text) => stripTrailingPeriod(text))
+    .filter(Boolean);
+
+  const envJoined =
+    cleanedEnvDescs.length > 1
+      ? `${cleanedEnvDescs.slice(0, -1).join(", ")}, and ${cleanedEnvDescs.slice(-1)[0]}`
+      : (cleanedEnvDescs[0] || "");
+
+  const envFragment = envJoined
+    ? `The world draws a lot of its identity from places defined by ${envJoined}.`
     : "";
 
   const labelHooks = {
@@ -550,53 +578,95 @@ function buildPitchParagraph({
     experienceProfile
   });
 
+  const coreParts = [coreAName, coreBName]
+    .filter(Boolean)
+    .map((name) => humanizeName(name).replace(/_/g, " ").toLowerCase());
+
+  const systemParts = [systemAName, systemBName]
+    .filter(Boolean)
+    .map((name) => {
+      return humanizeName(name)
+        .replace(/Clue web/i, "a network of clues")
+        .replace(/Exploration discovery/i, "exploration-driven discovery")
+        .replace(/Hidden information/i, "hidden information")
+        .replace(/loop/gi, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+    });
+
   const coreText = softenIdentityPhrase(
-    joinNatural(
-      [coreAName, coreBName]
-        .filter(Boolean)
-        .map((name) => humanizeName(name).replace(/_/g, " ").toLowerCase())
-    ),
+    joinNatural(coreParts),
     experienceProfile
   );
 
-  const systemText = joinNatural(
-    [systemAName, systemBName]
-      .filter(Boolean)
-      .map((name) => {
-        const cleaned = humanizeName(name)
-          .replace(/Clue web/i, "a network of clues")
-          .replace(/Exploration discovery/i, "exploration and discovery")
-          .replace(/Hidden information/i, "hidden information")
-          .replace(/loop/gi, "")
-          .replace(/\s+/g, " ")
-          .trim();
+  const systemText = joinNatural(systemParts);
 
-        return cleaned.toLowerCase();
-      })
+  const coreAOnly = softenIdentityPhrase(
+    humanizeName(coreAName || "").replace(/_/g, " ").toLowerCase(),
+    experienceProfile
+  );
+
+  const coreBOnly = softenIdentityPhrase(
+    humanizeName(coreBName || "").replace(/_/g, " ").toLowerCase(),
+    experienceProfile
   );
 
   const coreVerb = isPluralConcept(coreText) ? "give" : "gives";
   const coreKeepVerb = isPluralConcept(coreText) ? "keep" : "keeps";
   const systemVerb = isPluralConcept(systemText) ? "shape" : "shapes";
+  const systemLeadVerb = isPluralConcept(systemText) ? "take" : "takes";
+  const systemLiftVerb = isPluralConcept(systemText) ? "do" : "does";
 
+  const coreVariants = [];
+
+  if (coreAOnly && coreBOnly) {
+    coreVariants.push(
+      `the tension between ${coreAOnly} and ${coreBOnly}`,
+      `${coreAOnly} layered with ${coreBOnly}`,
+      `${coreAOnly} and the emergence of ${coreBOnly}`,
+      `${coreAOnly} alongside the rise of ${coreBOnly}`,
+      `${coreAOnly} alongside ${coreBOnly}`,
+      `the growing presence of ${coreBOnly} alongside ${coreAOnly}`,
+    );
+  }
+
+  if (coreAOnly) {
+    coreVariants.push(
+      coreAOnly,
+      `${coreAOnly} as the central pressure`,
+      
+    );
+  }
+
+  if (coreText) {
+    coreVariants.push(coreText);
+  }
+
+  const chosenCoreText = pickOne(coreVariants, coreText);
+  const safeCoreText = stripLeadingWhile(chosenCoreText);
   const secondParagraph = chooseByLabel(label, {
     primary: [
-      `Most sessions are driven by ${systemText}, while the larger story keeps pulling the players toward ${coreText}.`,
-      `${systemText} ${systemVerb} the moment-to-moment play, while ${coreText} ${coreVerb} the campaign its larger sense of direction.`,
-      `At the table, ${systemText} keeps things moving, while ${coreText} ${coreVerb} each discovery more meaning.`
+      `Most sessions revolve around ${systemText}, while the larger story keeps pulling the players toward ${safeCoreText}.`,
+      `${sentenceCase(systemText)} ${systemVerb} the moment-to-moment experience, while ${safeCoreText} gives the campaign its larger sense of direction.`,
+      `At the table, ${systemText} keeps things moving. ${sentenceCase(safeCoreText)} is what gives each discovery more weight.`,
+      `The surface rhythm comes from ${systemText}. ${sentenceCase(safeCoreText)} gives it staying power.`
     ],
     adjacent: [
-      `This version puts more weight on ${systemText}, letting ${coreText} build gradually underneath it.`,
-      `${systemText} takes the lead here, with ${coreText} unfolding over time rather than all at once.`,
-      `The campaign breathes through ${systemText}, while ${coreText} slowly ${coreKeepVerb} shaping the bigger picture.`
+      `${sentenceCase(systemText)} sets the pace, while ${safeCoreText} takes shape more gradually.`,
+      `The focus shifts toward ${systemText}, with ${safeCoreText} unfolding over time rather than all at once.`,
+      `The campaign unfolds through ${systemText}, as the larger pattern slowly starts to take shape around ${safeCoreText}.`,
+      `Here, the campaign puts more of its forward momentum into ${systemText}, while ${safeCoreText} broadens the scope of what it is really about.`
     ],
     wildcard: [
-      `This take leans harder into ${systemText}, with ${coreText} giving the campaign its stranger edge.`,
-      `${systemText} does more of the heavy lifting here, while ${coreText} ${coreKeepVerb} the campaign feeling slightly off-center in a good way.`,
-      `The wildcard version gets its energy from ${systemText}, while ${coreText} ${coreKeepVerb} expanding what the players think they understand.`
+      `This take leans harder into ${systemText}, with ${safeCoreText} giving the campaign its stranger edge.`,
+      `${sentenceCase(systemText)} sets the tone early. Over time, ${safeCoreText} starts to reshape how the players understand what is happening.`,
+      `The wildcard version gets its energy from ${systemText}. As play continues, ${safeCoreText} expands what the players think they understand.`,
+      `${sentenceCase(systemText)} sets the pace early. As the campaign unfolds, ${safeCoreText} starts to change what the players think they know.`
     ],
     default: [
-      `${systemText} and ${coreText} work together to define the campaign's rhythm.`
+      `${systemText} and ${safeCoreText} work together to define the campaign's rhythm.`,
+      `${sentenceCase(systemText)} drives the action, while ${safeCoreText} gives it context and direction.`
     ]
   });
 
@@ -613,7 +683,14 @@ function buildPitchParagraph({
   let closer = "";
 
   if (includePhrase) {
-    closer = ` The tone stays ${includePhrase}.`;
+    const toneClosers = [
+      ` The tone stays ${includePhrase}.`,
+      ` It keeps things ${includePhrase} without losing a sense of momentum.`,
+      ` The overall feel remains ${includePhrase}, even as the stakes build.`,
+      ` It maintains a ${includePhrase} tone while still letting the story evolve.`
+    ];
+
+    closer += pickOne(toneClosers, ` The tone stays ${includePhrase}.`);
   }
 
   const shouldRenderExclude =
@@ -622,12 +699,18 @@ function buildPitchParagraph({
     excludeClean.split(" ").length > 1;
 
   if (shouldRenderExclude) {
-    closer += ` It avoids ${excludeClean.toLowerCase()}.`;
+    const avoidClosers = [
+      ` It avoids ${excludeClean.toLowerCase()}.`,
+      ` It stays away from ${excludeClean.toLowerCase()}.`
+    ];
+
+    closer += pickOne(avoidClosers, ` It avoids ${excludeClean.toLowerCase()}.`);
   }
 
   const text = cleanOutputText(`${opening}\n\n${secondParagraph}${closer}`);
   return isYouthProfile(experienceProfile) ? softenYouthText(text).trim() : text;
 }
+
 // ==================================================
 // AI HANDOFF BLOCK
 // ==================================================
@@ -731,8 +814,9 @@ function applyToneFilters(text, toneName = "", excludeNotes = "", selections = {
     result = result
       .replace(/dangerous in its own right/gi, "important in its own right")
       .replace(/uncertainty becomes part of the tension/gi, "uncertainty becomes part of the discovery and exploration")
-      .replace(/divided,\s*or fractured/gi, "divided and incomplete")
-      .replace(/fractured/gi, "incomplete")
+      .replace(/incomplete,\s*divided,\s*or\s*fractured/gi, "divided and incomplete")
+      .replace(/divided,\s*or\s*fractured/gi, "divided and incomplete")
+      .replace(/\bfractured\b/gi, "incomplete")
       .replace(/burden/gi, "challenge")
       .replace(/dark/gi, "mysterious");
   }

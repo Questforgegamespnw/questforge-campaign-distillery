@@ -77,7 +77,8 @@ const environmentGameplay = uniqueLines(
 
   const gameplayBlock = buildGameplayBlock({
     systemGameplay,
-    systemPressure
+    systemPressure,
+    toneData
   });
 
   const escalation = buildEscalation({
@@ -127,11 +128,11 @@ function buildOpening({ corePremises, environmentImagery, genreFraming, toneData
 
   const opener = pickOne(openerPool, "Something is already changing.");
 
-  const secondLineParts = [premise, imagery || framing].filter(Boolean);
-  const secondLine = secondLineParts.length ? secondLineParts.join(" ") : "";
+  const detail = pickOne([imagery, framing].filter(Boolean), "");
+  const secondLine = [premise, detail].filter(Boolean).join(". ");
 
   if (secondLine) {
-    const cleanedSecond = cleanSentence(secondLine);
+    const cleanedSecond = cleanOutputText(secondLine);
     return `${opener}\n\n${capitalize(cleanedSecond)}`;
   }
 
@@ -139,85 +140,144 @@ function buildOpening({ corePremises, environmentImagery, genreFraming, toneData
 }
 
 function buildPremiseBlock({ corePremises, coreBurdens, environmentGameplay }) {
-  const premise = pickUnique(corePremises, []);
-  const burden = pickUnique(coreBurdens, [premise]);
-  const worldLoop = pickUnique(environmentGameplay, [premise, burden]);
+  const premise = cleanSentence(pickUnique(corePremises, []));
+  const burden = cleanSentence(pickUnique(coreBurdens, [premise]));
+  const worldLoop = cleanSentence(pickUnique(environmentGameplay, [premise, burden]));
 
-  return [premise, burden, worldLoop]
-  .filter(Boolean)
-  .map(capitalize)
-  .join("\n\n");
+  const frames = [
+    ({ premise, burden, worldLoop }) =>
+      [premise, burden, worldLoop]
+        .filter(Boolean)
+        .map(capitalize)
+        .join("\n\n"),
+
+    ({ premise, burden, worldLoop }) =>
+      [premise, burden]
+        .filter(Boolean)
+        .map(capitalize)
+        .join("\n\n"),
+
+    ({ premise, burden, worldLoop }) =>
+      [premise, worldLoop]
+        .filter(Boolean)
+        .map(capitalize)
+        .join("\n\n"),
+
+    ({ premise, burden, worldLoop }) =>
+      [premise, burden, worldLoop]
+        .filter(Boolean)
+        .join(" ")
+        .trim(),
+
+    ({ premise, burden, worldLoop }) =>
+      burden
+        ? `${capitalize(premise)} ${lowerStart(burden)}`
+        : capitalize(premise),
+
+    ({ premise, burden, worldLoop }) =>
+      worldLoop
+        ? `${capitalize(premise)} ${lowerStart(worldLoop)}`
+        : capitalize(premise)
+  ];
+
+  const frame = pickOne(frames, frames[0]);
+  return cleanOutputText(frame({ premise, burden, worldLoop }));
 }
 
-function buildGameplayBlock({ systemGameplay, systemPressure }) {
-  const gameplay1 = pickOne(systemGameplay, "");
+function buildGameplayBlock({ systemGameplay, systemPressure, toneData }) {
+  const gameplay = pickOne(systemGameplay, "");
   const pressure = pickOne(systemPressure, "");
 
-  const lines = [];
+  if (!gameplay && !pressure) return "";
 
-  if (gameplay1) {
-  const cleanedGameplay = cleanSentence(gameplay1);
+  const cleanedGameplay = cleanSentence(gameplay);
+  const cleanedPressure = cleanSentence(pressure);
 
-  const standaloneStarters = [
-  "Once",
-  "When",
-  "What",
-  "Who",
-  "Why",
-  "How"
-];
+  const cadence = toneData?.cadence || "neutral";
+  const style = toneData?.sentenceStyle || "neutral";
 
-const standalonePhrases = [
-  "The world",
-  "The group",
-  "Actions",
-  "Progress",
-  "Discovery",
-  "Power",
-  "Victory",
-  "Reputation",
-  "Certainty",
-  "Nothing"
-];
+  const immersiveFrames = [
+    ({ gameplay, pressure }) =>
+      [gameplay, pressure].filter(Boolean).join(" "),
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `${gameplay} ${pressure}`
+        : gameplay,
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `Play tends to move through ${lowerStart(gameplay)} ${lowerStart(pressure)}`
+        : `Play tends to move through ${lowerStart(gameplay)}`
+  ];
 
-const isStandaloneStarter = standaloneStarters.some((starter) =>
-  cleanedGameplay.startsWith(starter)
-);
+  const declarativeFrames = [
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `At the table, ${lowerStart(gameplay)} ${lowerStart(pressure)}`
+        : `At the table, ${lowerStart(gameplay)}`,
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `The play experience centers on ${lowerStart(gameplay)} ${lowerStart(pressure)}`
+        : `The play experience centers on ${lowerStart(gameplay)}`,
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `${gameplay} ${pressure}`
+        : gameplay
+  ];
 
-const isStandalonePhrase = standalonePhrases.some((phrase) =>
-  cleanedGameplay.startsWith(phrase)
-);
+  const punchyFrames = [
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `${gameplay} ${pressure}`
+        : gameplay,
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `${gameplay}\n\n${pressure}`
+        : gameplay,
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `${gameplay} And ${lowerStart(pressure)}`
+        : gameplay
+  ];
 
-// NEW RULE: full-sentence protection
-const looksLikeFullSentence =
-  cleanedGameplay.endsWith(".") ||
-  cleanedGameplay.includes(",") ||
-  cleanedGameplay.split(" ").length > 8;
+  const bouncyFrames = [
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `${gameplay} ${pressure}`
+        : gameplay,
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `Things stay in motion because ${lowerStart(gameplay)} ${lowerStart(pressure)}`
+        : `Things stay in motion because ${lowerStart(gameplay)}`,
+    ({ gameplay, pressure }) =>
+      pressure
+        ? `${gameplay} That momentum keeps building, because ${lowerStart(pressure)}`
+        : `${gameplay}`
+  ];
 
-const shouldStandAlone =
-  isStandaloneStarter || isStandalonePhrase || looksLikeFullSentence;
+  let pool = declarativeFrames;
 
-  if (shouldStandAlone) {
-    lines.push(cleanedGameplay);
-  } else {
-    const gameplayIntros = [
-      "This campaign is built around",
-      "Play centers on",
-      "You’ll spend most of your time",
-      "The experience focuses on"
-    ];
-
-    const intro = pickOne(gameplayIntros, "This campaign is built around");
-    lines.push(`${intro} ${cleanedGameplay}`);
+  if (cadence === "slow_burn" || cadence === "intimate" || style === "layered") {
+    pool = immersiveFrames;
+  } else if (
+    cadence === "heavy" ||
+    cadence === "urgent" ||
+    style === "sharp" ||
+    style === "tight"
+  ) {
+    pool = punchyFrames;
+  } else if (
+    cadence === "fast" ||
+    style === "bouncy"
+  ) {
+    pool = bouncyFrames;
   }
+
+  const frame = pickOne(pool, declarativeFrames[0]);
+  return cleanOutputText(frame({ gameplay: cleanedGameplay, pressure: cleanedPressure }));
 }
 
-  return lines.join("\n");
-}
-
-function buildEscalation({ coreBurdens}) {
-  const burden = pickOne(coreBurdens, "");
-  
+function buildEscalation({ coreBurdens }) {
+  const burden = cleanSentence(pickOne(coreBurdens, ""));
 
   const escalationLines = [
     "The deeper the group gets, the harder it becomes to stay untouched by the consequences.",
@@ -225,9 +285,32 @@ function buildEscalation({ coreBurdens}) {
     "Every answer, victory, or delay reshapes what the next problem will cost."
   ];
 
-  if (burden) return burden;
+  const escalationFrames = [
+    ({ burden }) =>
+      burden
+        ? `That pressure does not stay contained. ${lowerStart(burden)}`
+        : "",
 
-return pickOne(escalationLines, "");
+    ({ burden }) =>
+      burden
+        ? `What starts as a manageable problem rarely stays that way. ${lowerStart(burden)}`
+        : "",
+
+    ({ burden }) =>
+      burden
+        ? `The danger keeps changing shape as the group pushes forward. ${lowerStart(burden)}`
+        : "",
+
+    ({ burden }) =>
+      burden
+        ? `${capitalize(burden)}`
+        : "",
+
+    () => pickOne(escalationLines, "")
+  ];
+
+  const frame = pickOne(escalationFrames, escalationFrames[0]);
+  return cleanOutputText(frame({ burden })) || pickOne(escalationLines, "");
 }
 
 function buildClosing({ coreQuestions }) {
@@ -265,6 +348,11 @@ function cleanSentence(text) {
     .trim();
 }
 
+function lowerStart(text = "") {
+  if (!text) return "";
+  return text.charAt(0).toLowerCase() + text.slice(1);
+}
+
 function uniqueLines(arr) {
   return [...new Set(arr.filter(Boolean))];
 }
@@ -272,6 +360,15 @@ function uniqueLines(arr) {
 function capitalize(text) {
   if (!text) return "";
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function cleanOutputText(text) {
+  if (!text) return "";
+  return text
+    .replace(/\s+/g, " ")
+    .replace(/\s([.,!?;:])/g, "$1")
+    .replace(/\.\s*\./g, ".")
+    .trim();
 }
 
 module.exports = {

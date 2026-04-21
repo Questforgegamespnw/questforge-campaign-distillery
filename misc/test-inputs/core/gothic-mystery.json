@@ -1,18 +1,18 @@
 {
   "overallExperience": "solving_mysteries_and_uncovering_secrets",
-  "tone": "dark_and_dangerous",
+  "tone": "dramatic_and_emotionally_weighty",
   "worldAesthetic": "gothic_victorian",
   "environments": [
     "cities_and_urban_intrigue",
     "ancient_ruins_and_fallen_civilizations"
   ],
   "conflict": "a_hidden_truth_that_must_be_uncovered",
-  "choiceWeight": "strong_choices_with_lasting_consequences",
+  "choiceWeight": "some_meaningful_choices",
   "gameplay": [
     "investigation_and_clue_solving",
     "social_intrigue_and_negotiations"
   ],
   "playerFantasy": "uncovering_forbidden_truth",
-  "includeNotes": "Secret societies, cursed archives, and moral ambiguity.",
-  "excludeNotes": "No graphic gore."
+  "includeNotes": "Secret societies, family legacy, layered clues.",
+  "excludeNotes": "No slapstick or cartoon energy."
 }

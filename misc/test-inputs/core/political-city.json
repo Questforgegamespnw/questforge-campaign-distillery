@@ -1,0 +1,17 @@
+{
+    "overallExperience": "political_tension_factions_and_tough_choices",
+    "tone": "dramatic_and_emotionally_weighty",
+    "worldAesthetic": "classic_fantasy",
+    "environments": [
+        "cities_and_urban_intrigue"
+    ],
+    "conflict": "war_between_major_factions",
+    "choiceWeight": "we_want_our_decisions_to_define_the_campaign",
+    "gameplay": [
+        "social_intrigue_and_negotiations",
+        "building_alliances_or_choosing_factions"
+    ],
+    "playerFantasy": "deciding_who_to_trust_and_betray",
+    "includeNotes": "Court politics, unstable alliances, public reputation.",
+    "excludeNotes": "No constant dungeon crawling focus."
+}

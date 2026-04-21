@@ -11,6 +11,28 @@ function loadFormAnswers() {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
+function printDirection(label, block) {
+  if (!block) return;
+
+  console.log(`\n==================================================`);
+  console.log(`${label.toUpperCase()}`);
+  console.log(`==================================================`);
+  console.log(`Title: ${block.title}\n`);
+  console.log(`Pitch: ${block.pitch}\n`);
+  console.log(`About: ${block.about}\n`);
+  console.log(`Players Do: ${block.playersDo}\n`);
+  console.log(`Distinct Hook: ${block.distinctHook}\n`);
+}
+
+function printAuditDirection(label, block) {
+  if (!block) return;
+
+  console.log(`\n--------------------------------------------------`);
+  console.log(`AUDIT: ${label.toUpperCase()}`);
+  console.log(`--------------------------------------------------`);
+  console.log(JSON.stringify(block, null, 2));
+}
+
 function main() {
   try {
     const answers = loadFormAnswers();
@@ -24,23 +46,22 @@ function main() {
       process.exit(1);
     }
 
-    console.log("\n=== CANONICAL INTAKE ===");
-    console.log(JSON.stringify(result.intake.canonical, null, 2));
+    console.log("\n=== CLIENT PITCHES ===");
 
-    console.log("\n=== TRANSLATOR INPUT ===");
-    console.log(JSON.stringify(result.intake.translatorInput, null, 2));
+    printDirection("primary", result.clientPitch?.primary);
+    printDirection("adjacent", result.clientPitch?.adjacent);
+    printDirection("wildcard", result.clientPitch?.wildcard);
 
-    console.log("\n=== TRANSLATED ===");
-    console.log(JSON.stringify(result.translated, null, 2));
+    // Toggle audit visibility when needed
+    const SHOW_AUDIT = false;
 
-    console.log("\n=== SELECTED ===");
-    console.log(JSON.stringify(result.selected, null, 2));
+    if (SHOW_AUDIT) {
+      console.log("\n=== AUDIT DATA ===");
 
-    console.log("\n=== RESOLVED ===");
-    console.log(JSON.stringify(result.resolved, null, 2));
-
-    console.log("\n=== PITCH ===");
-    console.log(JSON.stringify(result.pitch, null, 2));
+      printAuditDirection("primary", result.auditPitch?.primary);
+      printAuditDirection("adjacent", result.auditPitch?.adjacent);
+      printAuditDirection("wildcard", result.auditPitch?.wildcard);
+    }
   } catch (error) {
     console.error("Form translation failed.");
     console.error(error.message);

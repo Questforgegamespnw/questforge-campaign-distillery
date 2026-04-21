@@ -1,0 +1,17 @@
+{
+    "overallExperience": "solving_mysteries_and_uncovering_secrets",
+    "tone": "lighthearted_and_fun",
+    "worldAesthetic": "gothic_victorian",
+    "environments": [
+        "cities_and_urban_intrigue"
+    ],
+    "conflict": "a_hidden_truth_that_must_be_uncovered",
+    "choiceWeight": "some_meaningful_choices",
+    "gameplay": [
+        "investigation_and_clue_solving",
+        "social_intrigue_and_negotiations"
+    ],
+    "playerFantasy": "uncovering_forbidden_truth",
+    "includeNotes": "Curiosity, approachable mystery, exciting discoveries.",
+    "excludeNotes": "No scary content, no horror, family-friendly."
+}

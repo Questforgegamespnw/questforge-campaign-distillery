@@ -1,0 +1,18 @@
+{
+    "overallExperience": "horror_tension_and_unsettling_threats",
+    "tone": "lighthearted_and_fun",
+    "worldAesthetic": "gothic_victorian",
+    "environments": [
+        "cities_and_urban_intrigue",
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "conflict": "a_curse_corruption_or_spreading_madness",
+    "choiceWeight": "some_meaningful_choices",
+    "gameplay": [
+        "investigation_and_clue_solving",
+        "character_growth_and_transformation"
+    ],
+    "playerFantasy": "mastering_dangerous_power",
+    "includeNotes": "Keep it playful and approachable.",
+    "excludeNotes": "No gore, no body horror, no terrifying imagery."
+}

@@ -1,9 +1,9 @@
 {
   "overallExperience": "big_heroic_action_and_epic_moments",
-  "tone": "dramatic_and_emotionally_weighty",
+  "tone": "adventurous_with_some_serious_moments",
   "worldAesthetic": "mythic_divine",
   "environments": [
-    "coastlines_islands_and_oceans",
+    "mountains_and_wild_frontiers",
     "ancient_ruins_and_fallen_civilizations"
   ],
   "conflict": "ancient_forces_returning",
@@ -13,6 +13,6 @@
     "exploration_and_discovery"
   ],
   "playerFantasy": "becoming_heroes",
-  "includeNotes": "Prophecy, sacred relics, larger-than-life setpieces.",
-  "excludeNotes": "No excessive gore."
+  "includeNotes": "Legendary scale, relics, rising champions.",
+  "excludeNotes": "Avoid cynicism and avoid horror framing."
 }

@@ -1,0 +1,18 @@
+{
+    "overallExperience": "horror_tension_and_unsettling_threats",
+    "tone": "dark_and_dangerous",
+    "worldAesthetic": "dark_fantasy",
+    "environments": [
+        "frozen_wastes",
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "conflict": "a_curse_corruption_or_spreading_madness",
+    "choiceWeight": "strong_choices_with_lasting_consequences",
+    "gameplay": [
+        "resource_management_and_survival_pressure",
+        "character_growth_and_transformation"
+    ],
+    "playerFantasy": "mastering_dangerous_power",
+    "includeNotes": "Corruption pressure, isolation, worsening conditions.",
+    "excludeNotes": "Avoid campy humor."
+}

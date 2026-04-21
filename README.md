@@ -186,7 +186,7 @@ The system distinguishes between:
 
 ---
 
-## Current State (v0.6.0)
+## Current State (v0.7.0)
 
 - End-to-end pipeline is stable and fully operational
 - Intake normalization layer is fully implemented and centralized
@@ -196,8 +196,16 @@ The system distinguishes between:
 - Renderer produces structured, client-ready campaign pitches
 - AI handoff layer outputs rich, structured expansion input
 
+### Voice Layer Stability (v0.7)
+
+- Full batch coverage achieved across all test scenarios
+- Pitch builder sentence composition stabilized
+- Core fragment handling normalized to prevent grammar collisions
+- Environment descriptions now join cleanly and read naturally
+- Major repetition and clause-stacking issues resolved
+
 - This version marks the transition from:
-**Intelligent interpretation → Reliable, constraint-aware system**
+**Reliable system → Consistent, multi-scenario output generation**
 
 ---
 
@@ -246,22 +254,22 @@ v0.6:
 
 ## Known Gaps
 
-- Voice layer still produces some repetitive sentence structures
-- Phrase variation is limited across multiple outputs
-- Some system-generated phrasing still feels mechanical
+- Core concept phrases still reflect internal labels in some cases (e.g. "the world is alive")
+- Voice output still shows minor repetition across sentence structures
+- Some phrasing still feels mechanical or templated under close reading
+- Tone and genre variation could be more distinct at the sentence level
+- AI expansion layer not fully tuned for voice consistency
 - No real-time intake → pipeline execution yet
-- AI expansion layer not fully tuned for tone variation
-- Pitch phrasing still has minor repetition and wording duplication
 
 ---
 
-## Next Focus (v0.7)
+## Next Focus (v0.8)
 
-### Voice Layer (Primary)
-- Improve sentence rhythm and variation
-- Reduce repeated structural patterns
-- Introduce stronger hooks and narrative flow
-- Align output with QuestForge brand voice
+### Voice & Language Refinement (Primary)
+- Humanize core concept phrasing (convert internal tags → natural language)
+- Reduce repetition across sentence structures
+- Improve cadence and flow of pitch output
+- Increase distinction between tone/genre combinations
 
 ### Output Polish
 - Smooth remaining mechanical phrasing
@@ -271,7 +279,6 @@ v0.6:
 ### Integration
 - Connect Formspree → pipeline execution
 - Format outputs for client-ready delivery
-
 ---
 
 ## Next Priorities
@@ -322,8 +329,9 @@ Input files are located in:
 - v0.4.0 → Core loop complete (stable)
 - v0.4.x → Output quality refinement
 - v0.5.x → Intelligence & signal quality layer
-- **v0.6.x** → Intake normalization, validation, and safety enforcement
-- v0.7.x → Voice and premium output layer
+- v0.6.x → Intake normalization, validation, and safety enforcement
+- **v0.7.x** → Voice and premium output layer
+- v0.8.x → Language refinment & premium output polish
 
 ## Future Vision
 

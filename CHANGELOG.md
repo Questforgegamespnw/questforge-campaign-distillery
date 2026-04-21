@@ -2,6 +2,85 @@
 
 All notable changes to this project will be documented in this file.
 
+---
+## v0.7.0 — Voice Stability & Full Coverage Pass
+
+### 🚧 Core Milestone: "Make It Hold Under All Inputs"
+
+This release stabilizes the voice and rendering layer across a full range of campaign inputs, eliminating structural sentence failures and achieving complete batch coverage.
+
+---
+
+## ✅ Added
+
+### Expanded Voice Coverage
+- Added comprehensive test input set covering:
+  - tone variations
+  - environment diversity
+  - system/gameplay styles
+  - edge-case combinations
+- Enabled full batch validation across all major campaign archetypes
+
+### VoiceMap Expansion
+- Expanded environment, system, and tone entries
+- Increased variation depth for imagery and gameplay descriptions
+- Improved alignment between data layer and voice layer outputs
+
+---
+
+## 🔧 Changed
+
+### Pitch Builder Stabilization
+- Refactored core phrase handling to use fragment-safe variants
+- Removed clause-based variants causing grammar conflicts
+- Standardized sentence templates for consistent structure
+- Fixed “is what gives…” and similar composition collisions
+
+### Environment Rendering
+- Reworked environment description joining for natural sentence flow
+- Eliminated list-like and broken “X. and Y” constructions
+
+### Core Variant Handling
+- Normalized coreVariants to noun-phrase structures
+- Removed “as X becomes…” and “as X emerges…” patterns
+- Reduced clause stacking and mid-sentence grammar conflicts
+
+---
+
+## 🧠 Behavioral Improvements
+
+- Output now remains stable across all tested combinations
+- Sentence composition is consistent and predictable
+- Reduced structural repetition and phrasing collisions
+- Improved readability of generated campaign pitches
+
+---
+
+## 🧪 Validation
+
+- Batch test suite: **24/24 passing**
+- No structural sentence failures across coverage set
+- All pipeline stages verified under expanded input conditions
+
+---
+
+## 📌 Notes
+
+- Core phrase humanization is still in progress (internal labels occasionally surface in output)
+- Voice refinement and cadence improvements are the next major focus
+- Some repetition patterns remain at the sentence structure level
+
+---
+
+## 🚀 Result
+
+v0.7.0 marks the transition from:
+
+**Stable system → Reliable, full-coverage output generation**
+
+The Campaign Distillery can now consistently produce structured campaign pitches across a wide range of input scenarios without breaking composition.
+
+---
 
 ## v0.6.0 — Intake Normalization & Safety Enforcement Pass
 

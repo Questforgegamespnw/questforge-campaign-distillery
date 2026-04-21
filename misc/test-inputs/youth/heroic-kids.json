@@ -1,0 +1,18 @@
+{
+    "overallExperience": "big_heroic_action_and_epic_moments",
+    "tone": "lighthearted_and_fun",
+    "worldAesthetic": "mythic_divine",
+    "environments": [
+        "coastlines_islands_and_oceans",
+        "mountains_and_wild_frontiers"
+    ],
+    "conflict": "ancient_forces_returning",
+    "choiceWeight": "some_meaningful_choices",
+    "gameplay": [
+        "dangerous_boss_fights",
+        "exploration_and_discovery"
+    ],
+    "playerFantasy": "becoming_heroes",
+    "includeNotes": "Big heroic moments, teamwork, courage, exciting adventure.",
+    "excludeNotes": "No horror, no gore, family-friendly."
+}

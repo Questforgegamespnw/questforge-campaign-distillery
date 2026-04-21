@@ -13,20 +13,42 @@ const genreSkins = require("../src/data/genreSkins");
 const toneSkins = require("../src/data/toneSkins");
 const environmentSkins = require("../src/data/environmentSkins");
 
-const INPUT_DIR = path.resolve(__dirname, "../misc/test-inputs");
+const INPUT_DIRS = [
+  path.resolve(__dirname, "../misc/test-inputs/core"),
+  path.resolve(__dirname, "../misc/test-inputs/coverage"),
+  path.resolve(__dirname, "../misc/test-inputs/youth"),
+  path.resolve(__dirname, "../misc/test-inputs/edge-cases")
+];
 
 function loadInputFiles() {
-  if (!fs.existsSync(INPUT_DIR)) {
-    throw new Error(`Missing test input directory: ${INPUT_DIR}`);
-  }
+  const collected = [];
 
-  return fs
-    .readdirSync(INPUT_DIR)
-    .filter((file) => file.endsWith(".json"))
-    .map((file) => ({
-      name: file,
-      fullPath: path.join(INPUT_DIR, file)
-    }));
+  INPUT_DIRS.forEach((dirPath) => {
+    if (!fs.existsSync(dirPath)) {
+      return;
+    }
+
+    const dirLabel = path.basename(dirPath);
+
+    fs.readdirSync(dirPath)
+      .filter((file) => file.endsWith(".json"))
+      .forEach((file) => {
+        collected.push({
+          name: file,
+          fullPath: path.join(dirPath, file),
+          group: dirLabel
+        });
+      });
+  });
+
+  collected.sort((a, b) => {
+    if (a.group !== b.group) {
+      return a.group.localeCompare(b.group);
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+  return collected;
 }
 
 function loadJson(filePath) {
@@ -70,7 +92,10 @@ function printDirectionSummary(directionBundle, pitchBlock) {
   console.log(`    Genre: ${summarizeNames(directionBundle.genreSkin)}`);
   console.log(`    Tone: ${summarizeNames(directionBundle.toneSkin)}`);
   console.log(`    Environment: ${summarizeNames(directionBundle.environmentSkins)}`);
-  console.log(`    Pitch: ${pitchBlock.pitch.replace(/\s+/g, " ").trim()}`);
+  console.log(`    Pitch: ${String(pitchBlock.pitch || "").replace(/\s+/g, " ").trim()}`);
+  console.log(`    About: ${String(pitchBlock.about || "").replace(/\s+/g, " ").trim()}`);
+  console.log(`    Players Do: ${String(pitchBlock.playersDo || "").replace(/\s+/g, " ").trim()}`);
+  console.log(`    Hook: ${String(pitchBlock.distinctHook || "").replace(/\s+/g, " ").trim()}`);
 }
 
 function runSingleFile(fileInfo) {
@@ -102,7 +127,7 @@ function runSingleFile(fileInfo) {
   const wildcardPitch = generateCampaignPitch(resolvedWildcard);
 
   console.log("\n==================================================");
-  console.log(`FILE: ${fileInfo.name}`);
+  console.log(`GROUP: ${fileInfo.group} | FILE: ${fileInfo.name}`);
   console.log("==================================================");
 
   printDirectionSummary(resolvedPrimary, primaryPitch);
@@ -117,14 +142,34 @@ function main() {
     const files = loadInputFiles();
 
     if (files.length === 0) {
-      throw new Error(`No JSON files found in ${INPUT_DIR}`);
+      throw new Error("No JSON files found in any configured test-input directory.");
     }
 
+    const countsByGroup = files.reduce((acc, file) => {
+      acc[file.group] = (acc[file.group] || 0) + 1;
+      return acc;
+    }, {});
+
     console.log("🎲 BATCH FORM TEST");
+    console.log("Groups loaded:", countsByGroup);
 
-    files.forEach(runSingleFile);
+    let passed = 0;
+    let failed = 0;
 
-    console.log("\n✅ Batch test complete.");
+    files.forEach((fileInfo) => {
+      try {
+        runSingleFile(fileInfo);
+        passed += 1;
+      } catch (error) {
+        failed += 1;
+        console.log("\n==================================================");
+        console.log(`GROUP: ${fileInfo.group} | FILE: ${fileInfo.name}`);
+        console.log("==================================================");
+        console.error(`❌ Failed: ${error.message}`);
+      }
+    });
+
+    console.log(`\n✅ Batch test complete. Passed: ${passed} | Failed: ${failed}`);
   } catch (error) {
     console.error("Batch test failed.");
     console.error(error.message);
