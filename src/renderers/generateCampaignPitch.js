@@ -460,6 +460,168 @@ function softenIdentityPhrase(text = "", experienceProfile = "standard") {
 // TITLE + SECTION BUILDERS
 // ==================================================
 
+function detectHookCategory({ coreIds = [], toneName = "", genreName = "", label = "primary" }) {
+  const tone = cleanName(toneName).toLowerCase();
+  const genre = cleanName(genreName).toLowerCase();
+
+  if (
+    coreIds.includes("hidden_truth") ||
+    coreIds.includes("lost_knowledge") ||
+    coreIds.includes("something_is_wrong")
+  ) {
+    return "mystery";
+  }
+
+  if (
+    coreIds.includes("survival_against_overwhelming_force") ||
+    coreIds.includes("endless_siege") ||
+    coreIds.includes("entropy_decay") ||
+    coreIds.includes("power_has_a_cost")
+  ) {
+    return "pressure";
+  }
+
+  if (
+    coreIds.includes("war_of_ideologies") ||
+    coreIds.includes("power_vacuum") ||
+    coreIds.includes("the_world_is_alive") ||
+    coreIds.includes("cycle_recurrence")
+  ) {
+    return "world_state";
+  }
+
+  if (
+    coreIds.includes("fragmented_self") ||
+    coreIds.includes("becoming_something_else") ||
+    coreIds.includes("what_is_humanity") ||
+    coreIds.includes("power_comes_from_within")
+  ) {
+    return "character";
+  }
+
+  if (
+    tone.includes("grim") ||
+    tone.includes("dark") ||
+    tone.includes("dangerous") ||
+    tone.includes("bleak") ||
+    genre.includes("dark")
+  ) {
+    return "pressure";
+  }
+
+  if (label === "wildcard") {
+    return "disruption";
+  }
+
+  return "disruption";
+}
+
+function buildHookLineByCategory(category, label = "primary") {
+  const hookPools = {
+    disruption: [
+      "It starts small—easy to dismiss—until it stops staying small.",
+      "At first, nothing seems wrong. Then the pattern breaks.",
+      "What looks stable at a glance does not stay that way for long.",
+      "The first sign feels minor. The next one is harder to explain away.",
+      "Something ordinary gives way first, and after that the rest stops feeling secure."
+    ],
+    pressure: [
+      "There is not enough time to solve this cleanly.",
+      "Every decision is already costing more than it should.",
+      "The pressure starts early and rarely lets up.",
+      "By the time the group understands the problem, something important is already under strain.",
+      "This is the kind of situation where delay becomes part of the damage."
+    ],
+    mystery: [
+      "The answers exist, but they do not line up cleanly.",
+      "Everything points somewhere. Nothing agrees.",
+      "The truth is there, just not in one place or one version.",
+      "Every useful lead seems to come with a missing piece attached to it.",
+      "The deeper the group looks, the harder it becomes to believe the obvious explanation."
+    ],
+    world_state: [
+      "The world is no longer holding together the way it used to.",
+      "Something fundamental has already shifted, and everyone is living in the aftermath.",
+      "The setting is already changing before the group fully understands why.",
+      "Whatever once kept things stable is no longer doing the job.",
+      "The trouble here is larger than one villain or one event; the whole situation has started to move."
+    ],
+    character: [
+      "This stops being distant the moment it starts changing the people inside it.",
+      "You are not just dealing with the problem—you are being pulled into what it changes.",
+      "What begins out in the world does not stay out there for long.",
+      "This was never going to stay impersonal.",
+      "The real pressure starts once the conflict becomes part of who the characters are becoming."
+    ]
+  };
+
+  const adjacentTweaks = {
+    disruption: [
+      "The break in the pattern shows earlier than anyone expects.",
+      "What first looks minor stops feeling containable very quickly.",
+      "The first crack widens before anyone has time to call it harmless."
+    ],
+    pressure: [
+      "The pressure starts building earlier than expected.",
+      "The cost shows up faster than the group is ready for.",
+      "Strain sets in before anyone has a clean way to answer it."
+    ],
+    mystery: [
+      "The pattern gets harder to explain away the deeper you go.",
+      "Uncertainty stops feeling accidental very quickly.",
+      "Every answer opens onto a larger hidden structure."
+    ],
+    world_state: [
+      "The wider shift is already underway by the time the group gets involved.",
+      "The setting is moving before the characters understand what set it off.",
+      "The larger instability is already in motion when the story begins."
+    ],
+    character: [
+      "The conflict gets closer to the characters more quickly.",
+      "The people involved do not come through it unchanged.",
+      "The pressure turns personal sooner than anyone would like."
+    ]
+  };
+
+  const wildcardTweaks = {
+    disruption: [
+      "The situation starts breaking in stranger ways than it first should.",
+      "The familiar stops behaving like itself almost immediately.",
+      "What should feel stable starts slipping out of place."
+    ],
+    pressure: [
+      "The pressure gets sharp enough to leave marks.",
+      "Something important is already being squeezed by the time the group arrives.",
+      "There is already too much strain in the system for a clean solution."
+    ],
+    mystery: [
+      "What should fit together keeps refusing to do so.",
+      "The truth is there, but it reaches the group in damaged pieces.",
+      "The answers get stranger instead of cleaner."
+    ],
+    world_state: [
+      "The larger shift stops staying in the background.",
+      "The setting itself has already started going unstable.",
+      "Whatever was changing under the surface is no longer staying there."
+    ],
+    character: [
+      "The story stops staying external almost immediately.",
+      "The conflict starts getting under the characters' skin fast.",
+      "What is happening in the world starts changing the people inside it."
+    ]
+  };
+
+  if (label === "adjacent") {
+    return pickOne(adjacentTweaks[category], pickOne(hookPools[category], ""));
+  }
+
+  if (label === "wildcard") {
+    return pickOne(wildcardTweaks[category], pickOne(hookPools[category], ""));
+  }
+
+  return pickOne(hookPools[category], "");
+}
+
 function buildTitle({ genreName, coreAName, systemAName, label }) {
   const corePart = coreAName || "Hidden Truth";
   const genrePart = genreName || "Campaign";
@@ -615,16 +777,24 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
       "Most of play is about",
       "A lot of play comes from"
     ],
+
     adjacent: [
-      "This version leans more into",
-      "Here, play tilts more toward",
-      "This take puts more emphasis on"
+      "Play here tends to revolve around",
+      "Most sessions start focusing on",
+      "The experience shifts toward",
+      "This version puts more weight on",
+      "You’ll find the group spending more time"
     ],
+
     wildcard: [
-      "This one gets its edge from",
-      "What makes this version feel different is",
-      "Here, a lot of the tension comes from"
+      "Here, a lot of the tension comes from",
+      "The campaign really comes alive through",
+      "Most of the pressure shows up through",
+      "What defines play here is",
+      "This version gets its edge from",
+      "Sessions tend to focus on"
     ],
+
     default: [
       "Play tends to center on"
     ]
@@ -638,7 +808,17 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
     "You start getting answers—but they don’t agree with each other.",
     "It feels manageable—until the situation shifts under you.",
     "The more progress you make, the less stable the bigger picture becomes.",
-    "Every step forward changes what you thought you understood."
+    "Every step forward changes what you thought you understood.",
+
+    // NEW VARIANTS (critical)
+    "The picture starts to shift the closer you look.",
+    "Clarity comes in pieces—and they don’t stay consistent.",
+    "What seemed solid starts to give way under pressure.",
+    "The situation stops behaving the way it should.",
+    "The more you uncover, the harder it is to stay certain.",
+    "Answers come through—but they raise new problems instead.",
+    "What made sense earlier doesn’t hold up anymore.",
+    "The ground keeps shifting under what you thought you understood."
   ];
 
   const opener = chooseByLabel(label, openersByLabel);
@@ -658,41 +838,71 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
   return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
-function buildDistinctHook({ genre, tone, environments, label, experienceProfile }) {
-  const genreDesc = stripTrailingPeriod(
-    cleanName(genre?.description || "")
-  );
+function buildDistinctHook({
+  genre,
+  tone,
+  environments,
+  label,
+  experienceProfile,
+  coreIds = []
+}) {
+  const genreDesc = stripTrailingPeriod(cleanName(genre?.description || ""));
+  const genreName = cleanName(genre?.name || "");
+  const toneName = cleanName(tone?.name || "");
 
   const envDescs = uniqueByName(environments)
     .map((env) => stripTrailingPeriod(cleanName(env?.description)))
     .filter(Boolean);
 
   const envLine = pickOne(envDescs, "");
-  const hookByLabel = {
-    primary: [
-      "Something here lingers.",
-      "This world gets under your skin fast.",
-      "The setting sticks with you."
+  const hookCategory = detectHookCategory({
+    coreIds,
+    toneName,
+    genreName,
+    label
+  });
+
+  const hookLead = buildHookLineByCategory(hookCategory, label);
+
+  const followupPools = {
+    disruption: [
+      "From there, the campaign starts widening around the first break instead of settling back down.",
+      "From there, every attempt to steady the situation reveals something else already slipping.",
+      "From there, the first fracture turns into a larger pattern the group cannot ignore."
     ],
-    adjacent: [
-      "Every answer opens something stranger.",
-      "Curiosity keeps turning into momentum.",
-      "The deeper you look, the less stable things feel."
+    pressure: [
+      "From there, the campaign keeps asking what can still be protected before the cost climbs again.",
+      "From there, every delay, compromise, or hard choice carries a heavier price than the last one.",
+      "From there, the situation keeps tightening faster than anyone can solve it cleanly."
     ],
-    wildcard: [
-      "This is where things get weird on purpose.",
-      "This one is harder to shake off afterward.",
-      "The setting stops feeling passive very quickly."
+    mystery: [
+      "From there, every answer risks opening a larger contradiction instead of closing the question.",
+      "From there, the truth keeps arriving in pieces that are useful, incomplete, and hard to trust all at once.",
+      "From there, the group is left sorting through answers that only make the larger pattern stranger."
+    ],
+    world_state: [
+      "From there, the group is dealing with a setting already changing under real strain.",
+      "From there, every choice lands inside a world that is already shifting around them.",
+      "From there, the story keeps pushing into a larger instability no one can fully step outside of."
+    ],
+    character: [
+      "From there, the conflict starts shaping the people caught inside it as much as the world around them.",
+      "From there, what is happening outside the group stops staying separate from what it is doing to them.",
+      "From there, the story keeps pressing on identity, change, and what the characters are becoming under strain."
     ]
   };
 
-  const opener = chooseByLabel(label, hookByLabel);
+  const followup = pickOne(followupPools[hookCategory], "");
 
-  const lines = [genreDesc, opener, envLine]
+  let text = [hookLead, followup]
     .filter(Boolean)
-    .map((line) => `${sentenceCase(line)}.`);
+    .map((line) => {
+      const cleaned = sentenceCase(stripTrailingPeriod(line));
+      return cleaned ? `${cleaned}.` : "";
+    })
+    .filter(Boolean)
+    .join(" ");
 
-  let text = lines.join(" ");
   text = softenIdentityPhrase(text, experienceProfile);
   text = cleanOutputText(text);
 
@@ -733,19 +943,22 @@ function buildPitchParagraph({
 
   const experienceLineByLabel = {
     primary: [
-      `This one plays like a ${pitchGenreText} campaign centered on ${coreAForPitch}.`,
-      `This direction leans into a ${pitchGenreText} experience shaped by ${coreAForPitch}.`,
-      `At its best, this feels like a ${pitchGenreText} campaign that keeps circling back to ${coreAForPitch}.`
+      `At its core, this is a ${pitchGenreText} campaign about ${coreAForPitch}.`,
+      `This plays like a ${pitchGenreText} story shaped by ${coreAForPitch}.`,
+      `From the start, this puts the group inside a ${pitchGenreText} campaign built around ${coreAForPitch}.`,
+      `Everything here turns on ${coreAForPitch} in a ${pitchGenreText} campaign.`
     ],
     adjacent: [
-      `This version takes the same foundation in a slightly different direction, leaning harder into ${coreAForPitch}.`,
-      `Here, the campaign leans further into ${coreAForPitch}, giving that tension more room to grow.`,
-      `This version leans harder into ${coreAForPitch}, letting it shape more of the campaign over time.`
+      `This version shifts the emphasis toward ${coreAForPitch}, letting that tension shape more of the campaign.`,
+      `Here, the story leans further into ${coreAForPitch}, giving it more room to drive events.`,
+      `This take moves closer to ${coreAForPitch}, so the campaign starts turning more directly around it.`,
+      `The emphasis here falls more squarely on ${coreAForPitch}, which changes the feel of the whole campaign.`
     ],
     wildcard: [
-      `This is the stranger version—the one that leans fully into ${coreAForPitch}.`,
-      `This take pushes the campaign into a sharper, weirder direction by centering ${coreAForPitch}.`,
-      `If you want the version with more edge, this is where ${coreAForPitch} really takes over.`
+      `This is the stranger angle: a campaign where ${coreAForPitch} takes over much more completely.`,
+      `This take pushes deeper into ${coreAForPitch}, giving the campaign a sharper and less predictable identity.`,
+      `Here, ${coreAForPitch} stops sitting underneath the story and starts driving it outright.`,
+      `This version leans fully into ${coreAForPitch}, letting it shape the direction of the campaign.`
     ]
   };
 
@@ -753,10 +966,14 @@ function buildPitchParagraph({
 
   if (primarySystemText) {
     const systemLineOptions = [
-      `A lot of play comes from ${primarySystemText}.`,
-      `You’ll spend a lot of time focused on ${primarySystemText}.`,
-      `The rhythm of play comes from ${primarySystemText}.`,
-      `The campaign builds its pressure through ${primarySystemText}.`
+      `Most sessions revolve around ${primarySystemText}.`,
+      `A lot of the campaign’s momentum comes from ${primarySystemText}.`,
+      `Play keeps circling back to ${primarySystemText}.`,
+      `What drives the campaign forward is ${primarySystemText}.`,
+      `The pressure builds through ${primarySystemText}.`,
+      `The group keeps getting pulled back into ${primarySystemText}.`,
+      `The core loop centers on ${primarySystemText}.`,
+      `What the players do here shapes the campaign through ${primarySystemText}.`
     ];
 
     secondLineOptions.push(...systemLineOptions);
@@ -962,7 +1179,8 @@ const envNames = environmentSkins
       tone,
       environments: environmentSkins,
       label,
-      experienceProfile
+      experienceProfile,
+      coreIds
     })
   );
 
