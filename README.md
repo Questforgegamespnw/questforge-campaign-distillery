@@ -2,38 +2,49 @@
 
 ## What This Is (Non-Technical)
 
-The Campaign Distillery is a system that turns rough campaign ideas or client input into structured, high-quality tabletop RPG experiences.
+The Campaign Distillery turns rough campaign ideas or client input into structured, high-quality tabletop RPG experiences.
 
 It is designed to produce consistent, playable, and sellable campaign concepts—not just one-off AI-generated text.
 
 ## Why Not Just Use GPT?
 
-You can absolutely paste notes into GPT and get a campaign pitch.
+You can absolutely paste notes into GPT and get a campaign pitch. 
+**But that approach is:**
+  - inconsistent
+  - hard to control
+  - difficult to repeat at scale
+  - prone to ignoring tone, safety, or audience constraints
+  
+This Distillery however, is built to understand the intake first, make disciplined decisions about it, and only then write the pitch. 
+This disciplined process is what makes the output more consistent, safer, easier to tune, and more scalable for a professional GM service.
 
-But that approach is:
-- inconsistent
-- hard to control
-- difficult to repeat at scale
-- prone to ignoring tone, safety, or audience constraints
+In other words, GPT alone gives you a response but this Distillery gives you a consistant, dependable and repeatable process that delivers results even after thousands of iterations. 
 
-The Distillery solves that by:
-- structuring input before generation
-- making explicit decisions about tone, gameplay, and themes
-- enforcing safety and audience constraints
-- producing consistent outputs across many submissions
+### The Campaign Distillery is designed to do the parts that raw prompting handles unreliably:
+  - normalize messy client input into structured intent
+  - apply deterministic selection logic instead of freeform guesswork
+  - enforce audience and safety constraints consistently
+  - preserve ambiguity instead of inventing false certainty
+  - generate repeatable outputs that can be tested, tuned, and improved over time
 
-GPT improvises.
+### That process matters when you want:
+  - reliable client-facing quality
+  - scalable onboarding
+  - safety-aware outputs
+  - consistency across many submissions
+  - a refinable system over time without starting over
 
-This system interprets first, then generates.
+In short, GPT improvises. This system interprets first, then generates.
 
 ---
 
 ## Example Outputs
-Below are sample campaign pitches generated from structured inputs.
-Each reflects a different tone, genre, and gameplay focus.
+Below are sample campaign pitches generated from structured inputs, demonstrating different tones, genres, and gameplay styles.
 
 These examples reflect the current output quality during v0.7 voice refinement.
 Final phrasing polish and cadence improvements are in progress.
+
+
 
 ### Mystery / Investigation (Urban Gothic, Light Chaos)
 
@@ -55,6 +66,7 @@ At the table, play revolves around piecing together scattered clues while never 
 The deeper you dig, the harder it becomes to walk away from what you’ve uncovered.
 
 The real question is: what happens when you finally understand what the city has been hiding—and it refuses to stay buried?
+
 
 ### Mythic Discovery (Surreal / Otherworldly, Emotional)
 #### Input Focus
@@ -244,20 +256,24 @@ Raw Intake
 
 Introduced a fully normalized intake and safety inference layer that ensures reliable, structured outputs even from messy or incomplete user input.
 ### Core Capabilities
-- Input Normalization
-- Handles inconsistent casing, punctuation, and phrasing
-- Uses shared preprocessing and alias mapping for stable interpretation
-- Structured Safety Model
-- Separates:
-- explicit user intent
-- inferred safety signals
-- final enforced safety mode
-- Automatic Safety Detection
-- Detects youth-safe intent even when not explicitly selected
-- Applies tone and content constraints during selection and rendering
-- Constraint-Aware Output
-- Softens or redirects sensitive content instead of stripping it
-- Generates tone and audience guardrails for downstream systems
+
+- **Input Normalization**
+  - Handles inconsistent casing, punctuation, and phrasing
+  - Uses shared preprocessing and alias mapping for stable interpretation  
+
+- **Structured Safety Model**
+  - Separates:
+    - explicit user intent  
+    - inferred safety signals  
+    - final enforced safety mode  
+
+- **Automatic Safety Detection**
+  - Detects youth-safe intent even when not explicitly selected  
+  - Applies tone and content constraints during selection and rendering  
+
+- **Constraint-Aware Output**
+  - Softens or redirects sensitive content instead of stripping it  
+  - Generates tone and audience guardrails for downstream systems  
 ### Why It Matters
 This layer ensures:
 - inconsistent inputs still produce coherent results

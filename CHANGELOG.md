@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 
 ---
+
+## [0.7.1] – Voice Stabilization Pass
+
+### Improved
+- Refined campaign pitch voice to read more naturally and less system-generated
+- Reworked pitch paragraph construction to emphasize player-facing language over system terminology
+- Expanded variation pools for core transitions and system-driven lines to reduce repetition
+- Improved fallback handling when system language is filtered or unavailable
+- Enhanced phrasing for system-derived text (e.g., exploration, clue discovery, environmental pressure)
+
+### Fixed
+- Removed duplicate phrasing issues (e.g., repeated "and" constructions)
+- Eliminated raw system ID leakage into pitch output
+- Corrected redundancy across second-line pitch generation
+- Fixed inconsistent sentence structure in pitch assembly
+
+### Internal
+- Added systemText filtering layer to block low-quality or design-facing language
+- Introduced deduplication and cleanup passes in system text normalization
+- Added temporary guardrails for system phrasing (scheduled for removal in v0.7.3)
+
+---
 ## v0.7.0 — Voice Stability & Full Coverage Pass
 
 ### 🚧 Core Milestone: "Make It Hold Under All Inputs"
