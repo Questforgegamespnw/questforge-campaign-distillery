@@ -72,6 +72,92 @@ function stripLeadingWhile(text) {
   return text.replace(/^while\s+/i, "").trim();
 }
 
+function normalizeSystemLead(text = "") {
+  const cleaned = stripTrailingPeriod(cleanName(text));
+
+  if (!cleaned) return "";
+
+  return cleaned
+    .replace(
+      /^Players assemble scattered clues into a larger understanding rather than following a single linear trail$/i,
+      "following scattered clues and slowly piecing them together"
+    )
+    .replace(
+      /^Players never have the full picture, and uncertainty becomes part of the tension$/i,
+      "working with incomplete information and mounting uncertainty"
+    )
+    .replace(
+      /^The players never have enough time, safety, light, healing, or supplies, so every decision costs something$/i,
+      "making hard calls when time, safety, and supplies are always running short"
+    )
+    .replace(
+      /^Progress comes from uncovering new places, secrets, paths, and environmental story buried in the world$/i,
+      "exploring strange places and uncovering what they mean"
+    )
+    .replace(
+      /^The longer events continue or the more certain actions are taken, the worse consequences become$/i,
+      "managing problems before they spiral"
+    )
+    .replace(
+      /^The longer events continue or the more certain actions are taken, the worse outcomes become$/i,
+      "managing problems before they spiral"
+    )
+    .replace(
+      /^Movement, territory, chokepoints, and positioning become central to how encounters are won or lost$/i,
+      "managing movement, territory, chokepoints, and positioning"
+    )
+    .replace(
+      /^Words, alliances, leverage, and negotiation shape the campaign as much as combat does$/i,
+      "managing pressure, leverage, negotiation, and fragile alliances"
+    )
+    .replace(
+      /^Enemies break normal expectations and create memorable multi-phase setpiece encounters$/i,
+      "facing enemies that force new tactics instead of routine fights"
+    )
+    .replace(
+      /^Power changes the characters over time, creating tradeoffs between strength, identity, and consequence$/i,
+      "dealing with power that changes the characters over time"
+    )
+    .replace(
+      /^The battlefield matters as much as the enemies, with hazards, terrain, and interaction shaping the fight$/i,
+      "surviving battlefields where hazards and terrain matter as much as the enemies"
+    )
+    .replace(
+      /^The world responds to player action over time, with areas, threats, and NPC behavior changing in reaction$/i,
+      "dealing with a world that keeps reacting to what the players do"
+    )
+    .replace(
+      /^Player actions shift their standing with factions, unlocking opportunities or closing doors over time$/i,
+      "shifting faction standing as alliances form, break, and evolve"
+    )
+    .replace(
+      /^Their choices, alliances, and leverage shape how the world responds$/i,
+      "watching choices and alliances reshape how the world responds"
+    )
+    .replace(
+      /^Players build their identity through flexible components, allowing highly customized growth and expression$/i,
+      "shaping identity through modular growth and highly customized choices"
+    )
+    .replace(
+      /^No alliance is simple, and choosing sides carries long-term consequences, tension, and compromise$/i,
+      "navigating alliances where every choice comes with tradeoffs and long-term consequences"
+    )
+
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function combineToneAndGenre(toneText = "", genreText = "") {
+  const tone = cleanName(toneText).toLowerCase();
+  const genre = cleanName(genreText).toLowerCase();
+
+  if (!tone) return genre;
+  if (!genre) return tone;
+  if (genre.includes(tone)) return genre;
+  if (tone.includes(genre)) return tone;
+
+  return `${tone} ${genre}`;
+}
 
 // ==================================================
 // PROFILE + SAFETY TEXT HELPERS
@@ -228,6 +314,12 @@ function cleanExcludeText(text = "") {
   return cleaned.join(", ");
 }
 
+function toSentence(text = "") {
+  const cleaned = cleanName(text);
+  if (!cleaned) return "";
+  return cleaned.endsWith(".") ? cleaned : `${cleaned}.`;
+}
+
 function formatToneLabel(toneName = "") {
   const tone = humanizeName(toneName).toLowerCase();
 
@@ -323,10 +415,9 @@ function buildTitle({ genreName, coreAName, systemAName, label }) {
 
 function buildOpening({ label, genreName, toneName, envNames, coreIds = [], experienceProfile }) {
   const envText = joinNatural(envNames);
-  const genreText = genreName ? humanizeName(genreName) : "fantasy";
-  const toneText = formatToneLabel(toneName);
-  const safeToneText =
-  genreText.toLowerCase().includes(toneText.toLowerCase()) ? "" : toneText;
+  const genreText = humanizeName(genreName || "fantasy").toLowerCase();
+  const toneText = formatToneLabel(toneName).toLowerCase();
+  const pitchGenreText = combineToneAndGenre(toneText, genreText);
 
   let campaignShape = "campaign";
 
@@ -363,40 +454,36 @@ function buildOpening({ label, genreName, toneName, envNames, coreIds = [], expe
     campaignShape = "discovery-driven adventure";
   }
 
-  const tonePrefix = safeToneText ? `${safeToneText.toLowerCase()} ` : "";
-  const genrePhrase = `${genreText} ${campaignShape}`;  
+  const genrePhrase = campaignShape === "campaign"
+    ? pitchGenreText
+    : `${pitchGenreText} ${campaignShape}`;
 
   if (label === "adjacent") {
-    
-  const adjacentOpeners = [
-    "This direction reframes the campaign as",
-    "This version shifts the focus toward",
-    "Here, the campaign pivots into",
-    "This take emphasizes",
-    "This direction leans into"
-  ];
-  
-  const opener =
-    adjacentOpeners[
-      Math.floor(Math.random() * adjacentOpeners.length)
+    const adjacentOpeners = [
+      "Here, the campaign leans into",
+      "This one shifts toward",
+      "This take moves closer to"
     ];
 
-    const base = `${opener} a ${tonePrefix}${genrePhrase}${envText ? `, set against ${envText}` : ""}.`;
-    return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
-}
-
-  if (label === "wildcard") {
-    const toneAdjustedEdge =
-      toneName && toneName.toLowerCase().includes("lighthearted")
-        ? "more playful and unexpected direction"
-        : "a stranger and more intense direction";
-
-    const base = `This version pushes toward ${toneAdjustedEdge}, turning the campaign into a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
-
+    const opener = pickOne(adjacentOpeners, "Here, the campaign leans into");
+    const base = `${opener} a ${genrePhrase}${envText ? ` set against ${envText}` : ""}.`;
     return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
   }
 
-  const base = `At its strongest, this campaign feels like a ${tonePrefix}${genrePhrase}${envText ? ` shaped by ${envText}` : ""}.`;
+  if (label === "wildcard") {
+    const base = `This is the stranger version: a ${genrePhrase}${envText ? ` set against ${envText}` : ""}.`;
+    return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
+  }
+
+  const primaryOpeners = [
+    "This plays like",
+    "At its best, this feels like",
+    "This leans into"
+  ];
+
+  const opener = pickOne(primaryOpeners, "This plays like");
+  const article = /^[aeiou]/i.test(genrePhrase) ? "an" : "a";
+  const base = `${opener} ${article} ${genrePhrase}${envText ? ` set against ${envText}` : ""}.`;
   return isYouthProfile(experienceProfile) ? softenYouthText(base) : base;
 }
 
@@ -472,82 +559,94 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
     )
   );
 
-  const startsLikeSentence = /^(players|progress|their|the group|the players|discovery|exploration)\b/i.test(systemADesc);
-
-  const lead = chooseByLabel(label, {
-    
+  const systemALead = normalizeSystemLead(systemADesc);
+  const systemBLead = normalizeSystemLead(systemBDesc);
+  
+  const openersByLabel = {
     primary: [
-      "Most sessions revolve around this loop:",
-      "At the table, the experience tends to unfold like this:",
-      "The core rhythm of play looks like this:"
+      "You’ll spend most of your time",
+      "Most of play is about",
+      "A lot of play comes from"
     ],
     adjacent: [
-      "This version shifts the table experience in a slightly different direction:",
-      "Here, the play loop tilts more toward this structure:",
-      "This take changes the rhythm at the table in a useful way:"
+      "This version leans more into",
+      "Here, play tilts more toward",
+      "This take puts more emphasis on"
     ],
     wildcard: [
-      "The wildcard energy shows up most clearly in how play unfolds:",
-      "This version feels bolder at the table because of this loop:",
-      "What gives this take its edge is the way play actually works:"
+      "This one gets its edge from",
+      "What makes this version feel different is",
+      "Here, a lot of the tension comes from"
     ],
     default: [
-      "Play tends to unfold like this:"
+      "Play tends to center on"
     ]
-  });
+  };
 
-  let text = startsLikeSentence
-    ? `${lead} ${systemADesc}. ${sentenceCase(systemBDesc)}.`
-    : `${lead} ${systemADesc.toLowerCase()}. ${sentenceCase(systemBDesc)}.`;
+  const connectiveLines = [
+    "That works—until something stops lining up.",
+    "It holds together—right up until it doesn’t.",
+    "The deeper you go, the harder it is to trust what you’re seeing.",
+    "At first it makes sense. Then the pieces stop fitting cleanly.",
+    "You start getting answers—but they don’t agree with each other.",
+    "It feels manageable—until the situation shifts under you.",
+    "The more progress you make, the less stable the bigger picture becomes.",
+    "Every step forward changes what you thought you understood."
+  ];
+
+  const opener = chooseByLabel(label, openersByLabel);
+  const first = systemALead
+    ? `${opener} ${systemALead}.`
+    : "";
+
+  const second = systemBLead && systemBLead !== systemALead
+    ? `${sentenceCase(systemBLead)}.`
+    : "";
+  const third = pickOne(connectiveLines, "");
+
+  let text = [first, second].filter(Boolean).join(" ");
+  if (third) text += ` ${third}`;
 
   text = cleanOutputText(text);
+
   return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
 function buildDistinctHook({ genre, tone, environments, label, experienceProfile }) {
   const genreDesc = stripTrailingPeriod(
-    normalizeDescription(
-      genre?.description,
-      "The setting's identity comes from the way atmosphere, conflict, and player pressure reinforce one another"
-    )
+    cleanName(genre?.description || "")
   );
 
   const envDescs = uniqueByName(environments)
-    .map((env) => cleanName(env?.description))
+    .map((env) => stripTrailingPeriod(cleanName(env?.description)))
     .filter(Boolean);
 
-  const cleanedEnvDescs = envDescs
-    .map((text) => stripTrailingPeriod(text))
-    .filter(Boolean);
-
-  const envJoined =
-    cleanedEnvDescs.length > 1
-      ? `${cleanedEnvDescs.slice(0, -1).join(", ")}, and ${cleanedEnvDescs.slice(-1)[0]}`
-      : (cleanedEnvDescs[0] || "");
-
-  const envFragment = envJoined
-    ? `The world draws a lot of its identity from places defined by ${envJoined}.`
-    : "";
-
-  const labelHooks = {
+  const envLine = pickOne(envDescs, "");
+  const hookByLabel = {
     primary: [
-      "It should feel like every discovery opens the door to something larger.",
-      "The strongest version of this campaign makes discovery feel momentum-building rather than static.",
-      "The hook here is the sense that the world is always holding one more answer just out of reach."
+      "Something here lingers.",
+      "This world gets under your skin fast.",
+      "The setting sticks with you."
     ],
     adjacent: [
-      "What sets this version apart is how much progress comes from following threads, leverage, and layered discovery.",
-      "This take stands out when the players are constantly choosing which clue, lead, or opportunity to chase next.",
-      "Its identity really sharpens when exploration and information start feeding each other."
+      "Every answer opens something stranger.",
+      "Curiosity keeps turning into momentum.",
+      "The deeper you look, the less stable things feel."
     ],
     wildcard: [
-      "This version stands out when the truth feels strange, exciting, and just a little larger than expected.",
-      "The wildcard energy comes from letting discovery reshape how the players understand the world around them.",
-      "Its best moments come when each answer changes the meaning of the next question."
+      "This is where things get weird on purpose.",
+      "This one is harder to shake off afterward.",
+      "The setting stops feeling passive very quickly."
     ]
   };
 
-  let text = `${genreDesc}. ${chooseByLabel(label, labelHooks)} ${envFragment}`.trim();
+  const opener = chooseByLabel(label, hookByLabel);
+
+  const lines = [genreDesc, opener, envLine]
+    .filter(Boolean)
+    .map((line) => `${sentenceCase(line)}.`);
+
+  let text = lines.join(" ");
   text = softenIdentityPhrase(text, experienceProfile);
   text = cleanOutputText(text);
 
@@ -567,41 +666,11 @@ function buildPitchParagraph({
   includeNotes,
   excludeNotes,
   experienceProfile
-
 }) {
-  const opening = buildOpening({
-    label,
-    genreName,
-    toneName,
-    envNames,
-    coreIds,
-    experienceProfile
-  });
-
-  const coreParts = [coreAName, coreBName]
-    .filter(Boolean)
-    .map((name) => humanizeName(name).replace(/_/g, " ").toLowerCase());
-
-  const systemParts = [systemAName, systemBName]
-    .filter(Boolean)
-    .map((name) => {
-      return humanizeName(name)
-        .replace(/Clue web/i, "a network of clues")
-        .replace(/Exploration discovery/i, "exploration-driven discovery")
-        .replace(/Hidden information/i, "hidden information")
-        .replace(/loop/gi, "")
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
-    });
-
-  const coreText = softenIdentityPhrase(
-    joinNatural(coreParts),
-    experienceProfile
-  );
-
-  const systemText = joinNatural(systemParts);
-
+  const genreText = humanizeName(genreName || "fantasy").toLowerCase();
+  const toneText = formatToneLabel(toneName).toLowerCase();
+  const pitchGenreText = combineToneAndGenre(toneText, genreText);
+  
   const coreAOnly = softenIdentityPhrase(
     humanizeName(coreAName || "").replace(/_/g, " ").toLowerCase(),
     experienceProfile
@@ -612,102 +681,113 @@ function buildPitchParagraph({
     experienceProfile
   );
 
-  const coreVerb = isPluralConcept(coreText) ? "give" : "gives";
-  const coreKeepVerb = isPluralConcept(coreText) ? "keep" : "keeps";
-  const systemVerb = isPluralConcept(systemText) ? "shape" : "shapes";
-  const systemLeadVerb = isPluralConcept(systemText) ? "take" : "takes";
-  const systemLiftVerb = isPluralConcept(systemText) ? "do" : "does";
+  const systemText = [...new Set(
+    [systemAName, systemBName]
+      .filter(Boolean)
+      .map((name) =>
+        humanizeName(name)
+          .replace(/Clue web/i, "uncovering hidden connections")
+          .replace(/Exploration discovery loop/i, "exploration and discovery")
+          .replace(/Exploration discovery/i, "exploration and discovery")
+          .replace(/Hidden information/i, "realizing how much has been kept out of sight")
+          .replace(/Environmental combat/i, "dealing with spaces that are as dangerous as the enemies in them")
+          .replace(/Influence social leverage/i, "managing pressure, leverage, and fragile alliances")
+          .replace(/\bloop\b/gi, "")
+          .replace(/and and/gi, "and")
+          .replace(/\b(.+?) and \1\b/gi, "$1")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase()
+      )
+  )];
+  
+  const systemTextFiltered = systemText.filter(
+    (text) => !/design|system|track|meter|build|control|reputation/i.test(text)
+  );
+  //temporary guard to block system ID's from leaking until v0.7.3 can be factored in.//
+  const blockedSystemWords = [
+    "resource scarcity",
+    "attrition combat",
+    "escalation meter",
+    "modular build system",
+    "corruption transformation track",
+    "tactical positioning zone control",
+    "living world reaction",
+    "legacy inheritance system"
+  ];
 
-  const coreVariants = [];
+  const hasRawSystemLeak = systemText.some((text) =>
+    blockedSystemWords.some((word) => text.includes(word))
+  );
 
-  if (coreAOnly && coreBOnly) {
-    coreVariants.push(
-      `the tension between ${coreAOnly} and ${coreBOnly}`,
-      `${coreAOnly} layered with ${coreBOnly}`,
-      `${coreAOnly} and the emergence of ${coreBOnly}`,
-      `${coreAOnly} alongside the rise of ${coreBOnly}`,
-      `${coreAOnly} alongside ${coreBOnly}`,
-      `the growing presence of ${coreBOnly} alongside ${coreAOnly}`,
-    );
-  }
-
-  if (coreAOnly) {
-    coreVariants.push(
-      coreAOnly,
-      `${coreAOnly} as the central pressure`,
-      
-    );
-  }
-
-  if (coreText) {
-    coreVariants.push(coreText);
-  }
-
-  const chosenCoreText = pickOne(coreVariants, coreText);
-  const safeCoreText = stripLeadingWhile(chosenCoreText);
-  const secondParagraph = chooseByLabel(label, {
+  const experienceLineByLabel = {
     primary: [
-      `Most sessions revolve around ${systemText}, while the larger story keeps pulling the players toward ${safeCoreText}.`,
-      `${sentenceCase(systemText)} ${systemVerb} the moment-to-moment experience, while ${safeCoreText} gives the campaign its larger sense of direction.`,
-      `At the table, ${systemText} keeps things moving. ${sentenceCase(safeCoreText)} is what gives each discovery more weight.`,
-      `The surface rhythm comes from ${systemText}. ${sentenceCase(safeCoreText)} gives it staying power.`
+      `This one plays like a ${pitchGenreText} campaign where ${coreAOnly} keeps pulling the story forward.`,
+      `This direction leans into a ${pitchGenreText} experience built around ${coreAOnly}.`,
+      `At its best, this feels like a ${pitchGenreText} campaign driven by ${coreAOnly}.`
     ],
     adjacent: [
-      `${sentenceCase(systemText)} sets the pace, while ${safeCoreText} takes shape more gradually.`,
-      `The focus shifts toward ${systemText}, with ${safeCoreText} unfolding over time rather than all at once.`,
-      `The campaign unfolds through ${systemText}, as the larger pattern slowly starts to take shape around ${safeCoreText}.`,
-      `Here, the campaign puts more of its forward momentum into ${systemText}, while ${safeCoreText} broadens the scope of what it is really about.`
+      `This version takes the same foundation in a slightly different direction, leaning harder into ${coreAOnly}.`,
+      `Here, the campaign leans further into ${coreAOnly}, giving that tension more space to build over time.`,
+      `This version leans harder into ${coreAOnly}, letting the larger pattern emerge more gradually.`
     ],
     wildcard: [
-      `This take leans harder into ${systemText}, with ${safeCoreText} giving the campaign its stranger edge.`,
-      `${sentenceCase(systemText)} sets the tone early. Over time, ${safeCoreText} starts to reshape how the players understand what is happening.`,
-      `The wildcard version gets its energy from ${systemText}. As play continues, ${safeCoreText} expands what the players think they understand.`,
-      `${sentenceCase(systemText)} sets the pace early. As the campaign unfolds, ${safeCoreText} starts to change what the players think they know.`
-    ],
-    default: [
-      `${systemText} and ${safeCoreText} work together to define the campaign's rhythm.`,
-      `${sentenceCase(systemText)} drives the action, while ${safeCoreText} gives it context and direction.`
+      `This is the stranger version—the one that leans fully into ${coreAOnly}.`,
+      `This take pushes the campaign into a sharper, weirder direction by centering ${coreAOnly}.`,
+      `If you want the version with more edge, this is where ${coreAOnly} really takes over.`
     ]
-  });
+  };
 
+  const secondLineOptions = [];
+
+  if (coreAOnly && coreBOnly) {
+    const coreTransitionOptions = [
+      `The deeper you go, the more ${coreBOnly} starts surfacing underneath it.`,
+      `What starts with ${coreAOnly} gradually opens into ${coreBOnly}.`,
+      `And before long, ${coreBOnly} starts changing what the whole campaign is really about.`,
+      `As things unfold, ${coreBOnly} starts reshaping what the story is really about.`,
+      `Over time, ${coreBOnly} starts shifting the direction of the entire campaign.`
+    ];
+
+    secondLineOptions.push(...coreTransitionOptions);
+  }
+
+  if (systemTextFiltered.length && !hasRawSystemLeak) {
+    const systemLineOptions = [
+      `A lot of play comes from ${joinNatural(systemTextFiltered)}.`,
+      `You’ll spend a lot of time focused on ${joinNatural(systemTextFiltered)}.`,
+      `The rhythm of play comes from ${joinNatural(systemTextFiltered)}.`,
+      `The campaign builds its pressure through ${joinNatural(systemTextFiltered)}.`
+    ];
+
+    secondLineOptions.push(pickOne(systemLineOptions));
+  }
+
+  
   const includeCleanRaw = cleanIncludeText(includeNotes);
   const includeClean = dedupePhrases(includeCleanRaw);
-  const excludeClean = cleanExcludeText(excludeNotes);
-
   const includePhrase = includeClean
     .toLowerCase()
     .replace(/keep it\s*/g, "")
     .replace(/\/\s*kid-safe/g, "")
     .trim();
 
-  let closer = "";
+  const first = chooseByLabel(label, experienceLineByLabel);
+  const second = pickOne(
+    secondLineOptions,
+    coreAOnly ? `Everything keeps circling back to ${coreAOnly}.` : ""
+  );
+  const third = includePhrase
+    ? pickOne([
+      `The overall feel stays ${includePhrase}.`,
+      `Tone-wise, it stays ${includePhrase}.`,
+      `It keeps that ${includePhrase} edge without losing momentum.`
+    ], "")
+    : "";
 
-  if (includePhrase) {
-    const toneClosers = [
-      ` The tone stays ${includePhrase}.`,
-      ` It keeps things ${includePhrase} without losing a sense of momentum.`,
-      ` The overall feel remains ${includePhrase}, even as the stakes build.`,
-      ` It maintains a ${includePhrase} tone while still letting the story evolve.`
-    ];
+  let text = [first, second, third].filter(Boolean).join(" ");
+  text = cleanOutputText(text);
 
-    closer += pickOne(toneClosers, ` The tone stays ${includePhrase}.`);
-  }
-
-  const shouldRenderExclude =
-    excludeClean &&
-    !/^horror$/i.test(excludeClean) &&
-    excludeClean.split(" ").length > 1;
-
-  if (shouldRenderExclude) {
-    const avoidClosers = [
-      ` It avoids ${excludeClean.toLowerCase()}.`,
-      ` It stays away from ${excludeClean.toLowerCase()}.`
-    ];
-
-    closer += pickOne(avoidClosers, ` It avoids ${excludeClean.toLowerCase()}.`);
-  }
-
-  const text = cleanOutputText(`${opening}\n\n${secondParagraph}${closer}`);
   return isYouthProfile(experienceProfile) ? softenYouthText(text).trim() : text;
 }
 
