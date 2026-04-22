@@ -33,6 +33,7 @@ function resolveSelections(selections, collection) {
       weight: selection.weight,
       name: match?.name || selection.id,
       description: match?.description || "",
+      pitchText: match?.pitchText || "",
       tags: match?.tags || [],
       family: match?.family || "",
       archetype: match?.archetype || ""

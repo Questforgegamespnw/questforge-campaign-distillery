@@ -39,76 +39,74 @@ In short, GPT improvises. This system interprets first, then generates.
 ---
 
 ## Example Outputs
-Below are sample campaign pitches generated from structured inputs, demonstrating different tones, genres, and gameplay styles.
 
-These examples reflect the current output quality during v0.7 voice refinement.
-Final phrasing polish and cadence improvements are in progress.
+These examples reflect the current output quality following the v0.7.2 voice layer stabilization pass.
 
+---
 
+### Mystery / Investigation (Urban Gothic, Psychological)
 
-### Mystery / Investigation (Urban Gothic, Light Chaos)
+**Input Focus**
+- Hidden truth + investigator burden  
+- Clue web + hidden information  
+- Dense urban environment  
+- Psychological tone  
 
-#### Input Focus
-
-- Hidden truth + investigator burden
-- Clue web + hidden information
-- Dense urban environment
-- Lighthearted / chaotic tone
-
-#### Output
-
+**Output**
 Something is already starting to slip out of place.
 
 The city is dense with overlapping lives, quiet tensions, and things that don’t quite add up. Beneath the surface, something important has been covered over—and the more closely you look, the harder it is to ignore.
 
-At the table, play revolves around piecing together scattered clues while never quite having the full picture. Information is incomplete, sometimes misleading, and often raises more questions than it answers.
+At the table, play revolves around following scattered clues and slowly piecing together the bigger picture. Information is incomplete, sometimes misleading, and often raises more questions than it answers.
 
 The deeper you dig, the harder it becomes to walk away from what you’ve uncovered.
 
 The real question is: what happens when you finally understand what the city has been hiding—and it refuses to stay buried?
 
+---
 
-### Mythic Discovery (Surreal / Otherworldly, Emotional)
-#### Input Focus
+### Survival Frontier (Grimdark Western, High Pressure)
 
-- Hidden truth + identity discovery
-- Exploration + investigation
-- Dreamlike / reality-warped environments
-- Emotionally weighty tone
+**Input Focus**
+- Survival against overwhelming force + endless pressure  
+- Resource scarcity + attrition combat  
+- Harsh frontier / wasteland  
+- Grimdark tone  
 
-#### Output
+**Output**
+At its best, this feels like a grimdark western frontier campaign that keeps circling back to surviving a world far harsher and stronger than the characters are.
 
+The world doesn’t bend to you. Every step forward costs something, and even small victories feel temporary against the weight of everything pushing back.
+
+At the table, play revolves around making hard calls when time, safety, and supplies are always running short. Every decision trades one problem for another—and sometimes you don’t get a good option at all.
+
+The pressure never fully lets up. Survival isn’t about winning—it’s about lasting long enough to matter.
+
+The real question is: how much can you lose before you stop being able to keep going?
+
+---
+
+### Cosmic Discovery (Eldritch, Psychological)
+
+**Input Focus**
+- Lost knowledge + hidden truth  
+- Exploration + clue web  
+- Abstract / underground environments  
+- Psychological tone  
+
+**Output**
 The first signs are easy to dismiss—until they stop being dismissible.
 
 The world doesn’t behave the way it should. Spaces shift, logic bends, and places seem to exist more as ideas than locations. Somewhere inside it, something important has been rearranged rather than removed.
 
-Play moves through exploration and interpretation—figuring out what places mean as much as what they are. Clues don’t just point forward; they reshape how everything behind you is understood.
+At the table, play moves through exploration and interpretation—figuring out what places mean as much as what they are. Clues don’t just point forward; they reshape how everything behind you is understood.
 
 The deeper you go, the harder it becomes to separate the world from what it’s doing to you.
 
 What matters is not just what you discover—but who you are by the time it finally makes sense.
 
-### Heroic Frontier (Adventure / Growth, High Energy)
-#### Input Focus
-
-- Power from within + creation vs destruction
-- Boss encounters + risk-based progression
-- Coastal + wild frontier
-- Lighthearted / heroic tone
-
-#### Output
-
-Something bigger than the group is already in motion.
-
-Open horizons, shifting tides, and untamed land set the stage for a world where freedom and danger sit side by side. Strength doesn’t come from where you start—it comes from what you’re willing to become.
-
-At the table, play centers on high-impact encounters and bold decisions. The biggest rewards come from taking risks, and every major challenge pushes the group to grow in ways that aren’t always comfortable.
-
-Momentum builds quickly, and the stakes rise just as fast.
-
-The question isn’t whether you can win—it’s what you’re willing to risk becoming in order to do it.
-
 ---
+
 
 ## ⚙️ Technical Overview (For Developers)
 
@@ -127,17 +125,35 @@ It is designed to:
 - Render a cohesive, sellable narrative output
 - Prioritizes deterministic, safety-aware interpretation over generative ambiguity.
 
-## Current Focus (v0.7)
+## Voice Layer Design (v0.7.2)
 
-The system is now stable end-to-end.
+The system separates **what a campaign means** from **how it is expressed**.
 
-Current work is focused on:
-- improving voice quality and phrasing
-- reducing repetition and mechanical language
-- producing output suitable for direct client use
+- Data layer (`pitchText`) defines player-facing phrasing
+- Renderer composes that phrasing into structured output
+
+This replaces earlier approaches that relied on:
+- string normalization
+- label transformation
+- post-processing cleanup
+
+The result is:
+- more natural language
+- consistent tone across outputs
+- a scalable foundation for future voice expansion
+
+## Current Focus (v0.7.2)
+
+The voice layer has been stabilized and is now producing consistent, client-ready output.
+
+Recent work focused on:
+- eliminating system/core label leakage from pitch output
+- replacing normalization logic with structured phrasing (`pitchText`)
+- improving sentence clarity and reducing clause stacking
+- ensuring consistent voice across all batch scenarios
 
 This phase represents the transition from:
-**functional system → polished, publishable output**
+**polished output → stable, scalable voice system**
 
 ---
 
@@ -229,7 +245,7 @@ Raw Intake
 
 ---
 
-## Current State (v0.7.0)
+## Current State (v0.7.2)
 
 - End-to-end pipeline is stable and fully operational
 - Intake normalization layer is fully implemented and centralized
@@ -249,6 +265,22 @@ Raw Intake
 
 - This version marks the transition from:
 **Reliable system → Consistent, multi-scenario output generation**
+
+### Voice Layer Stabilization (v0.7.2)
+
+- Introduced structured `pitchText` fields for core and system frames
+- Refactored renderer to use data-driven phrasing instead of string normalization
+- Eliminated internal label leakage in client-facing Pitch output
+- Simplified pitch composition (single system expression, no core stacking)
+- Improved readability, cadence, and sentence clarity across all outputs
+- Removed legacy guard logic and fallback filtering
+
+This marks the completion of the voice layer foundation.
+
+The system now produces:
+- consistent, repeatable campaign pitches
+- natural language output suitable for direct client delivery
+- stable behavior across all tested input scenarios
 
 ---
 
@@ -335,10 +367,9 @@ v0.6:
 
 ## Known Gaps
 
-- Core concept phrases still reflect internal labels in some cases (e.g. "the world is alive")
-- Voice output still shows minor repetition across sentence structures
-- Some phrasing still feels mechanical or templated under close reading
-- Tone and genre variation could be more distinct at the sentence level
+- Some phrasing patterns still repeat across large batch outputs
+- Tone and genre variation can be expanded further at the sentence level
+- VoiceMap depth is still limited for certain combinations
 - AI expansion layer not fully tuned for voice consistency
 - No real-time intake → pipeline execution yet
 
@@ -346,40 +377,33 @@ v0.6:
 
 ## Next Focus (v0.8)
 
-### Voice & Language Refinement (Primary)
-- Humanize core concept phrasing (convert internal tags → natural language)
-- Reduce repetition across sentence structures
-- Improve cadence and flow of pitch output
-- Increase distinction between tone/genre combinations
+### Voice Expansion & Depth (Primary)
+- Expand voiceMap coverage across tone and genre combinations
+- Increase phrasing variation and stylistic diversity
+- Add nuance to different campaign identities (e.g. heroic vs tragic vs surreal)
+
+### Genre & Tone System Refinement
+- Refactor genre layer into:
+  - era / setting frame
+  - aesthetic / narrative tone
+  - world condition
+- Reduce conceptual overlap between genre and environment
+- Improve composability of campaign identity
 
 ### Output Polish
-- Smooth remaining mechanical phrasing
-- Improve transitions between ideas
-- Increase readability and “sellability”
+- Further refine cadence and sentence flow
+- Reduce subtle repetition across outputs
+- Increase “sellability” and distinctiveness
 
 ### Integration
 - Connect Formspree → pipeline execution
-- Format outputs for client-ready delivery
----
+- Format outputs for direct client delivery
 
 ## Next Priorities
 
 For a full, live list of milestones and fixes, see: 
 https://github.com/Questforgegamespnw/questforge-campaign-distillery/issues. 
 
-### Tone System (High Priority)
-- Populate and normalize toneSkins
-- Resolve tonal conflicts (e.g., kid-safe vs dangerous)
-- Integrate tone into voice layer
-
-### Renderer & Voice Polish
-- Reduce repetition
-- Improve phrasing variation
-- Clean blending of generated text
-
-### Live Integration
-- Connect Formspree → pipeline execution
-- Format outputs for client delivery
 
 ---
 
@@ -411,7 +435,9 @@ Input files are located in:
 - v0.4.x → Output quality refinement
 - v0.5.x → Intelligence & signal quality layer
 - v0.6.x → Intake normalization, validation, and safety enforcement
-- **v0.7.x** → Voice and premium output layer
+- **v0.7.0–0.7.1** → Voice layer development and stabilization
+- **v0.7.2** → Voice layer finalized (structured phrasing, no label leakage)
+- v0.8.x → Voice expansion, tone/genre depth, and polish
 - v0.8.x → Language refinment & premium output polish
 
 ## Future Vision
