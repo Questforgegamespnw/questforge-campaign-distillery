@@ -4,6 +4,81 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## v0.7.2 — Voice Layer Stabilization & Pitch Refactor
+
+### 🎯 Core Improvements
+
+- Introduced `pitchText` field to **coreFrames** and **systemFrames**
+  - Enables clean, player-facing phrasing without relying on label transformation
+  - Replaces brittle string normalization logic
+
+- Refactored pitch generation to use structured phrasing
+  - Eliminated reliance on `normalizeSystemLead`
+  - Removed design-language leakage into client-facing output
+
+- Updated resolution layer (`lookupById`)
+  - Now preserves `pitchText` through the full pipeline
+  - Ensures renderer receives complete, intended data
+
+---
+
+### 🧠 Voice & Output Quality
+
+- Rebuilt `buildPitchParagraph()` for clarity and readability
+  - Reduced sentence stacking and clause overload
+  - Limited pitch to a single system expression for cleaner delivery
+  - Removed core-to-core transition sentence (moved responsibility to `About`)
+
+- Improved sentence templates
+  - Better handling of longer, natural-language phrases
+  - More consistent tone across Primary / Adjacent / Wildcard outputs
+
+- Added `cleanCoreLead()` helper
+  - Smooths insertion of core phrases into pitch sentences
+  - Prevents awkward constructions (e.g. “centering trying to…”)
+
+---
+
+### ✂️ Data Layer Refinement
+
+- Tightened high-frequency `coreFrames.pitchText` entries
+  - Reduced verbosity
+  - Improved readability in repeated pitch usage
+  - Better compatibility with sentence templates
+
+---
+
+### 🧹 Cleanup
+
+- Removed legacy guard logic for system/core label filtering
+  - Pipeline now produces clean output without fallback protections
+  - Reduces technical debt and improves maintainability
+
+---
+
+### ✅ Result
+
+- No raw system/core labels in Pitch output
+- Consistent, readable player-facing copy across all batch tests
+- Stable voice pipeline ready for expansion
+
+---
+
+### 📌 Notes
+
+This version marks the transition from:
+> “patched output formatting”
+
+to:
+> “structured, reliable voice generation”
+
+Future work will focus on:
+- voiceMap depth and variation
+- genre/tone system expansion
+- UI and intake integration
+
+---
+
 ## [0.7.1] – Voice Stabilization Pass
 
 ### Improved

@@ -147,6 +147,47 @@ function normalizeSystemLead(text = "") {
     .trim();
 }
 
+
+function getSystemPitchText(system = {}) {
+  const direct = stripTrailingPeriod(cleanName(system?.pitchText || ""));
+  if (direct) return direct;
+
+  const fallback = stripTrailingPeriod(
+    normalizeDescription(
+      system?.description || system?.name || "",
+      "Players investigate, connect hidden information, and push deeper into the campaign's central conflict"
+    )
+  );
+
+  return normalizeSystemLead(fallback);
+}
+
+function getCorePitchText(core = {}, fallback = "") {
+  const direct = stripTrailingPeriod(cleanName(core?.pitchText || ""));
+  if (direct) return direct;
+
+  return softenIdentityPhrase(
+    humanizeName(cleanName(core?.name || fallback || ""))
+      .replace(/_/g, " ")
+      .toLowerCase(),
+    "standard"
+  );
+}
+
+function getCorePitchTextForProfile(core = {}, experienceProfile = "standard", fallback = "") {
+  const direct = stripTrailingPeriod(cleanName(core?.pitchText || ""));
+  if (direct) {
+    return softenIdentityPhrase(direct.toLowerCase(), experienceProfile);
+  }
+
+  return softenIdentityPhrase(
+    humanizeName(cleanName(core?.name || fallback || ""))
+      .replace(/_/g, " ")
+      .toLowerCase(),
+    experienceProfile
+  );
+}
+
 function combineToneAndGenre(toneText = "", genreText = "") {
   const tone = cleanName(toneText).toLowerCase();
   const genre = cleanName(genreText).toLowerCase();
@@ -157,6 +198,26 @@ function combineToneAndGenre(toneText = "", genreText = "") {
   if (tone.includes(genre)) return tone;
 
   return `${tone} ${genre}`;
+}
+
+function cleanCoreLead(text = "") {
+  let cleaned = String(text || "").trim();
+
+  cleaned = cleaned
+    .replace(/^trying to\s+/i, "")
+    .replace(/^getting caught in\s+/i, "")
+    .replace(/^finding\s+/i, "")
+    .replace(/^learning that\s+/i, "");
+
+  // Fix common broken verb starts after stripping
+  cleaned = cleaned
+    .replace(/^survive\s+/i, "surviving ")
+    .replace(/^piece together\s+/i, "piecing together ")
+    .replace(/^matter\s+/i, "mattering ")
+    .replace(/^change\s+/i, "changing ")
+    .replace(/^hold on\s+/i, "holding on ");
+
+  return cleaned.replace(/\s+/g, " ");
 }
 
 // ==================================================
@@ -545,23 +606,9 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
 }
 
 function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") {
-  const systemADesc = stripTrailingPeriod(
-    normalizeDescription(
-      systemA?.description,
-      "Players investigate, connect hidden information, and push deeper into the campaign's central conflict"
-    )
-  );
+  const systemALead = getSystemPitchText(systemA);
+  const systemBLead = getSystemPitchText(systemB);
 
-  const systemBDesc = stripTrailingPeriod(
-    normalizeDescription(
-      systemB?.description,
-      "Their choices, alliances, and leverage shape how the world responds"
-    )
-  );
-
-  const systemALead = normalizeSystemLead(systemADesc);
-  const systemBLead = normalizeSystemLead(systemBDesc);
-  
   const openersByLabel = {
     primary: [
       "You’ll spend most of your time",
@@ -595,13 +642,12 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
   ];
 
   const opener = chooseByLabel(label, openersByLabel);
-  const first = systemALead
-    ? `${opener} ${systemALead}.`
-    : "";
+  const first = systemALead ? `${opener} ${systemALead}.` : "";
 
   const second = systemBLead && systemBLead !== systemALead
     ? `${sentenceCase(systemBLead)}.`
     : "";
+
   const third = pickOne(connectiveLines, "");
 
   let text = [first, second].filter(Boolean).join(" ");
@@ -655,10 +701,10 @@ function buildDistinctHook({ genre, tone, environments, label, experienceProfile
 
 function buildPitchParagraph({
   label,
-  coreAName,
-  coreBName,
-  systemAName,
-  systemBName,
+  coreA,
+  coreB,
+  systemA,
+  systemB,
   genreName,
   toneName,
   envNames,
@@ -670,100 +716,52 @@ function buildPitchParagraph({
   const genreText = humanizeName(genreName || "fantasy").toLowerCase();
   const toneText = formatToneLabel(toneName).toLowerCase();
   const pitchGenreText = combineToneAndGenre(toneText, genreText);
-  
-  const coreAOnly = softenIdentityPhrase(
-    humanizeName(coreAName || "").replace(/_/g, " ").toLowerCase(),
-    experienceProfile
-  );
 
-  const coreBOnly = softenIdentityPhrase(
-    humanizeName(coreBName || "").replace(/_/g, " ").toLowerCase(),
-    experienceProfile
-  );
+  const coreAOnly = getCorePitchTextForProfile(coreA, experienceProfile, "Hidden Truth");
+  const coreAForPitch = cleanCoreLead(coreAOnly);
+  const coreBOnly = getCorePitchTextForProfile(coreB, experienceProfile, "");
 
   const systemText = [...new Set(
-    [systemAName, systemBName]
+    [systemA, systemB]
       .filter(Boolean)
-      .map((name) =>
-        humanizeName(name)
-          .replace(/Clue web/i, "uncovering hidden connections")
-          .replace(/Exploration discovery loop/i, "exploration and discovery")
-          .replace(/Exploration discovery/i, "exploration and discovery")
-          .replace(/Hidden information/i, "realizing how much has been kept out of sight")
-          .replace(/Environmental combat/i, "dealing with spaces that are as dangerous as the enemies in them")
-          .replace(/Influence social leverage/i, "managing pressure, leverage, and fragile alliances")
-          .replace(/\bloop\b/gi, "")
-          .replace(/and and/gi, "and")
-          .replace(/\b(.+?) and \1\b/gi, "$1")
-          .replace(/\s+/g, " ")
-          .trim()
-          .toLowerCase()
-      )
+      .map((system) => getSystemPitchText(system))
+      .filter(Boolean)
+      .map((text) => text.toLowerCase().replace(/\s+/g, " ").trim())
   )];
-  
-  const systemTextFiltered = systemText.filter(
-    (text) => !/design|system|track|meter|build|control|reputation/i.test(text)
-  );
-  //temporary guard to block system ID's from leaking until v0.7.3 can be factored in.//
-  const blockedSystemWords = [
-    "resource scarcity",
-    "attrition combat",
-    "escalation meter",
-    "modular build system",
-    "corruption transformation track",
-    "tactical positioning zone control",
-    "living world reaction",
-    "legacy inheritance system"
-  ];
 
-  const hasRawSystemLeak = systemText.some((text) =>
-    blockedSystemWords.some((word) => text.includes(word))
-  );
+  const primarySystemText = systemText[0] || "";
 
   const experienceLineByLabel = {
     primary: [
-      `This one plays like a ${pitchGenreText} campaign where ${coreAOnly} keeps pulling the story forward.`,
-      `This direction leans into a ${pitchGenreText} experience built around ${coreAOnly}.`,
-      `At its best, this feels like a ${pitchGenreText} campaign driven by ${coreAOnly}.`
+      `This one plays like a ${pitchGenreText} campaign centered on ${coreAForPitch}.`,
+      `This direction leans into a ${pitchGenreText} experience shaped by ${coreAForPitch}.`,
+      `At its best, this feels like a ${pitchGenreText} campaign that keeps circling back to ${coreAForPitch}.`
     ],
     adjacent: [
-      `This version takes the same foundation in a slightly different direction, leaning harder into ${coreAOnly}.`,
-      `Here, the campaign leans further into ${coreAOnly}, giving that tension more space to build over time.`,
-      `This version leans harder into ${coreAOnly}, letting the larger pattern emerge more gradually.`
+      `This version takes the same foundation in a slightly different direction, leaning harder into ${coreAForPitch}.`,
+      `Here, the campaign leans further into ${coreAForPitch}, giving that tension more room to grow.`,
+      `This version leans harder into ${coreAForPitch}, letting it shape more of the campaign over time.`
     ],
     wildcard: [
-      `This is the stranger version—the one that leans fully into ${coreAOnly}.`,
-      `This take pushes the campaign into a sharper, weirder direction by centering ${coreAOnly}.`,
-      `If you want the version with more edge, this is where ${coreAOnly} really takes over.`
+      `This is the stranger version—the one that leans fully into ${coreAForPitch}.`,
+      `This take pushes the campaign into a sharper, weirder direction by centering ${coreAForPitch}.`,
+      `If you want the version with more edge, this is where ${coreAForPitch} really takes over.`
     ]
   };
 
   const secondLineOptions = [];
 
-  if (coreAOnly && coreBOnly) {
-    const coreTransitionOptions = [
-      `The deeper you go, the more ${coreBOnly} starts surfacing underneath it.`,
-      `What starts with ${coreAOnly} gradually opens into ${coreBOnly}.`,
-      `And before long, ${coreBOnly} starts changing what the whole campaign is really about.`,
-      `As things unfold, ${coreBOnly} starts reshaping what the story is really about.`,
-      `Over time, ${coreBOnly} starts shifting the direction of the entire campaign.`
-    ];
-
-    secondLineOptions.push(...coreTransitionOptions);
-  }
-
-  if (systemTextFiltered.length && !hasRawSystemLeak) {
+  if (primarySystemText) {
     const systemLineOptions = [
-      `A lot of play comes from ${joinNatural(systemTextFiltered)}.`,
-      `You’ll spend a lot of time focused on ${joinNatural(systemTextFiltered)}.`,
-      `The rhythm of play comes from ${joinNatural(systemTextFiltered)}.`,
-      `The campaign builds its pressure through ${joinNatural(systemTextFiltered)}.`
+      `A lot of play comes from ${primarySystemText}.`,
+      `You’ll spend a lot of time focused on ${primarySystemText}.`,
+      `The rhythm of play comes from ${primarySystemText}.`,
+      `The campaign builds its pressure through ${primarySystemText}.`
     ];
 
-    secondLineOptions.push(pickOne(systemLineOptions));
+    secondLineOptions.push(...systemLineOptions);
   }
 
-  
   const includeCleanRaw = cleanIncludeText(includeNotes);
   const includeClean = dedupePhrases(includeCleanRaw);
   const includePhrase = includeClean
@@ -970,11 +968,10 @@ const envNames = environmentSkins
 
   const pitch = buildPitchParagraph({
     label,
-    title,
-    coreAName,
-    coreBName,
-    systemAName,
-    systemBName,
+    coreA,
+    coreB,
+    systemA,
+    systemB,
     genreName,
     toneName,
     envNames,
@@ -983,6 +980,7 @@ const envNames = environmentSkins
     excludeNotes,
     experienceProfile
   });
+
   const aiBrief = buildAIBrief({
     label,
     emphasis,
