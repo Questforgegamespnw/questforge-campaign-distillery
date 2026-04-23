@@ -6,19 +6,69 @@ All rights reserved.
 
 This software and associated documentation files (the "Software") are the intellectual property of QuestForge Games PNW.
 
-Permission is NOT granted to any person to use, copy, modify, merge, publish, distribute, sublicense, or sell copies of the Software, in whole or in part, without explicit prior written permission from the author.
+---
 
-This includes, but is not limited to:
-- Commercial use
-- Redistribution of source code
-- Creation of derivative works
-- Use in other applications or services
+## Permitted Use
+
+You may:
+
+- View and study the source code
+- Run the software locally for personal, non-commercial use
+- Modify the code for personal experimentation
+
+---
+
+## Restrictions
+
+You may NOT, without explicit prior written permission:
+
+- Use the Software for commercial purposes
+- Distribute or publish the Software or any modified versions
+- Incorporate the Software into other applications, tools, or services
+- Create derivative works for public or commercial use
+
+---
+
+## Disclaimer
 
 The Software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement.
 
 In no event shall the author be liable for any claim, damages, or other liability arising from, out of, or in connection with the Software or the use or other dealings in the Software.
 
-For licensing inquiries, contact:
-QuestForge Games PNW
-https://www.questforgegamespnw.com/
-questforgegamespnw@gmail.com 
+---
+
+## Contact
+
+For licensing or usage inquiries:
+
+QuestForge Games PNW  
+https://www.questforgegamespnw.com/  
+questforgegamespnw@gmail.com
+
+---
+
+## Generated Content & Outputs
+
+The outputs produced by this Software (including campaign pitches, narrative content, and related materials) are not considered part of the Software itself.
+
+### For the Author
+
+QuestForge Games PNW retains full rights to use, modify, sell, and distribute any content generated using this system.
+
+### For Clients
+
+Clients who receive generated content through QuestForge services are granted permission to:
+
+- Use the content for personal gameplay
+- Share the content within their play group
+
+Unless otherwise agreed in writing, clients may NOT:
+
+- Resell or redistribute the content commercially
+- Publish the content as their own product
+
+### For Repository Users
+
+Running this Software locally does NOT grant rights to reuse or distribute generated outputs beyond personal use.
+
+Commercial use of generated content requires explicit permission from the author.
