@@ -24,6 +24,101 @@ Do NOT start by modifying rendering or output text.
 
 Most issues originate earlier in the pipeline.
 
+> Debug the pipeline in stages, and the renderer in layers.
+
+---
+
+## Layer Map & Quick Triage
+
+### Quick Debug Map
+
+```
+Wrong input?           → Intake
+Wrong interpretation?  → Mapping / Selection
+Wrong object data?     → Resolution
+Wrong section content? → pitchSectionBuilders
+Wrong sentence flow?   → pitchAssembly
+Wrong cleanup?         → pitchCleanup
+Wrong tone/safety?     → pitchSafetyFilters
+Wrong AI expansion?    → AI Layer
+```
+
+Use this when something looks wrong and you need to decide **which layer to inspect first**.
+
+
+RAW INPUT
+  ↓
+INTAKE
+  - form data
+  - normalization
+  - canonical shaping
+  Symptoms:
+    missing fields / bad structure / wrong normalized values
+
+  ↓
+MAPPING / TRANSLATION
+  - tags
+  - weights
+  - inferred signals
+  Symptoms:
+    wrong themes / weak signals / missing campaign intent
+
+  ↓
+SELECTION
+  - core/system/tone/genre/environment picks
+  Symptoms:
+    wrong direction chosen / duplicate-feeling outputs / weak variety
+
+  ↓
+RESOLUTION
+  - full objects returned by ID
+  - name / description / pitchText / tags
+  Symptoms:
+    fallback labels / undefined values / missing pitchText
+
+  ↓
+RENDERING PIPELINE
+    ↓
+    pitchCore
+      - context extraction / normalized renderer inputs
+      Symptoms:
+        wrong names, defaults, IDs, tone, genre, environment lists
+
+    ↓
+    pitchSectionBuilders
+      - title / about / playersDo / hook section content
+      Symptoms:
+        weak section focus / wrong emphasis / thin or mismatched sections
+
+    ↓
+    pitchAssembly
+      - sentence joining / pitch paragraph construction
+      Symptoms:
+        awkward grammar / repeated phrasing / clunky sentence flow
+
+    ↓
+    pitchCleanup
+      - text normalization / cleanup helpers
+      Symptoms:
+        punctuation issues / spacing / capitalization / artifact phrasing
+
+    ↓
+    pitchSafetyFilters
+      - youth-safe / tone / guardrail enforcement
+      Symptoms:
+        tone drift / too harsh / too soft / safety rules not applied
+
+  ↓
+FINAL OUTPUT
+  Symptoms:
+    output is structurally correct but still reads poorly
+    → usually Assembly, Cleanup, or Safety Filters
+
+  ↓
+AI LAYER (v0.9+)
+  Symptoms:
+    hallucinations / structure drift / new ideas introduced unexpectedly
+
 ---
 
 ## Debug Flow (Step-by-Step)
@@ -31,7 +126,7 @@ Most issues originate earlier in the pipeline.
 Follow this order:
 
 ```text id="x8q1r9"
-Intake → Mapping → Selection → Resolution → Rendering → AI Layer
+Intake → Mapping → Selection → Resolution → Rendering (Core → Sections → Assembly → Cleanup → Safety) → AI Layer
 ```
 
 ---
@@ -151,31 +246,148 @@ Intake → Mapping → Selection → Resolution → Rendering → AI Layer
 
 ---
 
-## 5. Rendering Issues
+## 5. Rendering Issues (Modular Pipeline)
+
+Rendering is now composed of multiple layers.  
+When debugging, isolate the issue to the correct layer before making changes.
+
+---
+
+### 5.1 pitchCore (Context Issues)
 
 ### Symptoms
 
-* awkward phrasing
-* repeated sentence structures
-* overly long or clunky sentences
+* missing or incorrect names (core/system/tone/genre)
+* unexpected defaults (e.g. "Hidden Truth")
+* incorrect environment lists
 
 ### Check
 
-* generated pitch / about / playersDo
-* sentence templates
-* phrase composition
+* output of `buildPitchContext`
+* extracted names and IDs
 
 ### Common Problems
 
-* poor template fit for data
-* repeated patterns
-* improper text joining
+* missing data in selections
+* incorrect normalization
+* fallback values triggering unexpectedly
 
 ### Fix
 
-* refine templates
+* verify upstream resolution data
+* adjust normalization logic
+
+---
+
+### 5.2 Section Builders (Content Issues)
+
+### Symptoms
+
+* sections feel empty or thin
+* incorrect focus (wrong core/system emphasis)
+* weak or mismatched tone
+
+### Check
+
+* outputs of section builders (title, about, playersDo, hook)
+
+### Common Problems
+
+* incorrect data passed into builders
+* missing phrasing templates
+* poor system/core alignment
+
+### Fix
+
+* refine section builder logic
+* adjust phrasing sources (`pitchText`)
+
+---
+
+### 5.3 Assembly (Sentence Issues)
+
+### Symptoms
+
+* awkward sentence structure
+* repeated phrasing
+* unnatural flow between ideas
+
+### Check
+
+* assembled pitch string
+* sentence join logic
+
+### Common Problems
+
+* poor sentence joining
+* repeated connectors
+* overloading sentences with multiple ideas
+
+### Fix
+
+* refine assembly logic
+* simplify sentence structure
 * adjust phrasing helpers
-* improve variation pools
+
+---
+
+### 5.4 Cleanup (Formatting Issues)
+
+### Symptoms
+
+* extra spaces or punctuation issues
+* inconsistent capitalization
+* awkward phrasing artifacts
+
+### Check
+
+* output before/after cleanup functions
+
+### Common Problems
+
+* missing normalization step
+* conflicting cleanup rules
+
+### Fix
+
+* adjust cleanup helpers
+* ensure consistent formatting rules
+
+---
+
+### 5.5 Safety Filters (Tone Issues)
+
+### Symptoms
+
+* tone mismatch (too harsh / too soft)
+* youth-safe output not applied
+* unintended content slips through
+
+### Check
+
+* output before/after safety filters
+
+### Common Problems
+
+* safety rules not applied
+* incorrect tone detection
+* missing soften logic
+
+### Fix
+
+* adjust safety filter logic
+* verify tone inputs and flags
+
+---
+
+### Key Rule for Rendering Debugging
+
+> Always identify the failing layer before making changes.
+
+Do NOT:
+- fix grammar inside section builders  
+- apply tone fixes in assembly  
+- patch output instead of correcting the correct layer  
 
 ---
 

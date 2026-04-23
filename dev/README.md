@@ -4,14 +4,35 @@
 
 This folder contains internal documentation for the QuestForge Campaign Distillery.
 
-Use these documents to understand, extend, and maintain the system safely.
+Use these documents to understand, extend, and safely maintain the system.
 
 ---
 
 ## System Overview
 
-* [Pipeline Overview](./PIPELINE_OVERVIEW.md)
-  End-to-end flow: intake → mapping → selection → resolution → rendering → AI
+* [Pipeline Overview](./PIPELINE_OVERVIEW.md)  
+  End-to-end flow: intake → mapping → selection → resolution → rendering → AI  
+
+* [Renderer Architecture](./RENDERER_ARCHITECTURE.md)  
+  Modular renderer structure: context → sections → assembly → cleanup → safety  
+
+* [Voice System Overview](./VOICE_SYSTEM_OVERVIEW.md)  
+  How structured data becomes player-facing narrative output  
+
+---
+
+## System Evolution
+
+The Campaign Distillery has progressed through distinct capability stages:
+
+- **v0.4** → The system works (end-to-end pipeline established)  
+- **v0.5** → The system understands intent (signal adjudication + intelligence layer)  
+- **v0.6** → The system normalizes and enforces safety constraints  
+- **v0.7** → The system produces stable, consistent outputs across all scenarios  
+- **v0.7.4** → Renderer modularized into a maintainable pipeline architecture  
+
+---
+
 
 ---
 

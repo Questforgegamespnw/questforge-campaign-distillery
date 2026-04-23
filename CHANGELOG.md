@@ -1,6 +1,44 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+---
+## v0.7.4 — Pipeline Refactor & Modular Renderer Architecture
+
+### Core Refactor (No Output Changes)
+Refactored generateCampaignPitch.js into a modular, pipeline-based architecture without intentionally altering output behavior
+
+- Split responsibilities into dedicated modules: 
+  - pitchCore.js → context extraction and normalization
+  - pitchSectionBuilders.js → section-level narrative construction
+  - pitchAssembly.js → sentence assembly and pitch composition
+  - pitchCleanup.js → normalization and text utilities
+  - pitchSafetyFilters.js → tone filtering and safety enforcement
+  - generateCampaignPitch.js → orchestration layer only
+
+### Structural Improvments
+- Renderer now reads as a clear pipeline instead of a monolithic function
+- Eliminated duplicated cleanup and splice logic from iterative fixes
+- Isolated fragile transforms into clearly defined layers
+- Improved debuggability and future iteration safety
+
+### Validation
+- Full batch test suite: 24/24 passing
+- No intentional changes to output, structure, or tone
+- verified stability across all existing test scenarios
+
+### Outcome
+This version marks the transition from: 
+"Working Renderer" 
+
+to: 
+
+"maintainable, modular pitch generation system" 
+
+This establishes a safe foundation for: 
+- Voice Expansion
+- Tone/Genre Refinement
+- Output Quality Tuning
+
 
 ---
 
