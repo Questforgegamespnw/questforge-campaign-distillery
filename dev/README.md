@@ -30,9 +30,7 @@ The Campaign Distillery has progressed through distinct capability stages:
 - **v0.6** → The system normalizes and enforces safety constraints  
 - **v0.7** → The system produces stable, consistent outputs across all scenarios  
 - **v0.7.4** → Renderer modularized into a maintainable pipeline architecture  
-
----
-
+- **v0.8.0** → 
 
 ---
 
@@ -69,3 +67,23 @@ The Campaign Distillery has progressed through distinct capability stages:
 
 * This documentation is developer-facing and may evolve over time
 * Root README remains the primary user-facing entry point
+
+
+---
+
+## v0.8 System Intent Update
+
+As of v0.8, the renderer is no longer responsible for producing final client-facing prose.
+
+Instead, it produces:
+> structured, clean, AI-expandable narrative scaffolding
+
+Key implications:
+- Slight repetition is acceptable (used as signal reinforcement)
+- Output clarity is prioritized over stylistic perfection
+- Avoid over-polishing phrasing at this layer
+
+Future work should focus on:
+- improving structure and clarity
+- maintaining consistency
+- supporting AI expansion workflows
