@@ -105,7 +105,7 @@ function normalizeSystemLead(text = "") {
         )
         .replace(
             /^Power changes the characters over time, creating tradeoffs between strength, identity, and consequence$/i,
-            "dealing with power that changes the characters over time"
+            "power changing the characters over time"
         )
         .replace(
             /^The battlefield matters as much as the enemies, with hazards, terrain, and interaction shaping the fight$/i,
@@ -113,7 +113,7 @@ function normalizeSystemLead(text = "") {
         )
         .replace(
             /^The world responds to player action over time, with areas, threats, and NPC behavior changing in reaction$/i,
-            "dealing with a world that keeps reacting to what the players do"
+            "a world reacting to what the players do"
         )
         .replace(
             /^Player actions shift their standing with factions, unlocking opportunities or closing doors over time$/i,
@@ -121,7 +121,7 @@ function normalizeSystemLead(text = "") {
         )
         .replace(
             /^Their choices, alliances, and leverage shape how the world responds$/i,
-            "watching choices and alliances reshape how the world responds"
+            "choices and alliances reshaping how the world responds"
         )
         .replace(
             /^Players build their identity through flexible components, allowing highly customized growth and expression$/i,
@@ -131,18 +131,32 @@ function normalizeSystemLead(text = "") {
             /^No alliance is simple, and choosing sides carries long-term consequences, tension, and compromise$/i,
             "navigating alliances where every choice comes with tradeoffs and long-term consequences"
         )
+
+        .replace(
+            /^dealing with power that changes the characters over time$/i,
+            "power changing the characters over time"
+        )
+        .replace(
+            /^dealing with a world that keeps reacting to what the players do$/i,
+            "a world reacting to what the players do"
+        )
+        .replace(
+            /^watching choices and alliances reshape how the world responds$/i,
+            "choices and alliances reshaping how the world responds"
+        )
+
         .replace(/\s+/g, " ")
         .trim();
 }
 
 function getSystemPitchText(system = {}) {
     const direct = stripTrailingPeriod(cleanName(system?.pitchText || ""));
-    if (direct) return direct;
+    if (direct) return normalizeSystemLead(direct);
 
     const fallback = stripTrailingPeriod(
         normalizeDescription(
             system?.description || system?.name || "",
-            "Players investigate, connect hidden information, and push deeper into the campaign's central conflict"
+            "exploring hidden information and pushing deeper into the central conflict"
         )
     );
 
@@ -344,19 +358,62 @@ function chooseByLabel(label, options = {}) {
     return fallback[Math.floor(Math.random() * fallback.length)] || "";
 }
 
-function pickOne(array = [], fallback = "") {
-    if (!Array.isArray(array) || array.length === 0) {
-        return fallback;
+let lastPick = null;
+
+function pickOne(arr, fallback = "", avoidRepeat = false) {
+    if (!Array.isArray(arr) || arr.length === 0) return fallback;
+
+    let options = arr;
+
+    if (avoidRepeat && lastPick) {
+        options = arr.filter(item => item !== lastPick);
+        if (options.length === 0) options = arr;
     }
 
-    return array[Math.floor(Math.random() * array.length)] || fallback;
+    const choice = options[Math.floor(Math.random() * options.length)];
+    lastPick = choice;
+    return choice;
+}
+/// PHRASE REWRITES ///
+const PHRASE_REWRITES = [
+    {
+        pattern: /\bpower changing the characters over time\b/gi,
+        replacement: "power gradually reshaping the characters"
+    },
+    {
+        pattern: /\bpower changing the characters\b/gi,
+        replacement: "power reshaping the characters"
+    }
+];
+
+function applyPhraseRewrites(text = "") {
+    return PHRASE_REWRITES.reduce(
+        (output, rule) => output.replace(rule.pattern, rule.replacement),
+        String(text || "")
+    );
 }
 
 function cleanOutputText(text = "") {
-    return text
+    return applyPhraseRewrites(text)
+
+        // Joiner cleanup patch
+        .replace(/\bwith dealing\b/gi, "dealing")
+        .replace(/\bwith managing\b/gi, "managing")
+        .replace(/\bwith following\b/gi, "following")
+
+        .replace(/\.\.+/g, ".")
         .replace(/\.\.+/g, ".")
         .replace(/\s+/g, " ")
         .replace(/\s([.,!?;:])/g, "$1")
+
+        // ✅ NEW: concept phrasing cleanup
+        .replace(/\brealizing that\s+/gi, "")
+        .replace(/\bdiscovering that\s+/gi, "")
+        .replace(/\bchasing\s+/gi, "")
+
+        // ✅ NEW: duplicate word cleanup
+        .replace(/\b(\w+)\s+\1\b/gi, "$1")
+
         .replace(/\.\s+\./g, ".")
         .replace(/(divided,\s*or incomplete,\s*and incomplete|divided,\s*or incomplete)/gi, "divided and incomplete")
         .replace(/family-friendly\.\s+It stays approachable and family-friendly\./gi, "family-friendly.")
@@ -364,7 +421,15 @@ function cleanOutputText(text = "") {
         .replace(/It stays approachable and family-friendly\.\s+The mood stays rooted in wonder, curiosity, and adventure\./gi, "It stays approachable and family-friendly, with a tone rooted in wonder and curiosity.")
         .replace(/The tone stays light and kid-safe, family-friendly\.\s+It stays approachable and family-friendly\./gi, "The tone stays light, kid-safe, and approachable.")
         .trim()
-        .replace(/divided and incomplete,\s*and/gi, "divided and incomplete. ");
+        .replace(/divided and incomplete,\s*and/gi, "divided and incomplete. ")
+        .replace(
+            /\bwhere ([^.,]+?) (keeps|starts|begins|continues)\b/gi,
+            "where $1, $2"
+        )
+        .replace(
+            /\b(shaped by|centered on|built around) ([^.,]+?) is\b/gi,
+            "$1 the fact that $2 is"
+        );
 }
 
 function isPluralConcept(text = "") {

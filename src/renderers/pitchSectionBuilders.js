@@ -22,6 +22,8 @@ const {
     softenIdentityPhrase
 } = require("./pitchSafetyFilters");
 
+///Helpers///
+
 function detectHookCategory({ coreIds = [], toneName = "", genreName = "", label = "primary" }) {
     const tone = cleanName(toneName).toLowerCase();
     const genre = cleanName(genreName).toLowerCase();
@@ -184,6 +186,8 @@ function buildHookLineByCategory(category, label = "primary") {
     return pickOne(hookPools[category], "");
 }
 
+///Main functions below///
+
 function buildTitle({ genreName, coreAName, systemAName, label }) {
     const corePart = coreAName || "Hidden Truth";
     const genrePart = genreName || "Campaign";
@@ -294,23 +298,10 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/incomplete,\s*divided and incomplete/gi, "divided and incomplete")
         .replace(/the self is incomplete,\s*divided and incomplete/gi, "the self is divided and incomplete")
         .replace(/\s+/g, " ")
-        .replace(/the self is incomplete,\s*divided and incomplete/gi, "the self is divided and incomplete")
         .replace(/self is incomplete,\s*divided and incomplete/gi, "self is divided and incomplete")
-
         .replace(/^every gain extracts something in return/i, "every gain comes at a cost")
         .replace(/^understanding what is really happening comes with consequences/i, "understanding the truth carries consequences")
-
         .trim();
-
-    if (
-        /makes things worse/i.test(coreBDesc) &&
-        /comes with consequences/i.test(coreBDesc)
-    ) {
-        coreBDesc = coreBDesc.replace(
-            /,?\s*and understanding (the truth )?comes with consequences/i,
-            ""
-        );
-    }
 
     const includeCleanRaw = cleanIncludeText(includeNotes);
     const includeClean = dedupePhrases(includeCleanRaw);
@@ -321,93 +312,23 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/\/\s*kid-safe/g, "")
         .trim();
 
-    const clauseTransitions = [
-        "What starts as something contained quickly becomes",
-        "It doesn’t stay contained for long, and soon",
-        "What begins as a smaller problem grows into",
-        "Eventually, it becomes clear that",
-        "The more the group engages with it, the more it reveals that",
-        "Over time, it starts to show that"
+    const followupTransitions = [
+        "Alongside that,",
+        "At the same time,",
+        "Running underneath it all,",
+        "What makes it harder is that",
+        "What gives it extra weight is that",
+        "What follows is that",
+        
     ];
 
-    const sentenceTransitions = {
-        neutral: [
-            "Alongside that,",
-            "At the same time,",
-            "Running underneath it all,"
-        ],
-        weight: {
-            clause: [
-                "What gives it extra weight is that",
-                "What makes it heavier is that"
-            ],
+    const transition = pickOne(followupTransitions, "At the same time,");
 
-            pivot: [
-                "What complicates things is that",
-                "What makes it harder is that",
-                "The situation turns when",
-                "It becomes more dangerous once",
-                "That’s where things start to shift:"
-            ]
-        }
-    };
-
-    const useClause = Math.random() < 0.3;
-    const useMergedAbout = Math.random() < 0.25;
-    const isSentenceLike = /^(the|this|that|everything|reality|something|knowing|understanding|unchecked|every gain|pressure)/i.test(coreBDesc);
-
-    let text;
-
-    if (useMergedAbout) {
-        const softMergeTransitions = [
-            "From there,",
-            "What follows is that",
-            "That’s when it becomes clear that",
-            "Soon after,",
-            "It leads into a situation where"
-        ];
-
-        const transition = pickOne(softMergeTransitions);
-
-        text = `${coreADesc}. ${transition} ${coreBDesc.toLowerCase()}.`;
-    } else if (useClause && !isSentenceLike) {
-        const transition = pickOne(clauseTransitions);
-
-        let coreBFragment = coreBDesc
-            .replace(/\.$/, "")
-            .toLowerCase();
-
-        if (/^(pressure|everything|the|something|knowing|understanding)/i.test(coreBFragment)) {
-            coreBFragment = `a situation where ${coreBFragment}`;
-        }
-
-        text = `${coreADesc}. ${transition} ${coreBFragment}.`;
-    } else {
-        const wantsWeightTransition =
-            /cost|loss|corruption|consequences|pressure|collapse|sacrifice/i.test(coreBDesc)
-            && Math.random() < 0.7;
-
-        const isFullSentence = /^(the|this|that|everything|reality|something)/i.test(coreBDesc);
-
-        let transition;
-
-        if (wantsWeightTransition) {
-            if (isFullSentence) {
-                transition = pickOne(sentenceTransitions.weight.pivot);
-            } else {
-                transition = pickOne(sentenceTransitions.weight.clause);
-            }
-        } else {
-            transition = pickOne(sentenceTransitions.neutral);
-        }
-
-        text = `${coreADesc}. ${transition} ${coreBDesc.toLowerCase()}.`;
-    }
+    let text = `${coreADesc}. ${transition} ${coreBDesc.toLowerCase()}.`;
 
     text = text
         .replace(/\s+/g, " ")
         .replace(/\.\s*/g, ". ")
-        .replace(/, and ([^,]+), and /gi, ", and $1. ")
         .replace(/(^|\.\s)([a-z])/g, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`)
         .trim();
 
@@ -421,6 +342,65 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
     return isYouthProfile(experienceProfile) ? softenYouthText(text) : text;
 }
 
+///Helpers for buildPlayersDo for sentence structure variation///
+
+function buildPlayersDoActionSentence(opener, actionText) {
+    if (!actionText) return "";
+    return `${opener} ${actionText}.`;
+}
+
+function buildPlayersDoEscalationSentence(text) {
+    return text ? `${sentenceCase(text)}.` : "";
+}
+
+function normalizeActionText(text) {
+    if (!text) return { text: "", hasSubject: false };
+
+    const trimmed = String(text).trim();
+    const hasSubject = /^(players|the group|characters)\b/i.test(trimmed);
+
+    return {
+        text: hasSubject ? sentenceCase(trimmed) : trimmed,
+        hasSubject
+    };
+}
+
+function makeActionPhraseCompatible(text = "") {
+    let cleaned = String(text || "").trim();
+
+    if (/^power changing the characters over time$/i.test(cleaned)) {
+        return "dealing with power that gradually reshapes the characters";
+    }
+
+    if (/^power gradually reshaping the characters$/i.test(cleaned)) {
+        return "dealing with power that gradually reshapes the characters";
+    }
+
+    if (/^power reshaping the characters$/i.test(cleaned)) {
+        return "dealing with power that reshapes the characters";
+    }
+
+    if (/^a world reacting to what the players do$/i.test(cleaned)) {
+        return "navigating a world that reacts to what the players do";
+    }
+
+    if (/^choices and alliances reshaping how the world responds$/i.test(cleaned)) {
+        return "making choices and alliances that reshape how the world responds";
+    }
+
+    return cleaned;
+}
+
+function softenRepeatedConcept(action = "") {
+    const text = action.toLowerCase();
+
+    if (text.includes("power") && text.includes("reshape")) {
+        return "coping with changes that alter who the characters are becoming";
+    }
+
+    return action;
+}
+///End of buildPlayersDo Helpers///
 function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") {
     const systemALead = getSystemPitchText(systemA);
     const systemBLead = getSystemPitchText(systemB);
@@ -429,7 +409,17 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
         primary: [
             "You’ll spend most of your time",
             "Most of play is about",
-            "A lot of play comes from"
+            "A lot of play comes from",
+            "Play usually revolves around",
+            "Most sessions center on",
+            "The group spends most of its time",
+            "What defines play here is",
+            "The experience is built around",
+            "Play tends to focus on",
+            "The campaign leans heavily on",
+            "A typical session focuses on",
+            "The core of play is",
+            "Much of the gameplay centers on"
         ],
 
         adjacent: [
@@ -437,7 +427,10 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
             "Most sessions start focusing on",
             "The experience shifts toward",
             "This version puts more weight on",
-            "You’ll find the group spending more time"
+            "You’ll find the group spending more time",
+            "This version leans more into",
+            "The campaign starts focusing more on",
+            "There’s a stronger emphasis on"
         ],
 
         wildcard: [
@@ -446,44 +439,162 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
             "Most of the pressure shows up through",
             "What defines play here is",
             "This version gets its edge from",
-            "Sessions tend to focus on"
+            "Sessions tend to focus on",
+            "This pushes play toward",
+            "The campaign leans hardest into",
+            "What really drives this version is"
         ],
 
         default: [
-            "Play tends to center on"
+            "Play tends to center on",
+            "Most sessions revolve around"
         ]
     };
 
     const connectiveLines = [
-        "That works—until something stops lining up.",
-        "It holds together—right up until it doesn’t.",
-        "The deeper you go, the harder it is to trust what you’re seeing.",
-        "At first it makes sense. Then the pieces stop fitting cleanly.",
-        "You start getting answers—but they don’t agree with each other.",
-        "It feels manageable—until the situation shifts under you.",
-        "The more progress you make, the less stable the bigger picture becomes.",
-        "Every step forward changes what you thought you understood.",
-        "The picture starts to shift the closer you look.",
-        "Clarity comes in pieces—and they don’t stay consistent.",
-        "What seemed solid starts to give way under pressure.",
-        "The situation stops behaving the way it should.",
-        "The more you uncover, the harder it is to stay certain.",
-        "Answers come through—but they raise new problems instead.",
-        "What made sense earlier doesn’t hold up anymore.",
-        "The ground keeps shifting under what you thought you understood."
+        "That pressure shows up quickly once play is underway",
+        "The rhythm stays active, but the situation keeps getting harder to read",
+        "What starts as manageable play gets more unstable over time",
+        "The group gets room to act, but never without consequences pushing back",
+        "What looks straightforward early on gets messier the longer play continues",
+        "The play stays active and tangible, even as the bigger picture starts shifting",
+        "The table experience keeps tightening as the group pushes further in",
+        "Each step forward opens up more to deal with, not less",
+        "The moment-to-moment play stays concrete, but the wider situation keeps changing",
+        "The campaign keeps turning simple actions into larger complications",
+        "The situation keeps evolving faster than the group can fully stabilize it",
+        "Even small decisions start to carry larger consequences",
+        "The campaign keeps raising the stakes around what the group is already doing",
+        "What feels manageable at first becomes harder to control",
+        "The pressure builds in ways that are hard to predict",
+        "The more the group commits, the more complicated things become",
+        "Each success changes what comes next",
+        "The system pushes back harder the further the group goes"
     ];
 
+    const secondaryOpeners = [
+        "You’ll also spend time",
+        "You’ll also keep coming back to",
+        "The group also spends time",
+        "A second layer of play comes from"
+    ];
+/// Commented out a fix for wiring pitch into the playersDo function that will be implemented later///
+    // const pitchText = (pitch || "").toLowerCase();
+
+    // function isOverlappingConcept(action = "") {
+    //     const cleaned = action.toLowerCase();
+
+    //     if (cleaned.includes("power") && pitchText.includes("power")) {
+    //         return true;
+    //     }
+
+    //     if (cleaned.includes("identity") && pitchText.includes("identity")) {
+    //         return true;
+    //     }
+
+    //     return false;
+    // }
+
     const opener = chooseByLabel(label, openersByLabel);
-    const first = systemALead ? `${opener} ${systemALead}.` : "";
-
-    const second = systemBLead && systemBLead !== systemALead
-        ? `${sentenceCase(systemBLead)}.`
+    let firstAction = makeActionPhraseCompatible(systemALead || "");
+    firstAction = softenRepeatedConcept(firstAction);
+    
+    const secondAction = systemBLead && systemBLead !== systemALead
+        ? makeActionPhraseCompatible(systemBLead)
         : "";
+    const escalation = pickOne(connectiveLines, "");
+    const { text: secondText, hasSubject: secondHasSubject } = normalizeActionText(secondAction);
 
-    const third = pickOne(connectiveLines, "");
+    const joiners = [
+        " while also ",
+        " and ",
+        " as well as ",
+        ", alongside ",
+        ", often involving ",
+        " but ",
+        " even as ",
+        " especially when "
+        
+    ];
+    const joiner = pickOne(joiners, " while also ", true);
 
-    let text = [first, second].filter(Boolean).join(" ");
-    if (third) text += ` ${third}`;
+    const structureType = pickOne(
+        ["three_line", "action_then_escalation", "dual_action", "compressed"],
+        "three_line",
+        true
+    );
+
+    let sentences = [];
+
+    if (structureType === "three_line") {
+        sentences = [
+            buildPlayersDoActionSentence(opener, firstAction),
+            secondText
+                ? (secondHasSubject
+                    ? `${secondText}.`
+                    : buildPlayersDoActionSentence(
+                        pickOne(secondaryOpeners, "You’ll also spend time"),
+                        secondText
+                    ))
+                : "",
+            escalation ? buildPlayersDoEscalationSentence(escalation) : ""
+        ];
+    }
+
+    if (structureType === "action_then_escalation") {
+        let combinedAction;
+
+        if (secondHasSubject) {
+            combinedAction = firstAction;
+        } else {
+            combinedAction = [firstAction, secondText]
+                .filter(Boolean)
+                .join(joiner);
+        }
+
+        sentences = [
+            buildPlayersDoActionSentence(opener, combinedAction || firstAction),
+            escalation ? buildPlayersDoEscalationSentence(escalation) : ""
+        ];
+    }
+
+    if (structureType === "dual_action") {
+        sentences = [
+            buildPlayersDoActionSentence(opener, firstAction),
+            secondText
+                ? (secondHasSubject
+                    ? `${secondText}.`
+                    : buildPlayersDoActionSentence(
+                        pickOne(secondaryOpeners, "You’ll also spend time"),
+                        secondText
+                    ))
+                : "",
+            escalation ? buildPlayersDoEscalationSentence(escalation) : ""
+        ];
+    }
+
+    if (structureType === "compressed") {
+        let combined;
+
+        if (secondHasSubject) {
+            combined = firstAction;
+        } else {
+            combined = [firstAction, secondText]
+                .filter(Boolean)
+                .join(joiner);
+        }
+
+        const compressedEscalation = escalation
+            ? ` ${sentenceCase(escalation)}.`
+            : "";
+
+        sentences = [
+            combined ? `${opener} ${combined}.` : "",
+            secondHasSubject ? `${secondText}.` : "",
+            compressedEscalation || ""
+        ];
+    }
+    let text = sentences.filter(Boolean).join(" ");
 
     text = cleanOutputText(text);
 
@@ -523,9 +634,9 @@ function buildDistinctHook({
             "From there, the first fracture turns into a larger pattern the group cannot ignore."
         ],
         pressure: [
-            "From there, the campaign keeps asking what can still be protected before the cost climbs again.",
             "From there, every delay, compromise, or hard choice carries a heavier price than the last one.",
-            "From there, the situation keeps tightening faster than anyone can solve it cleanly."
+            "From there, the situation keeps tightening faster than anyone can solve it cleanly.",
+            "From there, the campaign keeps asking what can still be protected before the cost climbs again."
         ],
         mystery: [
             "From there, every answer risks opening a larger contradiction instead of closing the question.",
@@ -533,8 +644,8 @@ function buildDistinctHook({
             "From there, the group is left sorting through answers that only make the larger pattern stranger."
         ],
         world_state: [
-            "From there, the group is dealing with a setting already changing under real strain.",
             "From there, every choice lands inside a world that is already shifting around them.",
+            "From there, the group is dealing with a setting already changing under real strain.",
             "From there, the story keeps pushing into a larger instability no one can fully step outside of."
         ],
         character: [

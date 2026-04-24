@@ -6,6 +6,8 @@ The Campaign Distillery turns rough campaign ideas or client input into structur
 
 It is designed to produce consistent, playable, and sellable campaign concepts—not just one-off AI-generated text.
 
+It produces structured, reliable narrative inputs that can be expanded into full campaign pitches using AI.
+
 ## Why Not Just Use GPT?
 
 You can absolutely paste notes into GPT and get a campaign pitch. 
@@ -35,6 +37,31 @@ In other words, GPT alone gives you a response but this Distillery gives you a c
   - a refinable system over time without starting over
 
 In short, GPT improvises. This system interprets first, then generates.
+
+---
+
+---
+
+## 🧠 How This Fits With AI
+
+This system is not meant to replace AI writing—it is meant to improve it.
+
+The Distillery handles:
+- structure
+- intent clarity
+- tone consistency
+- safety constraints
+
+AI handles:
+- expression
+- flow
+- stylistic polish
+- narrative richness
+
+This separation allows for:
+- more consistent outputs
+- better control over tone and content
+- higher-quality final results when expanded
 
 ---
 
@@ -124,7 +151,9 @@ If you are looking for internal implementation details, see the developer docume
 
 ## System Overview
 
-The Campaign Distillery is a structured pipeline that transforms raw tabletop RPG client intake into polished, client-facing campaign pitches.
+The Campaign Distillery is a structured pipeline that transforms raw tabletop RPG client intake into clean, consistent narrative scaffolding.
+
+The output is designed as **AI-ready input**, not final prose, enabling downstream AI systems to expand and refine it into client-facing copy.
 
 It is designed to:
 
@@ -174,43 +203,50 @@ The project is organized by pipeline responsibility to maintain clear separation
 
 ```text
 /misc
-- test inputs and support materials
+  test inputs and supporting materials
 
 /scripts
-- runCoreFrameSmokeTest.js
-- testAiExpansion.js
-- testBatchForms.js
-- testFormFlow.js
+  runCoreFrameSmokeTest.js   – core frame validation
+  testAiExpansion.js         – AI expansion testing
+  testBatchForms.js          – batch input testing
+  testFormFlow.js            – full pipeline test runner
 
 /src
-  /ai
-  /config
-  /data
-  /intake
-  /parsers
-  /renderers
-    - generateCampaignPitch.js  (orchestration layer)
-    - pitchCore.js              (context extraction)
-    - pitchSectionBuilders.js   (section generation)
-    - pitchAssembly.js          (sentence + pitch composition)
-    - pitchCleanup.js           (normalization + utilities)
-    - pitchSafetyFilters.js     (tone + safety enforcement)
+  /ai        – AI integration and expansion logic
+  /config    – enums, aliases, and normalization config
+  /data      – core data sources (frames, skins, mappings)
+  /intake    – intake processing and canonical shaping
+  /parsers   – form/input translation
+  /renderers – pitch generation pipeline (modular)
+    generateCampaignPitch.js  – orchestration layer
+    pitchCore.js              – context extraction
+    pitchSectionBuilders.js   – section generation
+    pitchAssembly.js          – sentence + pitch composition
+    pitchCleanup.js           – normalization and utilities
+    pitchSafetyFilters.js     – tone and safety enforcement
 
-  /resolvers
-  /selectors
-  /utils
-  /voice
+  /resolvers – ID → object resolution
+  /selectors – campaign direction selection logic
+  /utils     – shared helpers
+  /voice     – phrasing and voice system data
 
-  index.js
-```
+  index.js   – pipeline entry point
+  ```
 
-## Current State (v0.7.4)
+For detailed file-level documentation, see:
+
+/dev/README.md
+
+  ---
+
+## Current State (v0.8.0 — Stable Narrative Input Layer)
 
 - End-to-end pipeline is stable and fully operational
-- Renderer refactored into modular pipeline architecture
-- Voice layer produces consistent, client-ready output
-- Full batch test coverage passing
-
+- Renderer is fully modular and maintainable
+- Sentence assembly and cleanup layers are finalized
+- Outputs are grammatically stable and structurally consistent
+- Designed for AI expansion workflows rather than final prose
+- Full batch test coverage passing (24/24)
 ---
 
 ## 🛡️ Intake & Safety System (v0.6 Highlights)
@@ -258,10 +294,10 @@ This ensures:
 - Expand voiceMap coverage across tone and genre combinations  
 - Increase phrasing variation and stylistic diversity  
 
-### Output Polish
-- Improve sentence cadence and flow  
-- Reduce subtle repetition  
-- Increase sellability and distinctiveness  
+### AI Expansion Layer
+- Refine AI prompt for expansion
+- Improve downstream voice consistency
+- Tune narrative amplification behavior 
 
 ### Integration
 - Connect Formspree → pipeline execution  

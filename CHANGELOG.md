@@ -1,6 +1,71 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+
+---
+
+## v0.8.0 — Stable Narrative Input Layer
+
+### 🎯 Overview
+Major stabilization pass transforming the renderer into a structured, reliable narrative input system for AI expansion.
+
+---
+
+### 🧠 Core Changes
+
+**Sentence Assembly System**
+- Introduced structured sentence assembly layer (`pitchAssembly`)
+- Added controlled variation patterns for multi-line output
+- Reduced rigid sentence templating
+
+**Players Do Improvements**
+- Added action compatibility layer for player-facing phrasing
+- Introduced concept softening to reduce cross-section repetition
+- Improved alignment between system phrases and player actions
+
+**Joiner & Flow Fixes**
+- Expanded and refined joiner system
+- Removed unsafe joiners causing grammatical collisions
+- Added cleanup normalization for verb-chain artifacts
+
+**Cleanup Layer Enhancements**
+- Centralized post-assembly normalization in `cleanOutputText`
+- Added targeted fixes for common grammatical issues
+- Improved consistency across all output sections
+
+---
+
+### ✨ Output Improvements
+
+- Eliminated verb collisions and malformed joins
+- Reduced mechanical repetition across sections
+- Improved readability and sentence flow
+- Maintained consistent tone across all inputs
+- Outputs now optimized for AI expansion rather than final delivery
+
+---
+
+### ⚙️ System Behavior
+
+- Outputs are:
+  - structurally consistent
+  - grammatically stable
+  - semantically clear
+- Designed as **input for AI writing**, not final copy
+
+---
+
+### 🚀 Result
+
+v0.8.0 marks the transition from:
+
+"Stable voice generator"
+
+to:
+
+"Reliable narrative input layer for AI-assisted expansion"
+
 ---
 ## v0.7.4 — Pipeline Refactor & Modular Renderer Architecture
 
