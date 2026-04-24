@@ -1,0 +1,19 @@
+{
+    "experience": "exploration_and_discovering_strange_places",
+    "tone": "lighthearted_and_fun",
+    "genre": "classic_fantasy",
+    "environment": [
+        "jungles_and_overgrown_ruins",
+        "ancient_ruins_and_fallen_civilizations"
+    ],
+    "setup": "a_hidden_truth_that_must_be_uncovered",
+    "choice_weight": "some_meaningful_choices",
+    "gameplay": [
+        "exploration_and_discovery",
+        "investigation_and_clue_solving"
+    ],
+    "fantasy": "discovering_who_we_really_are",
+    "must_haves": "Ancient ruins, strange creatures, a sense of discovery and wonder.",
+    "avoid": "No horror, no bleak or oppressive tone.",
+    "age_band": "kids_11_13"
+}

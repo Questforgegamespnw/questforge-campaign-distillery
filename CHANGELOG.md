@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+---
+
+## v0.8.1 — Pipeline Integrity + Youth System Activation
+
+### 🎯 Summary
+This patch finalizes the core pipeline wiring and activates the youth experience layer, resolving several critical gaps discovered during end-to-end AI expansion testing.
+
+### ✅ Added / Fixed
+- Integrated `resolveCampaignContext` into main pipeline flow
+  - Ensures experience profile (standard vs youth) is respected before selection
+- Activated frame crosswalk system for youth experiences
+  - Youth-safe core frames now correctly supplement and reshape candidate pools
+- Fixed core frame resolution to use profile-aware pools
+  - Prevents missing data when resolving youth-specific frames
+- Added `pitchText` support to youth core frames
+  - Enables proper narrative language generation for youth outputs
+
+### 🧪 Validation Improvements
+- Full pipeline smoke tests now validate:
+  - experience profile detection
+  - crosswalk activation
+  - correct data pool resolution
+  - AI prompt input quality
+
+### ⚠️ Known Gaps (Next Iteration)
+- Youth voice still inherits adult phrasing patterns
+- Description text occasionally bleeds into player-facing output
+- Cleanup layer is not yet age-aware
+
+### 🧠 Impact
+The system now maintains consistent signal flow from intake → AI expansion across both standard and youth experiences. This marks the transition from structural stability to voice and output quality refinement.
 
 ---
 

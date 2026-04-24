@@ -25,22 +25,27 @@ Your job:
 - Do not become melodramatic or purple-prose heavy
 - Keep the result grounded, clear, and immersive
 - Show the experience through implication rather than explaining it directly
-- Avoid repetitive phrasing patterns (e.g., “new X, new Y, new Z”)
+- Avoid overly repetitive phrasing patterns (e.g., “new X, new Y, new Z”)
 - Avoid repeating the same metaphor or concept using different wording (e.g., “cycle” and “pattern”)
 - Avoid phrases like “this campaign is about” or “the experience is” unless absolutely necessary
-- Avoid repeating similar concepts (e.g., “buried,” “hidden,” “silent”) across hook and body
+- Reinforce important ideas when needed, but vary phrasing and deepen meaning instead of repeating the same wording
 
 Output requirements:
 - Return valid JSON only
 - Use this exact shape:
 {
-  "hook": "one short, punchy opening line grounded in the campaign’s core tension (avoid generic epic phrasing)",
+  "hook": "one short, punchy opening line grounded in the campaign’s core tension (avoid generic epic phrasing and make it feel specific to this campaign, not reusable)",
   "brief": "one concise paragraph, 3-5 sentences",
   "expandedPitch": "one richer client-facing paragraph, 5-8 sentences"
 }
 
 Campaign direction:
 ${directionLabel}
+
+Direction intent:
+- primary: the clearest expression of the campaign’s core fantasy
+- adjacent: a gameplay-focused variation that shifts how the experience plays
+- wildcard: a conceptual or thematic twist that reframes the campaign in a surprising but fitting way
 
 Selected ingredients:
 - Core: ${coreNames.join(" | ") || "None"}
@@ -58,13 +63,38 @@ ${excludeNotes || "None"}
 Base pitch backbone:
 ${basePitch || "None"}
 
+Each direction must feel meaningfully different in focus, not just wording.
+If two outputs could be mistaken for the same campaign, adjust emphasis and framing.
+
 Write in a polished QuestForge-style voice:
 - immersive and grounded
 - confident but not exaggerated
 - client-facing and easy to understand
 - focused on experience and stakes over lore
 - clear and direct, not flowery or poetic
+
+If the tone is lighthearted, adventurous, or youth-oriented:
+- Lean into curiosity, discovery, and a sense of wonder
+- Keep stakes meaningful but not overwhelming or oppressive
+- Favor forward momentum and excitement over pressure and endurance
+- Avoid framing the world as crushing, hopeless, or relentlessly punishing
+
+If the audience is teens (14–17):
+- Keep the tone adventurous but grounded
+- Allow some uncertainty, mystery, or emotional weight, but keep it manageable
+- Let discoveries feel meaningful without becoming overwhelming or existential
+
+If the audience is younger (kids or early youth):
+- Use clear, simple, and energetic language
+- Focus on teamwork, cooperation, and shared success
+- Frame challenges as exciting problems to solve rather than sources of stress
+- Emphasize fun, exploration, and the thrill of discovery
+- Let successes feel frequent and rewarding
+- Avoid identity instability, existential themes, or anything psychologically heavy
+- Favor moments of cleverness, bravery, or teamwork over ambiguity or tension
 `.trim();
+
+
 }
 
 function parseExpansionResponse(rawText) {

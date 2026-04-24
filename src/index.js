@@ -2,9 +2,11 @@ const { processFormSubmission } = require("./intake");
 const { buildTranslatorInput } = require("./intake/buildTranslatorInput");
 const { validateCanonicalIntake } = require("./parsers/validateCanonicalIntake");
 const { translateFormAnswers } = require("./parsers/translateFormAnswers");
+const { resolveCampaignContext } = require("./resolvers/resolveCampaignContext");
 const { selectCampaignDirections } = require("./selectors/selectCampaignDirections");
 const { resolveSelections } = require("./utils/lookupById");
 const { generateCampaignPitch } = require("./renderers/generateCampaignPitch");
+
 
 const coreFrames = require("./data/coreFrames");
 const systemFrames = require("./data/systemFrames");
@@ -32,12 +34,31 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
  
     const translatorInput = buildTranslatorInput(canonical);
     const translated = translateFormAnswers(translatorInput);
-    const selected = selectCampaignDirections(translated, canonical);
+
+    const campaignContext = resolveCampaignContext({
+        normalizedIntake: canonical,
+        translatedForm: translated,
+        rawAnswers: rawSubmission
+    });
+
+    const selected = selectCampaignDirections(
+        campaignContext.candidateBuckets,
+        canonical
+    );
+
+///CONSOLE LOGS FOR DEBUG AND IDENTIFYING LEAKS OR SIGNAL LOSS///
+    console.log("🧭 SELECTED PRIMARY:", selected.primary);
+    console.log("🧠 EXPERIENCE PROFILE:", campaignContext.experienceProfile);
+    console.log("🧠 POST-CROSSWALK CORES:", campaignContext.candidateBuckets.coreFrames);
+///
 
     function resolveDirection(direction) {
         return {
             ...direction,
-            coreFrames: resolveSelections(direction.coreFrames || [], coreFrames),
+            coreFrames: resolveSelections(
+                direction.coreFrames || [],
+                campaignContext.availablePools.coreFrames
+            ),
             systemFrames: resolveSelections(direction.systemFrames || [], systemFrames),
             genreSkin: resolveSelections(direction.genreSkin || [], genreSkins),
             toneSkin: resolveSelections(direction.toneSkin || [], toneSkins),
@@ -50,6 +71,11 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
         adjacent: resolveDirection(selected.adjacent),
         wildcard: resolveDirection(selected.wildcard)
     };
+
+///More debugging lines to find signal loss///
+    console.log("🧩 RESOLVED PRIMARY CORE:", resolved.primary.coreFrames);
+    console.log("🧩 RESOLVED PRIMARY GENRE:", resolved.primary.genreSkin);
+    console.log("🧩 RESOLVED PRIMARY ENV:", resolved.primary.environmentSkins);
 
     function toClientPitchBlock(pitch = {}) {
         return {
