@@ -13,8 +13,16 @@ const {
     pickOne,
     cleanOutputText,
     formatToneLabel,
-    getSystemPitchText
+    getSystemPitchText,
+    interpretIncludeNoteForPitch,
+    buildIncludeNoteSentence
 } = require("./pitchCleanup");
+
+
+const {
+    environmentVoiceMap,
+    genreVoiceMap
+} = require("../voice/voiceMap");
 
 const {
     isYouthProfile,
@@ -186,20 +194,133 @@ function buildHookLineByCategory(category, label = "primary") {
     return pickOne(hookPools[category], "");
 }
 
+
+function getSettingHookMaterial({ genre = {}, environments = [] }) {
+    const genreId = cleanName(genre?.id || "").toLowerCase();
+    const genreVoice = genreVoiceMap[genreId] || {};
+
+    const environmentEntries = uniqueByName(environments)
+        .map((entry) => cleanName(entry?.id || "").toLowerCase())
+        .filter(Boolean);
+
+    const environmentImagery = environmentEntries.flatMap((id) =>
+        environmentVoiceMap[id]?.imagery || []
+    );
+
+    const environmentGameplay = environmentEntries.flatMap((id) =>
+        environmentVoiceMap[id]?.gameplay || []
+    );
+
+    return {
+        environmentImagery,
+        environmentGameplay,
+        genreImagery: genreVoice.imagery || [],
+        genreFraming: genreVoice.framing || []
+    };
+}
+
+function buildSettingHookFollowup({ genre = {}, environments = [], label = "primary" }) {
+    const material = getSettingHookMaterial({ genre, environments });
+    const environmentImagery = pickOne(material.environmentImagery, "");
+    const environmentGameplay = pickOne(material.environmentGameplay, "");
+    const genreImagery = pickOne(material.genreImagery, "");
+    const genreFraming = pickOne(material.genreFraming, "");
+
+    const environmentPools = {
+        primary: [
+            environmentImagery ? `The first clues emerge through ${environmentImagery}.` : "",
+            environmentGameplay || ""
+        ],
+        adjacent: [
+            environmentGameplay || "",
+            environmentImagery ? `That shift becomes visible through ${environmentImagery}.` : ""
+        ],
+        wildcard: [
+            environmentImagery ? `The stranger edge shows itself through ${environmentImagery}.` : "",
+            environmentGameplay || ""
+        ]
+    };
+
+    const genreFallbackPools = {
+        primary: [
+            genreImagery ? `The campaign grounds that tension in ${genreImagery}.` : "",
+            genreFraming ? `The campaign grounds that tension in ${genreFraming}.` : ""
+        ],
+        adjacent: [
+            genreImagery ? `This version brings ${genreImagery} closer to the foreground.` : "",
+            genreFraming ? `This version brings ${genreFraming} closer to the foreground.` : ""
+        ],
+        wildcard: [
+            genreImagery ? `The bolder interpretation leans into ${genreImagery}.` : "",
+            genreFraming ? `The bolder interpretation leans into ${genreFraming}.` : ""
+        ]
+    };
+
+    const environmentCandidates = (environmentPools[label] || environmentPools.primary).filter(Boolean);
+    if (environmentCandidates.length) {
+        return pickOne(environmentCandidates, "", true);
+    }
+
+    return pickOne((genreFallbackPools[label] || genreFallbackPools.primary).filter(Boolean), "", true);
+}
+
 ///Main functions below///
 
 function buildTitle({ genreName, coreAName, systemAName, label }) {
-    const corePart = coreAName || "Hidden Truth";
-    const genrePart = genreName || "Campaign";
-    const systemPart = systemAName || "Intrigue";
+    const coreId = cleanName(coreAName).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+    const systemId = cleanName(systemAName).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 
-    const titlesByLabel = {
-        primary: `${corePart} in ${genrePart}`,
-        adjacent: `${systemPart} Beneath the Surface`,
-        wildcard: `The Cost of Knowing`
+    const coreTitles = {
+        survival_against_overwhelming_force: "Against Impossible Odds",
+        power_comes_from_within: "The Power Awakening",
+        entropy_decay: "While the World Fails",
+        the_endless_siege: "The Last Line Holds",
+        hidden_truth: "The Hidden Pattern",
+        lost_knowledge: "What the Ruins Remember",
+        investigators_burden: "The Weight of the Truth",
+        creation_vs_destruction: "What Must End",
+        war_of_ideologies: "The War for What Comes Next",
+        power_vacuum: "The Empty Throne",
+        fragmented_self: "The Fractured Self",
+        becoming_something_else: "What We Are Becoming",
+        what_is_humanity: "The Human Question",
+        power_has_a_cost: "The Price of Power",
+        cycle_recurrence: "The Turning Wheel",
+        the_world_is_alive: "The Living World"
     };
 
-    return titlesByLabel[label] || `${corePart} and ${systemPart}`;
+    const systemTitles = {
+        tactical_positioning_zone_control: "Lines of Battle",
+        resource_scarcity: "What Remains",
+        asymmetrical_boss_design: "The Unfair Fight",
+        clue_web: "A Web of Clues",
+        exploration_discovery_loop: "Beyond the Known Road",
+        influence_social_leverage: "Leverage and Allegiance",
+        hidden_information: "Behind Closed Doors",
+        alliance_vs_betrayal: "The Price of Allegiance",
+        faction_reputation: "Names Carry Weight",
+        living_world_reaction: "A World That Answers",
+        upgrade_through_risk: "Power Worth the Risk",
+        corruption_transformation_track: "The Shape of Change",
+        modular_build_system: "Built by Choice"
+    };
+
+    const fallbackCore = humanizeName(coreAName || genreName || "Campaign");
+    const fallbackSystem = humanizeName(systemAName || coreAName || "Campaign");
+
+    if (label === "primary") {
+        return coreTitles[coreId] || fallbackCore;
+    }
+
+    if (label === "adjacent") {
+        return systemTitles[systemId] || fallbackSystem;
+    }
+
+    if (label === "wildcard") {
+        return coreTitles[coreId] || fallbackCore;
+    }
+
+    return coreTitles[coreId] || systemTitles[systemId] || fallbackCore;
 }
 
 function buildOpening({ label, genreName, toneName, envNames, coreIds = [], experienceProfile }) {
@@ -303,14 +424,7 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/^understanding what is really happening comes with consequences/i, "understanding the truth carries consequences")
         .trim();
 
-    const includeCleanRaw = cleanIncludeText(includeNotes);
-    const includeClean = dedupePhrases(includeCleanRaw);
-
-    const tonePhrase = includeClean
-        .toLowerCase()
-        .replace(/keep it\s*/g, "")
-        .replace(/\/\s*kid-safe/g, "")
-        .trim();
+    const includeNote = interpretIncludeNoteForPitch(includeNotes);
 
     const followupTransitions = [
         "Alongside that,",
@@ -332,8 +446,9 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/(^|\.\s)([a-z])/g, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`)
         .trim();
 
-    if (tonePhrase) {
-        text += ` The overall feel stays ${tonePhrase}.`;
+    const includeSentence = buildIncludeNoteSentence(includeNote, "about");
+    if (includeSentence) {
+        text += ` ${includeSentence}`;
     }
 
     text = softenIdentityPhrase(text, experienceProfile);
@@ -507,14 +622,8 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
 
     const joiners = [
         " while also ",
-        " and ",
-        " as well as ",
         ", alongside ",
-        ", often involving ",
-        " but ",
-        " even as ",
-        " especially when "
-        
+        ", with an additional focus on "
     ];
     const joiner = pickOne(joiners, " while also ", true);
 
@@ -655,7 +764,18 @@ function buildDistinctHook({
         ]
     };
 
-    const followup = pickOne(followupPools[hookCategory], "");
+    const thematicFollowup = pickOne(followupPools[hookCategory], "");
+    const settingFollowup = buildSettingHookFollowup({
+        genre,
+        environments,
+        label
+    });
+
+    const followup = pickOne(
+        [thematicFollowup, settingFollowup].filter(Boolean),
+        thematicFollowup || settingFollowup || "",
+        true
+    );
 
     let text = [hookLead, followup]
         .filter(Boolean)

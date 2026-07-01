@@ -213,9 +213,13 @@ Genre defines **story expectations and narrative conventions**.
 
 The current genre layer is **overloaded** and may be split in future versions into:
 
-* era / timeline
-* aesthetic
-* world condition
+* The current genre layer may later separate into:
+
+- setting frame
+- era or social frame
+- aesthetic or narrative skin
+- cultural or mythological brush
+- world condition
 
 Do not expand genre aggressively until this refactor is complete.
 

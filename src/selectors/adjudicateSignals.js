@@ -54,8 +54,52 @@ function buildSafetyProfile(translated = {}, canonicalIntake = {}) {
     };
 }
 
+function cleanNote(value) {
+    return typeof value === "string" ? value.trim() : "";
+}
+
+function mergeNotes(...values) {
+    const seen = new Set();
+    const notes = [];
+
+    for (const value of values.flat()) {
+        const note = cleanNote(value);
+        if (!note || seen.has(note)) {
+            continue;
+        }
+
+        seen.add(note);
+        notes.push(note);
+    }
+
+    return notes.join("\n");
+}
+
+function resolveConstraintNotes(translated = {}, canonicalIntake = {}) {
+    const canonicalNotes = canonicalIntake.notes || {};
+    const canonicalBoundaries = canonicalIntake.boundaries || {};
+
+    return {
+        includeNotes: mergeNotes(
+            translated.includeNotes,
+            canonicalNotes.mustHaves,
+            Array.isArray(canonicalBoundaries.contentBoundaries)
+                ? canonicalBoundaries.contentBoundaries
+                : []
+        ),
+        excludeNotes: mergeNotes(
+            translated.excludeNotes,
+            canonicalNotes.avoid
+        )
+    };
+}
+
 function buildConstraints(translated = {}, canonicalIntake = {}) {
     const safetyProfile = buildSafetyProfile(translated, canonicalIntake);
+    const { includeNotes, excludeNotes } = resolveConstraintNotes(
+        translated,
+        canonicalIntake
+    );
     const hardBlocks = [];
     const softBlocks = [];
 
@@ -77,8 +121,8 @@ function buildConstraints(translated = {}, canonicalIntake = {}) {
 
     return {
         safetyProfile,
-        includeNotes: translated.includeNotes || "",
-        excludeNotes: translated.excludeNotes || "",
+        includeNotes,
+        excludeNotes,
         hardBlocks,
         softBlocks
     };

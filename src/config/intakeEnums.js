@@ -27,12 +27,14 @@ const TONE_ALIASES = {
     "dramatic and emotionally weighty": "dramatic_and_emotionally_weighty",
     "dark and dangerous": "dark_and_dangerous",
     "bleak brutal and high stakes": "bleak_brutal_and_high_stakes",
-    "chaotic lighthearted": "chaotic_lighthearted"
+    "chaotic lighthearted": "chaotic_lighthearted",
+    "heroic": "adventurous_with_some_serious_moments"
 };
 
 const GENRES = [
     "classic_fantasy",
     "dark_fantasy",
+    "heroic_fantasy",
     "gothic_victorian",
     "western_frontier",
     "feudal_eastern",
@@ -46,6 +48,7 @@ const GENRE_ALIASES = {
     // canonical/internal values
     "classic_fantasy": "classic_fantasy",
     "dark_fantasy": "dark_fantasy",
+    "heroic_fantasy": "heroic_fantasy",
     "gothic_victorian": "gothic_victorian",
     "western_frontier": "western_frontier",
     "feudal_eastern": "feudal_eastern",
@@ -57,6 +60,7 @@ const GENRE_ALIASES = {
     // normalized human-readable labels
     "classic fantasy": "classic_fantasy",
     "dark fantasy": "dark_fantasy",
+    "heroic mythic fantasy": "heroic_fantasy",
     "gothic victorian": "gothic_victorian",
     "western frontier": "western_frontier",
     "feudal eastern": "feudal_eastern",
@@ -75,7 +79,8 @@ const ENVIRONMENTS = [
     "mountains_and_wild_frontiers",
     "underground_caverns_and_deep_places",
     "ancient_ruins_and_fallen_civilizations",
-    "strange_dreamlike_or_reality_warped_places"
+    "strange_dreamlike_or_reality_warped_places",
+    "volcanic_lands_and_fire_scarred_regions"
 ];
 
 const ENVIRONMENT_ALIASES = {
@@ -89,9 +94,11 @@ const ENVIRONMENT_ALIASES = {
     "underground_caverns_and_deep_places": "underground_caverns_and_deep_places",
     "ancient_ruins_and_fallen_civilizations": "ancient_ruins_and_fallen_civilizations",
     "strange_dreamlike_or_reality_warped_places": "strange_dreamlike_or_reality_warped_places",
+    "volcanic_lands_and_fire_scarred_regions": "volcanic_lands_and_fire_scarred_regions",
 
     // normalized human-readable labels
     "cities and urban intrigue": "cities_and_urban_intrigue",
+    "dense cities and urban intrigue": "cities_and_urban_intrigue",
     "jungles and overgrown ruins": "jungles_and_overgrown_ruins",
     "frozen wastes": "frozen_wastes",
     "deserts and wastelands": "deserts_and_wastelands",
@@ -99,7 +106,9 @@ const ENVIRONMENT_ALIASES = {
     "mountains and wild frontiers": "mountains_and_wild_frontiers",
     "underground caverns and deep places": "underground_caverns_and_deep_places",
     "ancient ruins and fallen civilizations": "ancient_ruins_and_fallen_civilizations",
-    "strange dreamlike or reality warped places": "strange_dreamlike_or_reality_warped_places"
+    "strange dreamlike or reality warped places": "strange_dreamlike_or_reality_warped_places",
+    "dreamlike or reality warped places": "strange_dreamlike_or_reality_warped_places",
+    "volcanic lands and fire scarred regions": "volcanic_lands_and_fire_scarred_regions"
 };
 
 module.exports = {

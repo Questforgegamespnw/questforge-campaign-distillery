@@ -138,6 +138,16 @@ module.exports = {
       ]
     },
 
+    heroic_fantasy: {
+      genreSkins: [
+        { id: "heroic_fantasy", weight: 5 }
+      ],
+      toneSkins: [
+        { id: "heroic", weight: 2 },
+        { id: "mythic", weight: 2 }
+      ]
+    },
+
     gothic_victorian: {
       genreSkins: [
         { id: "victorian_gothic", weight: 5 }
@@ -240,6 +250,12 @@ module.exports = {
     strange_dreamlike_or_reality_warped_places: {
       environmentSkins: [
         { id: "otherworld_abstract", weight: 5 }
+      ]
+    },
+
+    volcanic_lands_and_fire_scarred_regions: {
+      environmentSkins: [
+        { id: "volcanic_firelands", weight: 5 }
       ]
     }
   },

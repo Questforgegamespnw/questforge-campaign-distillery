@@ -30,7 +30,7 @@ The Campaign Distillery has progressed through distinct capability stages:
 - **v0.6** → The system normalizes and enforces safety constraints  
 - **v0.7** → The system produces stable, consistent outputs across all scenarios  
 - **v0.7.4** → Renderer modularized into a maintainable pipeline architecture  
-- **v0.8.0** → 
+- **v0.8.0** → The system produces stable, AI-expandable narrative scaffolding
 
 ---
 
@@ -42,7 +42,7 @@ The Campaign Distillery has progressed through distinct capability stages:
 * [New Entry Review Template](./NEW_ENTRY_REVIEW.md)
   Checklist for validating proposed additions
 
-* [Entry Decision Log](./ENTRY_DECISION_LOG.md)
+* [Entry Decision Log](./ENTRY_DECISIONS_LOG.md)
   Record of accepted, refined, and rejected concepts
 
 ---

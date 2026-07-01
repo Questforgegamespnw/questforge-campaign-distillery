@@ -13,8 +13,16 @@ const {
     abstractSystemPitchText,
     getCorePitchTextForProfile,
     cleanCoreLead,
-    resolvePrimarySentence
+    resolvePrimarySentence,
+    interpretIncludeNoteForPitch,
+    buildIncludeNoteSentence
 } = require("./pitchCleanup");
+
+
+const {
+    environmentVoiceMap,
+    genreVoiceMap
+} = require("../voice/voiceMap");
 
 const {
     isYouthProfile,
@@ -132,169 +140,205 @@ function classifyLeadShape(text = "") {
 function buildPitchLead({ label, toneProfile, genreCampaignText, conceptText, conceptType, leadShape = "theme" }) {
     const genreText = withIndefiniteArticle(genreCampaignText || "campaign");
     const concept = stripCampaignPrefix(conceptText);
+    const direction = ["primary", "adjacent", "wildcard"].includes(label)
+        ? label
+        : "primary";
 
     const pools = {
         primary: {
             identity: [
-                `From the start, this feels like ${genreText} built around ${concept}.`,
                 `This plays like ${genreText} centered on ${concept}.`,
                 `At its core, this is ${genreText} shaped by ${concept}.`,
-                `This unfolds as ${genreText} built around ${concept}.`,
-                `Everything here points toward ${genreText} built around ${concept}.`,
-                `This drops the group into ${genreText} shaped by ${concept}.`
-                
+                `From the start, this feels like ${genreText} built around ${concept}.`
             ],
             theme: [
-                `From the start, this feels like ${genreText} shaped by ${concept}.`,
-                `This plays like ${genreText} where ${concept} defines the pressure.`,
+                `This plays like ${genreText} shaped by ${concept}.`,
                 `At its core, this is ${genreText} built around ${concept}.`,
-                `Everything here leans toward ${genreText} shaped by ${concept}.`,
                 `This is ${genreText} with ${concept} pressing on every major turn.`
             ],
             activity: [
-                `From the start, this feels like ${genreText} where the tension comes from ${concept}.`,
-                `At its core, this is ${genreText} shaped by ${concept}.`,
                 `This plays like ${genreText} built around ${concept}.`,
-                `Everything here leans on ${concept} to create momentum inside ${genreText}.`,
+                `At its core, this is ${genreText} whose momentum comes from ${concept}.`,
                 `The campaign finds its rhythm through ${concept}, giving ${genreText} its pace.`
+            ],
+            proposition: [
+                `This plays like ${genreText} built around the fact that ${concept}.`,
+                `At its core, this is ${genreText} shaped by the fact that ${concept}.`,
+                `From the start, this feels like ${genreText} where ${concept}.`
             ]
         },
-
         adjacent: {
             identity: [
-                `This version shifts the emphasis toward a campaign built around ${concept}.`,
+                `This version shifts the emphasis toward ${concept}.`,
                 `This take leans harder into a campaign shaped by ${concept}.`,
-                `The emphasis here falls more squarely on a campaign centered on ${concept}.`,
-                `This reframes the campaign around ${concept}, giving that tension more room to breathe.`
-                
+                `The emphasis here falls more squarely on ${concept}.`
             ],
             theme: [
-                `This version shifts the emphasis toward a campaign shaped by ${concept}.`,
-                `This take leans harder into a campaign built around ${concept}.`,
-                `The emphasis here falls more squarely on ${concept}.`,
-                `This reframes the campaign so that ${concept} carries more of the weight.`,
-                `This direction leans more fully into ${concept} as a defining pressure.`,
-                
-                
+                `This version shifts the emphasis toward ${concept}.`,
+                `This take gives ${concept} more of the campaign’s weight.`,
+                `This direction leans more fully into ${concept} as a defining pressure.`
             ],
             activity: [
-                `This version shifts the emphasis toward a campaign where the tension comes from ${concept}.`,
-                `This take leans harder into a campaign shaped by ${concept}.`,
-                `The emphasis here falls more squarely on ${concept}.`,
-                `Here, the campaign starts getting more of its momentum from ${concept}.`,
                 `This version puts more weight on ${concept} as the engine of play.`,
-                `This direction leans more fully into ${concept} as the core of play.`,
-                
+                `Here, the campaign gets more of its momentum from ${concept}.`,
+                `This direction leans more fully into ${concept} as the core of play.`
+            ],
+            proposition: [
+                `This version shifts the emphasis toward the fact that ${concept}.`,
+                `This take leans harder into the truth that ${concept}.`,
+                `The emphasis here falls more squarely on the fact that ${concept}.`
             ]
         },
-
         wildcard: {
             identity: [
-                `This version pushes fully into a campaign built around ${concept}.`,
-                `This direction commits fully to a campaign shaped by ${concept}.`,
-                `Here, the focus locks onto a campaign centered on ${concept}.`,
-                `This is the sharper version, built around ${concept}.`
+                `This version pushes fully into a campaign centered on ${concept}.`,
+                `This direction commits to ${concept} as its sharpest idea.`,
+                `Here, the campaign locks onto ${concept}.`
             ],
             theme: [
-                `This version pushes fully into a campaign shaped by ${concept}.`,
-                `This direction commits fully to a campaign built around ${concept}.`,
-                `Here, the focus locks onto ${concept}.`,
-                `This is the sharper take, where ${concept} takes over more of the campaign’s identity.`
+                `This version pushes fully into ${concept}.`,
+                `This direction lets ${concept} take over more of the campaign’s identity.`,
+                `Here, the focus locks onto ${concept}.`
             ],
             activity: [
-                `This version pushes fully into a campaign where the tension comes from ${concept}.`,
-                `This direction commits fully to a campaign shaped by ${concept}.`,
-                `Here, the focus locks onto ${concept}.`,
-                `This is the sharper version, where ${concept} does more of the heavy lifting.`
+                `This version pushes play fully toward ${concept}.`,
+                `This direction commits to ${concept} as its driving force.`,
+                `This sharper version centers play on ${concept}.`
+            ],
+            proposition: [
+                `This version pushes fully into the fact that ${concept}.`,
+                `This direction commits to the unsettling truth that ${concept}.`,
+                `Here, the campaign locks onto the fact that ${concept}.`
             ]
         }
     };
 
-    let pool =
-        pools[label]?.[conceptType] ||
-        pools.primary[conceptType] ||
-        pools.primary.theme;
-    
-    if (leadShape === "proposition") {
-        if (label === "primary") {
-            pool = [
-                `From the start, this feels like ${genreText} built around the fact that ${concept}.`,
-                `At its core, this is ${genreText} shaped by the fact that ${concept}.`,
-                `Everything here points toward ${genreText} built around the fact that ${concept}.`,
-                `This drops the group into ${genreText} shaped by the fact that ${concept}.`
-            ];
-        }
+    const shape = leadShape === "proposition"
+        ? "proposition"
+        : leadShape === "process"
+            ? "activity"
+            : conceptType;
+    let pool = pools[direction]?.[shape] || pools[direction].theme;
 
-        if (label === "adjacent") {
-            pool = [
-                `This version shifts the emphasis toward a campaign built around the fact that ${concept}.`,
-                `This take leans harder into a campaign shaped by the fact that ${concept}.`,
-                `The emphasis here falls more squarely on a campaign centered on the fact that ${concept}.`,
-                `This reframes the campaign around the fact that ${concept}, giving that tension more room to breathe.`
-            ];
-        }
-
-        if (label === "wildcard") {
-            pool = [
-                `This version pushes fully into a campaign built around the fact that ${concept}.`,
-                `This direction commits fully to a campaign shaped by the fact that ${concept}.`,
-                `Here, the focus locks onto a campaign centered on the fact that ${concept}.`,
-                `This is the sharper version, built around the fact that ${concept}.`
-            ];
-        }
-    }    
-
-    if (label === "primary") {
-        if (toneProfile === "grimdark") {
-            pool = [
-                `This drops the group into ${genreText} built around ${concept}.`,
-                `From the start, this feels like ${genreText} shaped by ${concept}.`,
-                `Everything here points toward ${genreText} shaped by ${concept}.`,
-                `The campaign leans into ${genreText} shaped by ${concept}, with pressure baked into nearly everything.`,
-                
-            ];
-        }
-
-        if (toneProfile === "psychological") {
-            pool = [
-                `From the start, this feels like ${genreText} centered on ${concept}.`,
-                `At its core, this is ${genreText} shaped by ${concept}.`,
-                `Everything here leans toward ${genreText} shaped by ${concept}, with the pressure landing close to the characters.`,
-            
-            ];
-        }
-
-        if (toneProfile === "mythic") {
-            pool = [
+    // Tone changes cadence and emphasis without replacing grammatical routing.
+    if (direction === "primary" && shape !== "proposition" && shape !== "activity") {
+        const tonePools = {
+            grimdark: [
+                `This drops the group into ${genreText} shaped by ${concept}.`,
+                `From the start, ${concept} bears down on ${genreText}.`,
+                `This is ${genreText} where ${concept} leaves little room for clean victories.`
+            ],
+            psychological: [
+                `This is ${genreText} centered on ${concept}, with the pressure landing close to the characters.`,
+                `At its core, ${concept} gives ${genreText} a more inward and unstable edge.`,
+                `This plays like ${genreText} where ${concept} keeps the characters questioning what they can trust.`
+            ],
+            mythic: [
                 `This unfolds as ${genreText} built around ${concept}.`,
-                `From the start, this feels like ${genreText} shaped by ${concept}.`,
-                `At its core, this is ${genreText} centered on ${concept}.`,
-                `Everything here leans toward ${genreText} where ${concept} carries larger consequences.`,
-                `This plays like ${genreText} with ${concept} echoing through the campaign’s larger shape.`
-            ];
-        }
-
-        if (toneProfile === "heroic") {
-            pool = [
-                `From the start, this feels like ${genreText} shaped by ${concept}.`,
+                `This plays like ${genreText} where ${concept} carries consequences larger than any one character.`,
+                `At its core, ${concept} gives ${genreText} a mythic sense of weight.`
+            ],
+            heroic: [
                 `This plays like ${genreText} built around ${concept}.`,
-                `At its core, this is ${genreText} shaped by ${concept}.`,
-                `Everything here points toward ${genreText} where ${concept} keeps opening harder, bigger choices.`,
-                `This is ${genreText} that keeps building momentum through ${concept}.`
-            ];
-        }
+                `At its core, ${concept} gives ${genreText} forward momentum and meaningful stakes.`,
+                `This is ${genreText} where ${concept} keeps opening difficult choices the heroes can still shape.`
+            ],
+            lighthearted: [
+                `This plays like ${genreText} powered by ${concept}.`,
+                `From the start, ${concept} gives ${genreText} an adventurous, unpredictable energy.`,
+                `At its core, this is ${genreText} built around ${concept} without losing its sense of fun.`
+            ]
+        };
 
-        if (toneProfile === "lighthearted") {
-            pool = [
-                `From the start, this feels like ${genreText} built around ${concept}.`,
-                `This plays like ${genreText} shaped by ${concept}.`,
-                `At its core, this is ${genreText} shaped by ${concept}.`,
-                `Everything here leans toward ${genreText} powered by ${concept}.`
-            ];
+        if (tonePools[toneProfile]) {
+            pool = tonePools[toneProfile];
         }
     }
 
     return pickOne(pool, `This feels like ${genreText} built around ${concept}.`, true);
+}
+
+
+function collectSettingVoice({ genre = {}, environments = [] }) {
+    const genreId = cleanName(genre?.id || "").toLowerCase();
+    const genreVoice = genreVoiceMap[genreId] || {};
+
+    const environmentEntries = uniqueByName(environments)
+        .map((entry) => ({
+            id: cleanName(entry?.id || "").toLowerCase(),
+            name: cleanName(entry?.name || entry?.id || "")
+        }))
+        .filter((entry) => entry.id);
+
+    const imagery = environmentEntries.flatMap((entry) =>
+        environmentVoiceMap[entry.id]?.imagery || []
+    );
+
+    const gameplay = environmentEntries.flatMap((entry) =>
+        environmentVoiceMap[entry.id]?.gameplay || []
+    );
+
+    return {
+        genreFraming: genreVoice.framing || [],
+        genreImagery: genreVoice.imagery || [],
+        environmentImagery: imagery,
+        environmentGameplay: gameplay
+    };
+}
+
+function buildSettingIdentityLine({ label = "primary", genre = {}, environments = [], usedText = "" }) {
+    const voice = collectSettingVoice({ genre, environments });
+    const used = String(usedText || "").toLowerCase();
+
+    const environmentImagery = voice.environmentImagery
+        .filter((line) => line && !used.includes(line.toLowerCase()));
+
+    const environmentGameplay = voice.environmentGameplay
+        .filter((line) => line && !used.includes(line.toLowerCase()));
+
+    const genreImagery = voice.genreImagery
+        .filter((line) => line && !used.includes(line.toLowerCase()));
+
+    const genreFraming = voice.genreFraming
+        .filter((line) => line && !used.includes(line.toLowerCase()));
+
+    const environmentPools = {
+        primary: [
+            environmentImagery.length ? `The setting takes shape through ${pickOne(environmentImagery, "")}.` : "",
+            environmentGameplay.length ? pickOne(environmentGameplay, "") : ""
+        ],
+        adjacent: [
+            environmentGameplay.length ? pickOne(environmentGameplay, "") : "",
+            environmentImagery.length ? `This version brings ${pickOne(environmentImagery, "")} closer to the center of play.` : ""
+        ],
+        wildcard: [
+            environmentImagery.length ? `The bolder edge comes from ${pickOne(environmentImagery, "")}.` : "",
+            environmentGameplay.length ? pickOne(environmentGameplay, "") : ""
+        ]
+    };
+
+    const genreFallbackPools = {
+        primary: [
+            genreImagery.length ? `The setting takes shape through ${pickOne(genreImagery, "")}.` : "",
+            genreFraming.length ? `Its world is grounded in ${pickOne(genreFraming, "")}.` : ""
+        ],
+        adjacent: [
+            genreImagery.length ? `This version brings ${pickOne(genreImagery, "")} closer to the center of play.` : "",
+            genreFraming.length ? `The shift is reinforced by ${pickOne(genreFraming, "")}.` : ""
+        ],
+        wildcard: [
+            genreImagery.length ? `The bolder edge comes from ${pickOne(genreImagery, "")}.` : "",
+            genreFraming.length ? `That sharper identity leans into ${pickOne(genreFraming, "")}.` : ""
+        ]
+    };
+
+    const environmentCandidates = (environmentPools[label] || environmentPools.primary).filter(Boolean);
+    if (environmentCandidates.length) {
+        return pickOne(environmentCandidates, "", true);
+    }
+
+    const genreCandidates = (genreFallbackPools[label] || genreFallbackPools.primary).filter(Boolean);
+    return pickOne(genreCandidates, "", true);
 }
 
 function buildPitchSupportLine({ systemText = "", coreText = "", usedText = "" }) {
@@ -362,8 +406,10 @@ function buildPitchParagraph({
     systemA,
     systemB,
     genreName,
+    genre,
     toneName,
     envNames,
+    environments,
     coreIds,
     includeNotes,
     excludeNotes,
@@ -441,23 +487,23 @@ function buildPitchParagraph({
         usedText: first
     });
 
-    const includeCleanRaw = cleanIncludeText(includeNotes);
-    const includeClean = dedupePhrases(includeCleanRaw);
-    const includePhrase = includeClean
-        .toLowerCase()
-        .replace(/keep it\s*/g, "")
-        .replace(/\/\s*kid-safe/g, "")
-        .trim();
+    const settingLine = buildSettingIdentityLine({
+        label,
+        genre,
+        environments,
+        usedText: `${first} ${second}`
+    });
 
-    const third = includePhrase
-        ? pickOne([
-            `The overall feel stays ${includePhrase}.`,
-            `Tone-wise, it stays ${includePhrase}.`,
-            `It keeps that ${includePhrase} edge without losing momentum.`
-        ], "", true)
-        : "";
+    const includeNote = interpretIncludeNoteForPitch(includeNotes);
+    const includeLine = buildIncludeNoteSentence(includeNote, "pitch");
 
-    let text = assemblePitchSentences(first, second, third);
+    // Setting identity is guaranteed whenever valid setting material exists.
+    // User priorities are appended separately so neither signal can randomly displace the other.
+    let text = assemblePitchSentences(first, second, settingLine);
+
+    if (includeLine && !text.includes(includeLine)) {
+        text = `${text} ${includeLine}`;
+    }
 
     text = cleanOutputText(text);
 

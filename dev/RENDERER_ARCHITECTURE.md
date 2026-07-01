@@ -75,13 +75,13 @@ Context (pitchCore)
   → Cleanup & Normalization (pitchCleanup)
   → Safety & Tone Filtering (pitchSafetyFilters)
   → Final Output (generateCampaignPitch)
-
-  Responsibilities by Layer
-Layer	Responsibility
-pitchCore	Data preparation
-pitchSectionBuilders	Narrative construction
-pitchAssembly	Sentence composition
-pitchCleanup	Text normalization
-pitchSafetyFilters	Safety and tone enforcement
-generateCampaignPitch	Pipeline orchestration
+```
+## Responsibilities by Layer
+|Layer|	Responsibility|
+|pitchCore|	Data preparation|
+|pitchSectionBuilders|	Narrative construction|
+|pitchAssembly|	Sentence composition|
+|pitchCleanup|	Text normalization|
+|pitchSafetyFilters|	Safety and tone enforcement|
+|generateCampaignPitch|	Pipeline orchestration|
 
