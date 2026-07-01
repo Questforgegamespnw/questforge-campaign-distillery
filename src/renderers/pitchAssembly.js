@@ -96,6 +96,11 @@ function stripCampaignPrefix(text = "") {
         .trim();
 }
 
+function capitalizeFirst(text = "") {
+    const value = String(text || "").trim();
+    return value ? value.charAt(0).toUpperCase() + value.slice(1) : "";
+}
+
 function classifyPitchConcept(text = "") {
     const t = stripCampaignPrefix(text).toLowerCase();
 
@@ -158,8 +163,10 @@ function buildPitchLead({ label, toneProfile, genreCampaignText, conceptText, co
             ],
             activity: [
                 `This plays like ${genreText} built around ${concept}.`,
-                `At its core, this is ${genreText} whose momentum comes from ${concept}.`,
-                `The campaign finds its rhythm through ${concept}, giving ${genreText} its pace.`
+                `At its core, the campaign is driven by ${concept}.`,
+                `The central experience of ${genreText} comes from ${concept}.`,
+                `${capitalizeFirst(concept)} gives the campaign its forward momentum.`,
+                `The campaign is structured around ${concept}, with ${genreText} providing the wider frame.`
             ],
             proposition: [
                 `This plays like ${genreText} built around the fact that ${concept}.`,
@@ -169,46 +176,54 @@ function buildPitchLead({ label, toneProfile, genreCampaignText, conceptText, co
         },
         adjacent: {
             identity: [
-                `This version shifts the emphasis toward ${concept}.`,
-                `This take leans harder into a campaign shaped by ${concept}.`,
-                `The emphasis here falls more squarely on ${concept}.`
+                `The alternate direction brings ${concept} to the foreground.`,
+                `Here, ${concept} carries more of the campaign’s identity.`,
+                `The emphasis moves toward a campaign shaped by ${concept}.`,
+                `This take gives ${concept} a more visible role in the overall experience.`
             ],
             theme: [
-                `This version shifts the emphasis toward ${concept}.`,
-                `This take gives ${concept} more of the campaign’s weight.`,
-                `This direction leans more fully into ${concept} as a defining pressure.`
+                `The alternate direction brings ${concept} to the foreground.`,
+                `${capitalizeFirst(concept)} carries more of the campaign’s weight here.`,
+                `The emphasis moves toward ${concept} as a defining pressure.`,
+                `This take lets ${concept} shape more of what happens at the table.`
             ],
             activity: [
-                `This version puts more weight on ${concept} as the engine of play.`,
-                `Here, the campaign gets more of its momentum from ${concept}.`,
-                `This direction leans more fully into ${concept} as the core of play.`
+                `Here, ${concept} becomes the main engine of play.`,
+                `The campaign draws more of its momentum from ${concept}.`,
+                `The alternate direction is structured more directly around ${concept}.`,
+                `Play shifts toward ${concept} as the group’s recurring focus.`
             ],
             proposition: [
-                `This version shifts the emphasis toward the fact that ${concept}.`,
-                `This take leans harder into the truth that ${concept}.`,
-                `The emphasis here falls more squarely on the fact that ${concept}.`
+                `The alternate direction leans into the truth that ${concept}.`,
+                `Here, the fact that ${concept} carries more of the campaign’s weight.`,
+                `The emphasis moves toward ${concept}.`,
+                `This take treats the truth that ${concept} as a defining pressure.`
             ]
         },
         wildcard: {
             identity: [
-                `This version pushes fully into a campaign centered on ${concept}.`,
-                `This direction commits to ${concept} as its sharpest idea.`,
-                `Here, the campaign locks onto ${concept}.`
+                `The wildcard commits to a campaign centered on ${concept}.`,
+                `${capitalizeFirst(concept)} becomes the direction’s sharpest idea.`,
+                `Here, the campaign locks onto ${concept} and follows it further.`,
+                `The bolder interpretation lets ${concept} define the campaign more completely.`
             ],
             theme: [
-                `This version pushes fully into ${concept}.`,
-                `This direction lets ${concept} take over more of the campaign’s identity.`,
-                `Here, the focus locks onto ${concept}.`
+                `The wildcard commits fully to ${concept}.`,
+                `${capitalizeFirst(concept)} takes over more of the campaign’s identity.`,
+                `Here, the focus locks onto ${concept} and refuses to soften it.`,
+                `The bolder interpretation gives ${concept} room to reshape the entire direction.`
             ],
             activity: [
-                `This version pushes play fully toward ${concept}.`,
-                `This direction commits to ${concept} as its driving force.`,
-                `This sharper version centers play on ${concept}.`
+                `The wildcard centers play on ${concept}.`,
+                `${capitalizeFirst(concept)} becomes the campaign’s driving force.`,
+                `Here, play is pushed toward ${concept} at every major turn.`,
+                `The bolder interpretation builds its momentum directly from ${concept}.`
             ],
             proposition: [
-                `This version pushes fully into the fact that ${concept}.`,
-                `This direction commits to the unsettling truth that ${concept}.`,
-                `Here, the campaign locks onto the fact that ${concept}.`
+                `The wildcard commits to the truth that ${concept}.`,
+                `Here, the fact that ${concept} becomes impossible to treat as background.`,
+                `The bolder interpretation builds around a world where ${concept}.`,
+                `This direction follows the truth that ${concept} to its sharpest consequences.`
             ]
         }
     };
@@ -309,10 +324,12 @@ function buildSettingIdentityLine({ label = "primary", genre = {}, environments 
         ],
         adjacent: [
             environmentGameplay.length ? pickOne(environmentGameplay, "") : "",
-            environmentImagery.length ? `This version brings ${pickOne(environmentImagery, "")} closer to the center of play.` : ""
+            environmentImagery.length ? `The altered emphasis brings ${pickOne(environmentImagery, "")} closer to the center of play.` : "",
+            environmentImagery.length ? `More of the campaign now unfolds through ${pickOne(environmentImagery, "")}.` : ""
         ],
         wildcard: [
             environmentImagery.length ? `The bolder edge comes from ${pickOne(environmentImagery, "")}.` : "",
+            environmentImagery.length ? `Its stranger identity takes shape through ${pickOne(environmentImagery, "")}.` : "",
             environmentGameplay.length ? pickOne(environmentGameplay, "") : ""
         ]
     };
@@ -323,8 +340,8 @@ function buildSettingIdentityLine({ label = "primary", genre = {}, environments 
             genreFraming.length ? `Its world is grounded in ${pickOne(genreFraming, "")}.` : ""
         ],
         adjacent: [
-            genreImagery.length ? `This version brings ${pickOne(genreImagery, "")} closer to the center of play.` : "",
-            genreFraming.length ? `The shift is reinforced by ${pickOne(genreFraming, "")}.` : ""
+            genreImagery.length ? `The altered emphasis brings ${pickOne(genreImagery, "")} closer to the center of play.` : "",
+            genreFraming.length ? `That shift is reinforced by ${pickOne(genreFraming, "")}.` : ""
         ],
         wildcard: [
             genreImagery.length ? `The bolder edge comes from ${pickOne(genreImagery, "")}.` : "",
@@ -349,14 +366,14 @@ function buildPitchSupportLine({ systemText = "", coreText = "", usedText = "" }
         !used.includes(systemText.toLowerCase())
     ) {
         return pickOne([
-            `A lot of its momentum comes from ${systemText}.`,
-            `Much of the pressure comes through ${systemText}.`,
-            `It keeps building through ${systemText}.`,
-            `A lot of play gets shaped by ${systemText}.`,
-            `The tension really takes form through ${systemText}.`,
-            `Much of the campaign’s rhythm comes from ${systemText}.`,
-            `A lot of the campaign’s edge comes from ${systemText}.`,
-            `The experience keeps turning on ${systemText}.`
+            `At the table, that means ${systemText}.`,
+            `The group keeps returning to ${systemText}.`,
+            `Day-to-day play is shaped by ${systemText}.`,
+            `The campaign repeatedly returns to ${systemText}.`,
+            `The campaign builds its practical momentum through ${systemText}.`,
+            `Most major turns revolve around ${systemText}.`,
+            `The tension becomes concrete through ${systemText}.`,
+            `That premise reaches the table through ${systemText}.`
         ], "", true);
     }
 
@@ -495,7 +512,7 @@ function buildPitchParagraph({
     });
 
     const includeNote = interpretIncludeNoteForPitch(includeNotes);
-    const includeLine = buildIncludeNoteSentence(includeNote, "pitch");
+    const includeLine = buildIncludeNoteSentence(includeNote, "pitch", label);
 
     // Setting identity is guaranteed whenever valid setting material exists.
     // User priorities are appended separately so neither signal can randomly displace the other.

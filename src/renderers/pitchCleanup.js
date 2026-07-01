@@ -395,44 +395,101 @@ function interpretIncludeNoteForPitch(text = "") {
     };
 }
 
-function buildIncludeNoteSentence(note = {}, context = "pitch") {
+function buildIncludeNoteSentence(note = {}, context = "pitch", label = "primary") {
     const category = note?.category || "none";
     const phrase = cleanName(note?.phrase || "").trim();
+    const direction = ["primary", "adjacent", "wildcard"].includes(label)
+        ? label
+        : "primary";
 
     if (!phrase || category === "none" || category === "non_directive") {
         return "";
     }
 
-    const pools = {
-        genre_anchor: context === "about"
-            ? [
-                `The direction stays rooted in ${phrase}.`,
-                `It remains firmly grounded in ${phrase}.`
-            ]
-            : [
+    const directionPools = {
+        genre_anchor: {
+            primary: [
                 `The direction stays rooted in ${phrase}.`,
                 `It remains firmly grounded in ${phrase} rather than drifting into another genre.`
             ],
-        teamwork_priority: context === "about"
-            ? [
-                `Teamwork, shared victories, and constructive outcomes remain central throughout.`,
-                `The campaign keeps cooperation and hard-won positive outcomes at its center.`
+            adjacent: [
+                `Even with the altered emphasis, it remains grounded in ${phrase}.`,
+                `The change in play style still preserves ${phrase}.`
+            ],
+            wildcard: [
+                `Despite the bolder premise, it stays rooted in ${phrase}.`,
+                `The stranger interpretation still keeps ${phrase} at its foundation.`
             ]
-            : [
+        },
+        teamwork_priority: {
+            primary: [
                 `The campaign keeps teamwork, shared victories, and constructive outcomes at the center.`,
                 `Cooperation and hard-won positive outcomes remain central throughout.`
             ],
-        tone_priority: [
-            `The tone stays ${phrase}.`,
-            `Its overall mood remains ${phrase}.`
-        ],
-        general_priority: [
-            `The campaign keeps ${phrase} as a clear priority.`,
-            `That direction keeps ${phrase} at the center.`
-        ]
+            adjacent: [
+                `The altered approach still puts cooperation, shared victories, and constructive outcomes first.`,
+                `Even as play shifts, teamwork and positive outcomes remain central.`
+            ],
+            wildcard: [
+                `The bolder direction still keeps teamwork and constructive outcomes at its core.`,
+                `Despite the sharper premise, cooperation and shared success remain essential.`
+            ]
+        },
+        tone_priority: {
+            primary: [
+                `The tone stays ${phrase}.`,
+                `Its overall mood remains ${phrase}.`
+            ],
+            adjacent: [
+                `The altered emphasis still keeps the tone ${phrase}.`,
+                `The play style shifts without losing its ${phrase} mood.`
+            ],
+            wildcard: [
+                `The bolder premise still keeps the tone ${phrase}.`,
+                `The stranger direction remains ${phrase} in presentation.`
+            ]
+        },
+        general_priority: {
+            primary: [
+                `The campaign keeps ${phrase} as a clear priority.`,
+                `That direction keeps ${phrase} at the center.`
+            ],
+            adjacent: [
+                `The altered approach still keeps ${phrase} as a clear priority.`,
+                `Even with the shift in play, ${phrase} remains central.`
+            ],
+            wildcard: [
+                `The bolder direction still keeps ${phrase} at its core.`,
+                `Despite the sharper premise, ${phrase} remains a clear priority.`
+            ]
+        }
     };
 
-    return pickOne(pools[category] || pools.general_priority, "", true);
+    if (context === "about") {
+        const aboutPools = {
+            genre_anchor: [
+                `The direction stays rooted in ${phrase}.`,
+                `It remains firmly grounded in ${phrase}.`
+            ],
+            teamwork_priority: [
+                `Teamwork, shared victories, and constructive outcomes remain central throughout.`,
+                `The campaign keeps cooperation and hard-won positive outcomes at its center.`
+            ],
+            tone_priority: [
+                `The tone stays ${phrase}.`,
+                `Its overall mood remains ${phrase}.`
+            ],
+            general_priority: [
+                `The campaign keeps ${phrase} as a clear priority.`,
+                `That direction keeps ${phrase} at the center.`
+            ]
+        };
+
+        return pickOne(aboutPools[category] || aboutPools.general_priority, "", true);
+    }
+
+    const pools = directionPools[category] || directionPools.general_priority;
+    return pickOne(pools[direction] || pools.primary, "", true);
 }
 
 function chooseByLabel(label, options = {}) {

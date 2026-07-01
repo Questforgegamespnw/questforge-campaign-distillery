@@ -14,8 +14,6 @@ const {
     cleanOutputText,
     formatToneLabel,
     getSystemPitchText,
-    interpretIncludeNoteForPitch,
-    buildIncludeNoteSentence
 } = require("./pitchCleanup");
 
 
@@ -247,8 +245,8 @@ function buildSettingHookFollowup({ genre = {}, environments = [], label = "prim
             genreFraming ? `The campaign grounds that tension in ${genreFraming}.` : ""
         ],
         adjacent: [
-            genreImagery ? `This version brings ${genreImagery} closer to the foreground.` : "",
-            genreFraming ? `This version brings ${genreFraming} closer to the foreground.` : ""
+            genreImagery ? `The altered emphasis brings ${genreImagery} closer to the foreground.` : "",
+            genreFraming ? `That change also draws on ${genreFraming}.` : ""
         ],
         wildcard: [
             genreImagery ? `The bolder interpretation leans into ${genreImagery}.` : "",
@@ -424,16 +422,14 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/^understanding what is really happening comes with consequences/i, "understanding the truth carries consequences")
         .trim();
 
-    const includeNote = interpretIncludeNoteForPitch(includeNotes);
-
     const followupTransitions = [
         "Alongside that,",
         "At the same time,",
         "Running underneath it all,",
         "What makes it harder is that",
         "What gives it extra weight is that",
-        "What follows is that",
-        
+        "Beneath that,",
+        "Complicating matters,"
     ];
 
     const transition = pickOne(followupTransitions, "At the same time,");
@@ -445,11 +441,6 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/\.\s*/g, ". ")
         .replace(/(^|\.\s)([a-z])/g, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`)
         .trim();
-
-    const includeSentence = buildIncludeNoteSentence(includeNote, "about");
-    if (includeSentence) {
-        text += ` ${includeSentence}`;
-    }
 
     text = softenIdentityPhrase(text, experienceProfile);
     text = cleanOutputText(text);
@@ -524,7 +515,7 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
         primary: [
             "You’ll spend most of your time",
             "Most of play is about",
-            "A lot of play comes from",
+            "Play frequently returns to",
             "Play usually revolves around",
             "Most sessions center on",
             "The group spends most of its time",
@@ -534,30 +525,32 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
             "The campaign leans heavily on",
             "A typical session focuses on",
             "The core of play is",
-            "Much of the gameplay centers on"
+            "The gameplay repeatedly centers on"
         ],
 
         adjacent: [
             "Play here tends to revolve around",
-            "Most sessions start focusing on",
+            "Most sessions focus on",
             "The experience shifts toward",
-            "This version puts more weight on",
             "You’ll find the group spending more time",
-            "This version leans more into",
             "The campaign starts focusing more on",
-            "There’s a stronger emphasis on"
+            "There’s a stronger emphasis on",
+            "The alternate direction makes more room for",
+            "At the table, the change is most visible in",
+            "This take repeatedly returns to"
         ],
 
         wildcard: [
-            "Here, a lot of the tension comes from",
-            "The campaign really comes alive through",
+            "Here, the tension comes from",
+            "The campaign comes alive through",
             "Most of the pressure shows up through",
             "What defines play here is",
-            "This version gets its edge from",
             "Sessions tend to focus on",
-            "This pushes play toward",
+            "The wildcard pushes play toward",
             "The campaign leans hardest into",
-            "What really drives this version is"
+            "What really drives this direction is",
+            "Its boldest table-facing choice is",
+            "The stranger version keeps returning to"
         ],
 
         default: [
@@ -566,26 +559,37 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
         ]
     };
 
-    const connectiveLines = [
-        "That pressure shows up quickly once play is underway",
-        "The rhythm stays active, but the situation keeps getting harder to read",
-        "What starts as manageable play gets more unstable over time",
-        "The group gets room to act, but never without consequences pushing back",
-        "What looks straightforward early on gets messier the longer play continues",
-        "The play stays active and tangible, even as the bigger picture starts shifting",
-        "The table experience keeps tightening as the group pushes further in",
-        "Each step forward opens up more to deal with, not less",
-        "The moment-to-moment play stays concrete, but the wider situation keeps changing",
-        "The campaign keeps turning simple actions into larger complications",
-        "The situation keeps evolving faster than the group can fully stabilize it",
-        "Even small decisions start to carry larger consequences",
-        "The campaign keeps raising the stakes around what the group is already doing",
-        "What feels manageable at first becomes harder to control",
-        "The pressure builds in ways that are hard to predict",
-        "The more the group commits, the more complicated things become",
-        "Each success changes what comes next",
-        "The system pushes back harder the further the group goes"
-    ];
+    const connectiveLinesByLabel = {
+        primary: [
+            "That pressure shows up quickly once play is underway",
+            "What starts as manageable play gets more unstable over time",
+            "The group gets room to act, but never without consequences pushing back",
+            "The table experience keeps tightening as the group pushes further in",
+            "Even small decisions start to carry larger consequences",
+            "Each success changes what comes next"
+        ],
+        adjacent: [
+            "The wider situation keeps changing around otherwise concrete actions",
+            "Each step forward opens up more to deal with, not less",
+            "The alternate approach makes familiar problems harder to control",
+            "What looks straightforward early on grows more complicated in play",
+            "The shift becomes clearer as the group commits to it",
+            "The campaign keeps raising the stakes around the new emphasis"
+        ],
+        wildcard: [
+            "The pressure builds in ways the group cannot fully predict",
+            "The stranger premise keeps turning simple actions into larger complications",
+            "The situation evolves faster than the group can completely stabilize it",
+            "The more the group commits, the less familiar the consequences become",
+            "The system pushes back harder the further this direction goes",
+            "What feels manageable at first becomes increasingly difficult to contain"
+        ],
+        default: [
+            "The situation keeps changing as the group pushes further",
+            "Each decision alters what comes next"
+        ]
+    };
+
 
     const secondaryOpeners = [
         "You’ll also spend time",
@@ -617,7 +621,7 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
     const secondAction = systemBLead && systemBLead !== systemALead
         ? makeActionPhraseCompatible(systemBLead)
         : "";
-    const escalation = pickOne(connectiveLines, "");
+    const escalation = pickOne(connectiveLinesByLabel[label] || connectiveLinesByLabel.default, "");
     const { text: secondText, hasSubject: secondHasSubject } = normalizeActionText(secondAction);
 
     const joiners = [
@@ -738,33 +742,46 @@ function buildDistinctHook({
 
     const followupPools = {
         disruption: [
-            "From there, the campaign starts widening around the first break instead of settling back down.",
-            "From there, every attempt to steady the situation reveals something else already slipping.",
-            "From there, the first fracture turns into a larger pattern the group cannot ignore."
+            "The first break widens instead of settling back down.",
+            "Every attempt to steady the situation reveals something else already slipping.",
+            "What looks like a single fracture soon becomes a larger pattern the group cannot ignore.",
+            "Stability proves temporary, and each repair exposes a deeper fault."
         ],
         pressure: [
-            "From there, every delay, compromise, or hard choice carries a heavier price than the last one.",
-            "From there, the situation keeps tightening faster than anyone can solve it cleanly.",
-            "From there, the campaign keeps asking what can still be protected before the cost climbs again."
+            "Every delay, compromise, or hard choice carries a heavier price than the last one.",
+            "The situation tightens faster than anyone can solve it cleanly.",
+            "The central question becomes what can still be protected before the cost climbs again.",
+            "Even successful choices leave the group with less room than before."
         ],
         mystery: [
-            "From there, every answer risks opening a larger contradiction instead of closing the question.",
-            "From there, the truth keeps arriving in pieces that are useful, incomplete, and hard to trust all at once.",
-            "From there, the group is left sorting through answers that only make the larger pattern stranger."
+            "Every answer risks opening a larger contradiction instead of closing the question.",
+            "The truth arrives in pieces that are useful, incomplete, and difficult to trust all at once.",
+            "The group is left sorting through answers that only make the larger pattern stranger.",
+            "Each discovery clarifies one detail while destabilizing the larger picture."
         ],
         world_state: [
-            "From there, every choice lands inside a world that is already shifting around them.",
-            "From there, the group is dealing with a setting already changing under real strain.",
-            "From there, the story keeps pushing into a larger instability no one can fully step outside of."
+            "Every choice lands inside a world already shifting around the group.",
+            "The setting is changing under real strain, whether the group is ready or not.",
+            "The story keeps pressing into an instability no one can fully step outside of.",
+            "What happens next depends as much on the changing world as on the group’s intentions."
         ],
         character: [
-            "From there, the conflict starts shaping the people caught inside it as much as the world around them.",
-            "From there, what is happening outside the group stops staying separate from what it is doing to them.",
-            "From there, the story keeps pressing on identity, change, and what the characters are becoming under strain."
+            "The conflict shapes the people caught inside it as much as the world around them.",
+            "External pressure stops staying separate from what it is doing to the characters.",
+            "Identity, change, and what the characters are becoming remain under constant strain.",
+            "The longer the campaign runs, the harder it becomes to separate survival from transformation."
         ]
     };
-
-    const thematicFollowup = pickOne(followupPools[hookCategory], "");
+    const followupIndexesByLabel = {
+        primary: [0, 1],
+        adjacent: [2],
+        wildcard: [3],
+        default: [0, 1, 2, 3]
+    };
+    const followupCandidates = (followupPools[hookCategory] || []).filter((_, index) =>
+        (followupIndexesByLabel[label] || followupIndexesByLabel.default).includes(index)
+    );
+    const thematicFollowup = pickOne(followupCandidates, "");
     const settingFollowup = buildSettingHookFollowup({
         genre,
         environments,
