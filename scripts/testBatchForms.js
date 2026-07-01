@@ -20,6 +20,9 @@ const INPUT_DIRS = [
   path.resolve(__dirname, "../misc/test-inputs/edge-cases")
 ];
 
+const OUTPUT_DIR = path.resolve(__dirname, "../misc/test-output");
+const OUTPUT_FILE = path.join(OUTPUT_DIR, "batch-forms-output.txt");
+
 function loadInputFiles() {
   const collected = [];
 
@@ -81,21 +84,23 @@ function summarizeNames(entries) {
   return (entries || []).map((entry) => entry.name).filter(Boolean).join(" | ");
 }
 
-function extractIds(entries) {
-  return (entries || []).map((entry) => entry.id).filter(Boolean);
+function normalizeText(value) {
+  return String(value || "").replace(/\s+/g, " ").trim();
 }
 
-function printDirectionSummary(directionBundle, pitchBlock) {
-  console.log(`\n  ▶ ${directionBundle.label.toUpperCase()}`);
-  console.log(`    Core: ${summarizeNames(directionBundle.coreFrames)}`);
-  console.log(`    Systems: ${summarizeNames(directionBundle.systemFrames)}`);
-  console.log(`    Genre: ${summarizeNames(directionBundle.genreSkin)}`);
-  console.log(`    Tone: ${summarizeNames(directionBundle.toneSkin)}`);
-  console.log(`    Environment: ${summarizeNames(directionBundle.environmentSkins)}`);
-  console.log(`    Pitch: ${String(pitchBlock.pitch || "").replace(/\s+/g, " ").trim()}`);
-  console.log(`    About: ${String(pitchBlock.about || "").replace(/\s+/g, " ").trim()}`);
-  console.log(`    Players Do: ${String(pitchBlock.playersDo || "").replace(/\s+/g, " ").trim()}`);
-  console.log(`    Hook: ${String(pitchBlock.distinctHook || "").replace(/\s+/g, " ").trim()}`);
+function buildDirectionSummary(directionBundle, pitchBlock) {
+  return [
+    `\n  ▶ ${directionBundle.label.toUpperCase()}`,
+    `    Core: ${summarizeNames(directionBundle.coreFrames)}`,
+    `    Systems: ${summarizeNames(directionBundle.systemFrames)}`,
+    `    Genre: ${summarizeNames(directionBundle.genreSkin)}`,
+    `    Tone: ${summarizeNames(directionBundle.toneSkin)}`,
+    `    Environment: ${summarizeNames(directionBundle.environmentSkins)}`,
+    `    Pitch: ${normalizeText(pitchBlock.pitch)}`,
+    `    About: ${normalizeText(pitchBlock.about)}`,
+    `    Players Do: ${normalizeText(pitchBlock.playersDo)}`,
+    `    Hook: ${normalizeText(pitchBlock.distinctHook)}`
+  ];
 }
 
 function runSingleFile(fileInfo) {
@@ -126,13 +131,15 @@ function runSingleFile(fileInfo) {
   const adjacentPitch = generateCampaignPitch(resolvedAdjacent);
   const wildcardPitch = generateCampaignPitch(resolvedWildcard);
 
-  console.log("\n==================================================");
-  console.log(`GROUP: ${fileInfo.group} | FILE: ${fileInfo.name}`);
-  console.log("==================================================");
-
-  printDirectionSummary(resolvedPrimary, primaryPitch);
-  printDirectionSummary(resolvedAdjacent, adjacentPitch);
-  printDirectionSummary(resolvedWildcard, wildcardPitch);
+  return [
+    "",
+    "==================================================",
+    `GROUP: ${fileInfo.group} | FILE: ${fileInfo.name}`,
+    "==================================================",
+    ...buildDirectionSummary(resolvedPrimary, primaryPitch),
+    ...buildDirectionSummary(resolvedAdjacent, adjacentPitch),
+    ...buildDirectionSummary(resolvedWildcard, wildcardPitch)
+  ];
 }
 
 function main() {
@@ -150,26 +157,51 @@ function main() {
       return acc;
     }, {});
 
-    console.log("🎲 BATCH FORM TEST");
-    console.log("Groups loaded:", countsByGroup);
+    const outputLines = [
+      "🎲 BATCH FORM TEST",
+      `Groups loaded: ${JSON.stringify(countsByGroup)}`
+    ];
 
     let passed = 0;
     let failed = 0;
+    const failedFiles = [];
 
     files.forEach((fileInfo) => {
       try {
-        runSingleFile(fileInfo);
+        outputLines.push(...runSingleFile(fileInfo));
         passed += 1;
       } catch (error) {
         failed += 1;
-        console.log("\n==================================================");
-        console.log(`GROUP: ${fileInfo.group} | FILE: ${fileInfo.name}`);
-        console.log("==================================================");
-        console.error(`❌ Failed: ${error.message}`);
+        failedFiles.push(`${fileInfo.group}/${fileInfo.name}`);
+        outputLines.push(
+          "",
+          "==================================================",
+          `GROUP: ${fileInfo.group} | FILE: ${fileInfo.name}`,
+          "==================================================",
+          `❌ Failed: ${error.message}`
+        );
       }
     });
 
-    console.log(`\n✅ Batch test complete. Passed: ${passed} | Failed: ${failed}`);
+    outputLines.push(
+      "",
+      `✅ Batch test complete. Passed: ${passed} | Failed: ${failed}`,
+      ""
+    );
+
+    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    fs.writeFileSync(OUTPUT_FILE, outputLines.join("\n"), "utf-8");
+
+    console.log("🎲 BATCH FORM TEST");
+    console.log(`Output written to: ${OUTPUT_FILE}`);
+    console.log(`Passed: ${passed}`);
+    console.log(`Failed: ${failed}`);
+
+    if (failedFiles.length > 0) {
+      console.log("Failed fixtures:");
+      failedFiles.forEach((file) => console.log(`  - ${file}`));
+      process.exitCode = 1;
+    }
   } catch (error) {
     console.error("Batch test failed.");
     console.error(error.message);

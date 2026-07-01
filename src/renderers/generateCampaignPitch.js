@@ -46,7 +46,8 @@ function generateCampaignPitch(selections = {}) {
       ctx.systemA,
       ctx.systemB,
       ctx.experienceProfile,
-      ctx.label
+      ctx.label,
+      ctx.toneName
     )
   );
 
@@ -68,10 +69,8 @@ function generateCampaignPitch(selections = {}) {
     systemA: ctx.systemA,
     systemB: ctx.systemB,
     genreName: ctx.genreName,
-    genre: ctx.genre,
     toneName: ctx.toneName,
     envNames: ctx.envNames,
-    environments: ctx.environmentSkins,
     coreIds: ctx.coreIds,
     includeNotes: ctx.includeNotes,
     excludeNotes: ctx.excludeNotes,

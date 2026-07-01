@@ -19,7 +19,9 @@ const {
 
 const {
     environmentVoiceMap,
-    genreVoiceMap
+    genreVoiceMap,
+    toneRenderMap,
+    resolvePitchToneProfile
 } = require("../voice/voiceMap");
 
 const {
@@ -507,7 +509,7 @@ function softenRepeatedConcept(action = "") {
     return action;
 }
 ///End of buildPlayersDo Helpers///
-function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") {
+function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary", toneName = "") {
     const systemALead = getSystemPitchText(systemA);
     const systemBLead = getSystemPitchText(systemB);
 
@@ -621,7 +623,11 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
     const secondAction = systemBLead && systemBLead !== systemALead
         ? makeActionPhraseCompatible(systemBLead)
         : "";
-    const escalation = pickOne(connectiveLinesByLabel[label] || connectiveLinesByLabel.default, "");
+    const toneProfile = resolvePitchToneProfile(toneName);
+    const toneEscalationPool = toneRenderMap[toneProfile]?.escalation?.[label] || [];
+    const escalation = toneEscalationPool.length
+        ? pickOne(toneEscalationPool, "")
+        : pickOne(connectiveLinesByLabel[label] || connectiveLinesByLabel.default, "");
     const { text: secondText, hasSubject: secondHasSubject } = normalizeActionText(secondAction);
 
     const joiners = [
@@ -739,6 +745,7 @@ function buildDistinctHook({
     });
 
     const hookLead = buildHookLineByCategory(hookCategory, label);
+    const toneProfile = resolvePitchToneProfile(toneName);
 
     const followupPools = {
         disruption: [
@@ -787,10 +794,15 @@ function buildDistinctHook({
         environments,
         label
     });
+    const toneFollowup = pickOne(
+        toneRenderMap[toneProfile]?.hook?.[label] || [],
+        "",
+        true
+    );
 
     const followup = pickOne(
-        [thematicFollowup, settingFollowup].filter(Boolean),
-        thematicFollowup || settingFollowup || "",
+        [toneFollowup, thematicFollowup, settingFollowup].filter(Boolean),
+        toneFollowup || thematicFollowup || settingFollowup || "",
         true
     );
 

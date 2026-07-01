@@ -1,0 +1,892 @@
+🎲 BATCH FORM TEST
+Groups loaded: {"core":7,"coverage":8,"edge-cases":4,"youth":5}
+
+==================================================
+GROUP: core | FILE: character-identity.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Fragmented Self | Fate vs Free Will
+    Systems: Corruption / Transformation Track | Modular Build System
+    Genre: Classic Fantasy
+    Tone: Psychological
+    Environment: Coastal / Oceanic | Ruined Civilization
+    Pitch: In a psychological classic fantasy campaign, the pressure takes on a more inward and unstable edge through piecing together an identity that doesn’t fully hold together. At the table, the group keeps reinterpreting the situation through power gradually reshaping the characters.
+    About: The self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction. What makes it harder is that the central question is whether the characters are shaping their own path or fulfilling one already written.
+    Players Do: The core of play is coping with changes that alter who the characters are becoming. You’ll also keep coming back to shaping identity through modular growth and highly customized choices. The pressure keeps moving inward as certainty slips.
+    Hook: The real pressure starts once the conflict becomes part of who the characters are becoming. The environment creates pressure by forcing the group to work through what history broke, hid, or left behind.
+
+  ▶ ADJACENT
+    Core: Fragmented Self | Becoming Something Else
+    Systems: Modular Build System | Corruption / Transformation Track
+    Genre: Classic Fantasy
+    Tone: Mythic
+    Environment: Ruined Civilization
+    Pitch: The alternate direction raises piecing together an identity that doesn’t fully hold together into a more symbolic role. Each decision becomes part of something larger through identity shaped through change and self-definition.
+    About: The self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction. Running underneath it all, the characters are changing, whether they want to or not, and power or circumstance is reshaping who they are.
+    Players Do: Most sessions focus on shaping identity through modular growth and highly customized choices, with an additional focus on dealing with power that gradually reshapes the characters. Each step forward carries consequences beyond the present moment.
+    Hook: The people involved do not come through it unchanged. Identity, change, and what the characters are becoming remain under constant strain.
+
+  ▶ WILDCARD
+    Core: Becoming Something Else | Power Has a Cost
+    Systems: Influence / Social Leverage | Legacy / Inheritance System
+    Genre: Classic Fantasy
+    Tone: Mythic
+    Environment: Coastal / Oceanic
+    Pitch: This direction places changing in ways the characters may not fully welcome or understand inside a pattern that reaches beyond the immediate story. At the table, the larger struggle takes concrete shape through using pressure, negotiation, and leverage to move people and situations.
+    About: The characters are changing, whether they want to or not, and power or circumstance is reshaping who they are. Running underneath it all, every gain comes at a cost, forcing sacrifice, corruption, or loss.
+    Players Do: Its boldest table-facing choice is using pressure, negotiation, and leverage to move people and situations. You’ll also spend time dealing with past lives, inherited consequences, or old choices that still shape the present. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: There is already too much strain in the system for a clean solution. Even successful choices leave the group with less room than before.
+
+==================================================
+GROUP: core | FILE: dark-corruption.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Something Is Wrong | Power Has a Cost
+    Systems: Resource Scarcity | Escalation Meter
+    Genre: Dark Fantasy
+    Tone: Grimdark
+    Environment: Frozen Expanse | Ruined Civilization
+    Pitch: This is a grimdark fantasy campaign where the fact that something in the world is off in ways no one can fully explain away leaves no clean way through. Play returns to constant pressure and difficult tradeoffs, and little comes through it cleanly.
+    About: Reality feels off, patterns break down, and the world carries signs that something fundamental is distorted. Beneath that, every gain comes at a cost, forcing sacrifice, corruption, or loss.
+    Players Do: Most of play is about making hard calls when time, safety, and supplies are always running short while also managing problems before they spiral out of control. Every gain leaves damage behind.
+    Hook: The truth is there, just not in one place or one version. The truth arrives in pieces that are useful, incomplete, and difficult to trust all at once.
+
+  ▶ ADJACENT
+    Core: Something Is Wrong | What Is Humanity?
+    Systems: Escalation Meter | Resource Scarcity
+    Genre: Dark Fantasy
+    Tone: Horror
+    Environment: Ruined Civilization
+    Pitch: The emphasis moves toward the fact that something in the world is off in ways no one can fully explain away. That premise reaches the table through keeping situations from escalating.
+    About: Reality feels off, patterns break down, and the world carries signs that something fundamental is distorted. Running underneath it all, the campaign asks where the line lies between person and monster, empathy and power, self and loss.
+    Players Do: The campaign starts focusing more on managing problems before they spiral out of control while also making hard calls when time, safety, and supplies are always running short. What looks straightforward early on grows more complicated in play.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: What Is Humanity? | Power Must Be Controlled
+    Systems: Hidden Information | Corruption / Transformation Track
+    Genre: Dark Fantasy
+    Tone: Horror
+    Environment: Frozen Expanse
+    Pitch: The bolder interpretation lets questioning what still makes someone human as power, loss, and change blur the edges define the campaign more completely. Most major turns revolve around working with incomplete information and uncovering what others keep hidden.
+    About: The campaign asks where the line lies between person and monster, empathy and power, self and loss. Complicating matters, unchecked power destroys everything, and the struggle is not only to gain strength but to restrain it.
+    Players Do: The campaign leans hardest into working with incomplete information and uncovering what others keep hidden while also dealing with power that gradually reshapes the characters. The system pushes back harder the further this direction goes.
+    Hook: The conflict starts getting under the characters' skin fast. The longer the campaign runs, the harder it becomes to separate survival from transformation.
+
+==================================================
+GROUP: core | FILE: frontier-survival.json
+==================================================
+
+  ▶ PRIMARY
+    Core: 
+    Systems: Resource Scarcity | Tactical Positioning / Zone Control
+    Genre: 
+    Tone: Grimdark
+    Environment: 
+    Pitch: The campaign lets hidden truth bear down on a grimdark fantasy campaign, leaving little room for clean victories. Play returns to constant pressure and difficult tradeoffs, and little comes through it cleanly.
+    About: The world is not what it seems, and the deeper the players dig, the worse the truth becomes. What makes it harder is that understanding the truth carries consequences.
+    Players Do: The experience is built around making hard calls when time, safety, and supplies are always running short, with an additional focus on managing movement, chokepoints, and battlefield control under pressure. Every gain leaves damage behind.
+    Hook: This is the kind of situation where delay becomes part of the damage. Every delay, compromise, or hard choice carries a heavier price than the last one.
+
+  ▶ ADJACENT
+    Core: 
+    Systems: Tactical Positioning / Zone Control | Resource Scarcity
+    Genre: 
+    Tone: Grimdark
+    Environment: 
+    Pitch: Here, hidden truth shifts the damage without reducing it. The group's margin for error keeps shrinking through managing movement, chokepoints, and battlefield control under pressure.
+    About: The world is not what it seems, and the deeper the players dig, the worse the truth becomes. Beneath that, understanding the truth carries consequences.
+    Players Do: Play here tends to revolve around managing movement, chokepoints, and battlefield control under pressure. A second layer of play comes from making hard calls when time, safety, and supplies are always running short. The altered approach only changes where the cost lands.
+    Hook: The pressure starts building earlier than expected. The central question becomes what can still be protected before the cost climbs again.
+
+  ▶ WILDCARD
+    Core: 
+    Systems: Resource Scarcity
+    Genre: 
+    Tone: Grimdark
+    Environment: 
+    Pitch: This direction makes the cost of hidden truth harsher, sharper, and harder to escape. The group's margin for error keeps shrinking through constant pressure and difficult tradeoffs.
+    About: The world is not what it seems, and the deeper the players dig, the worse the truth becomes. What gives it extra weight is that understanding the truth carries consequences.
+    Players Do: Its boldest table-facing choice is making hard calls when time, safety, and supplies are always running short. You’ll also spend time exploring hidden information and pushing deeper into the central conflict. The stranger direction leaves scars even when the group wins.
+    Hook: The pressure gets sharp enough to leave marks. Even successful choices leave the group with less room than before.
+
+==================================================
+GROUP: core | FILE: gothic-mystery.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Hidden Truth | The Investigator's Burden
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Psychological
+    Environment: Dense City / Urban | Ruined Civilization
+    Pitch: This is a psychological victorian gothic campaign where the fact that the world is hiding more than it first reveals keeps destabilizing what the characters trust. Play returns to following scattered clues and slowly piecing together the bigger picture, with certainty growing harder to hold.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. Complicating matters, knowing the truth makes things worse, and understanding comes with consequences.
+    Players Do: A typical session focuses on following scattered clues and slowly piecing together the bigger picture. The group also spends time working with incomplete information and uncovering what others keep hidden. The pressure keeps moving inward as certainty slips.
+    Hook: Everything points somewhere. Nothing agrees. The first clues emerge through collapsed structures, buried histories, and old ambitions still visible in what they left behind.
+
+  ▶ ADJACENT
+    Core: Hidden Truth | Lost Knowledge
+    Systems: Influence / Social Leverage | Clue Web
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Ruined Civilization
+    Pitch: The alternate direction reveals the fact that the world is hiding more than it first reveals as another face of a larger pattern. Each decision becomes part of something larger through using pressure, negotiation, and leverage to move people and situations.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. Complicating matters, the answers exist, but they are buried, forgotten, sealed away, or deliberately erased.
+    Players Do: Most sessions focus on using pressure, negotiation, and leverage to move people and situations. You’ll also spend time following scattered clues and slowly piecing together the bigger picture. The altered emphasis reveals another face of the same larger struggle.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Lost Knowledge
+    Systems: Influence / Social Leverage
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The wildcard turns answers that were buried, forgotten, or deliberately pushed out of reach into the direction’s largest and most legendary expression. At the table, the larger struggle takes concrete shape through using pressure, negotiation, and leverage to move people and situations.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. At the same time, understanding the truth carries consequences.
+    Players Do: The wildcard pushes play toward using pressure, negotiation, and leverage to move people and situations. A second layer of play comes from exploring hidden information and pushing deeper into the central conflict. The bolder premise pushes the group into a role larger than they first understood.
+    Hook: The answers get stranger instead of cleaner. The setting rewards careful movement through social and institutional terrain, not just geographic terrain.
+
+==================================================
+GROUP: core | FILE: heroic-mythic.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Power Comes From Within | Creation vs Destruction
+    Systems: Asymmetrical Boss Design | Upgrade Through Risk
+    Genre: Heroic Fantasy
+    Tone: Heroic
+    Environment: Ruined Civilization | Frontier Wildlands
+    Pitch: In a heroic fantasy campaign, the group keeps moving toward choices that matter through awakening power that has to be discovered and shaped from within. Play keeps moving forward through adapting to threats that refuse easy answers.
+    About: The source of power is internal, and growth comes through awakening, mastery, or self-realization. Beneath that, something must end for something else to begin, and renewal comes at a cost.
+    Players Do: Play usually revolves around facing enemies that force new tactics instead of routine fights, alongside taking bigger risks in order to earn the rewards worth chasing. Pressure keeps rising, but so does the group's ability to answer it.
+    Hook: You are not just dealing with the problem—you are being pulled into what it changes. The conflict shapes the people caught inside it as much as the world around them.
+
+  ▶ ADJACENT
+    Core: Power Comes From Within | Lost Knowledge
+    Systems: Exploration Discovery Loop | Asymmetrical Boss Design
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Frontier Wildlands
+    Pitch: Here, the campaign places awakening power that has to be discovered and shaped from within a struggle larger than the group first understood. Play carries that significance forward through pushing into the unknown.
+    About: The source of power is internal, and growth comes through awakening, mastery, or self-realization. Beneath that, the answers exist, but they are buried, forgotten, sealed away, or deliberately erased.
+    Players Do: The campaign starts focusing more on exploring strange places and uncovering what they reveal while also facing enemies that force new tactics instead of routine fights. Each step forward carries consequences beyond the present moment.
+    Hook: The pattern gets harder to explain away the deeper you go. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Lost Knowledge | Cycle / Recurrence
+    Systems: Exploration Discovery Loop | Living World Reaction
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Ruined Civilization
+    Pitch: The wildcard turns answers that were buried, forgotten, or deliberately pushed out of reach into the direction’s largest and most legendary expression. Each decision becomes part of something larger through pushing into the unknown.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Running underneath it all, this has all happened before, and the world is shaped by loops, returns, and repeating history.
+    Players Do: What really drives this direction is exploring strange places and uncovering what they reveal. You’ll also spend time seeing the world change in response to the group’s actions. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: The answers get stranger instead of cleaner. The stranger edge shows itself through shattered monuments, reclaimed corridors, and traces of an older world still shaping the one built on top of it.
+
+==================================================
+GROUP: core | FILE: political-city.json
+==================================================
+
+  ▶ PRIMARY
+    Core: War of Ideologies | Power Vacuum
+    Systems: Alliance vs Betrayal | Faction Reputation
+    Genre: Classic Fantasy
+    Tone: Psychological
+    Environment: Dense City / Urban
+    Pitch: In a psychological classic fantasy campaign, the pressure takes on a more inward and unstable edge through a larger struggle over what kind of world should emerge. At the table, the group keeps reinterpreting the situation through choosing who to trust when every alliance comes with tension and compromise.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. At the same time, something that once held the world together is gone, and competing forces are rising to fill the gap.
+    Players Do: What defines play here is choosing who to trust when every alliance comes with tension and compromise. You’ll also spend time dealing with alliances and rivalries that shift based on what the group does. The pressure keeps moving inward as certainty slips.
+    Hook: Whatever once kept things stable is no longer doing the job. The city creates pressure by compressing danger, opportunity, and secrecy into the same crowded spaces.
+
+  ▶ ADJACENT
+    Core: War of Ideologies | Power Vacuum
+    Systems: Faction Reputation | Alliance vs Betrayal
+    Genre: Classic Fantasy
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The alternate direction raises a larger struggle over what kind of world should emerge into a more symbolic role. At the table, the larger struggle takes concrete shape through dealing with alliances and rivalries that shift based on what the group does.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. Beneath that, something that once held the world together is gone, and competing forces are rising to fill the gap.
+    Players Do: This take repeatedly returns to dealing with alliances and rivalries that shift based on what the group does, alongside choosing who to trust when every alliance comes with tension and compromise. Each step forward carries consequences beyond the present moment.
+    Hook: The wider shift is already underway by the time the group gets involved. That shift becomes visible through crowded streets, closed circles, and too many secrets packed too close together.
+
+  ▶ WILDCARD
+    Core: War of Ideologies
+    Systems: Influence / Social Leverage | Living World Reaction
+    Genre: Classic Fantasy
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The wildcard turns a larger struggle over what kind of world should emerge into the direction’s largest and most legendary expression. Play carries that significance forward through using pressure, negotiation, and leverage to move people and situations.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. Running underneath it all, understanding the truth carries consequences.
+    Players Do: What defines play here is using pressure, negotiation, and leverage to move people and situations, alongside seeing the world change in response to the group’s actions. The bolder premise pushes the group into a role larger than they first understood.
+    Hook: The larger shift stops staying in the background. What happens next depends as much on the changing world as on the group’s intentions.
+
+==================================================
+GROUP: core | FILE: weird-dream-expedition.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Lost Knowledge | Hidden Truth
+    Systems: Exploration Discovery Loop | Clue Web
+    Genre: Cosmic / Eldritch
+    Tone: Psychological
+    Environment: Otherworld / Abstract | Underground / Caverns
+    Pitch: This is a psychological cosmic eldritch campaign centered on answers that were buried, forgotten, or deliberately pushed out of reach, with the pressure landing close to the characters. Play returns to pushing into the unknown, with certainty growing harder to hold.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. What gives it extra weight is that the world is not what it seems, and the real danger is buried beneath false appearances.
+    Players Do: A typical session focuses on exploring strange places and uncovering what they reveal while also following scattered clues and slowly piecing together the bigger picture. Each success changes how the group understands what is happening.
+    Hook: The answers exist, but they do not line up cleanly. The first clues emerge through spaces that seem to react to attention, emotion, or hidden logic rather than simple physical law.
+
+  ▶ ADJACENT
+    Core: Lost Knowledge | Fragmented Self
+    Systems: Clue Web | Exploration Discovery Loop
+    Genre: Cosmic / Eldritch
+    Tone: Mythic
+    Environment: Underground / Caverns
+    Pitch: The alternate direction raises answers that were buried, forgotten, or deliberately pushed out of reach into a more symbolic role. Play carries that significance forward through following scattered clues and slowly piecing together the bigger picture.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Running underneath it all, the self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction.
+    Players Do: You’ll find the group spending more time following scattered clues and slowly piecing together the bigger picture, alongside exploring strange places and uncovering what they reveal. Each step forward carries consequences beyond the present moment.
+    Hook: Uncertainty stops feeling accidental very quickly. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Fragmented Self | The World Is Alive
+    Systems: Environmental Combat
+    Genre: Cosmic / Eldritch
+    Tone: Mythic
+    Environment: Otherworld / Abstract
+    Pitch: The wildcard turns piecing together an identity that doesn’t fully hold together into the direction’s largest and most legendary expression. At the table, the larger struggle takes concrete shape through surviving fights where hazards and terrain matter as much as the enemies.
+    About: The self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction. Beneath that, the environment is not passive, and the world reacts, adapts, and resists the characters' presence.
+    Players Do: Most of the pressure shows up through surviving fights where hazards and terrain matter as much as the enemies. You’ll also keep coming back to exploring hidden information and pushing deeper into the central conflict. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: The larger shift stops staying in the background. The environment creates tension by making certainty harder to hold onto from one moment to the next.
+
+==================================================
+GROUP: coverage | FILE: exploration-wonder.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Lost Knowledge | Power Comes From Within
+    Systems: Exploration Discovery Loop | Clue Web
+    Genre: Heroic Fantasy
+    Tone: Heroic
+    Environment: Coastal / Oceanic | Ruined Civilization
+    Pitch: In a heroic fantasy campaign, the group keeps moving toward choices that matter through answers that were buried, forgotten, or deliberately pushed out of reach. At the table, the group finds a concrete way to push back through pushing into the unknown.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Running underneath it all, the source of power is internal, and growth comes through awakening, mastery, or self-realization.
+    Players Do: You’ll spend most of your time exploring strange places and uncovering what they reveal while also following scattered clues and slowly piecing together the bigger picture. Pressure keeps rising, but so does the group's ability to answer it.
+    Hook: The truth is there, just not in one place or one version. The first clues emerge through shorelines where discovery feels close enough to chase and far enough to fear.
+
+  ▶ ADJACENT
+    Core: Lost Knowledge | The World Is Alive
+    Systems: Clue Web | Exploration Discovery Loop
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Ruined Civilization | Frontier Wildlands
+    Pitch: Here, the campaign places answers that were buried, forgotten, or deliberately pushed out of reach within a struggle larger than the group first understood. At the table, the larger struggle takes concrete shape through following scattered clues and slowly piecing together the bigger picture.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Beneath that, the environment is not passive, and the world reacts, adapts, and resists the characters' presence.
+    Players Do: Play here tends to revolve around following scattered clues and slowly piecing together the bigger picture, alongside exploring strange places and uncovering what they reveal. The altered emphasis reveals another face of the same larger struggle.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: The World Is Alive | Cycle / Recurrence
+    Systems: Environmental Combat
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Frontier Wildlands
+    Pitch: The wildcard turns moving through a world that reacts, adapts, and pushes back into the direction’s largest and most legendary expression. At the table, the larger struggle takes concrete shape through surviving fights where hazards and terrain matter as much as the enemies.
+    About: The environment is not passive, and the world reacts, adapts, and resists the characters' presence. Alongside that, this has all happened before, and the world is shaped by loops, returns, and repeating history.
+    Players Do: Its boldest table-facing choice is surviving fights where hazards and terrain matter as much as the enemies. A second layer of play comes from exploring hidden information and pushing deeper into the central conflict. The bolder premise pushes the group into a role larger than they first understood.
+    Hook: The setting itself has already started going unstable. The stranger edge shows itself through borderland spaces where opportunity and danger sit close together, and no one is fully insulated from either.
+
+==================================================
+GROUP: coverage | FILE: faction-war.json
+==================================================
+
+  ▶ PRIMARY
+    Core: War of Ideologies | Power Vacuum
+    Systems: Alliance vs Betrayal | Faction Reputation
+    Genre: Western Frontier
+    Tone: Grimdark
+    Environment: Dense City / Urban | Frontier Wildlands
+    Pitch: This drops the group into a grimdark western frontier campaign shaped by a larger struggle over what kind of world should emerge. Play returns to choosing who to trust when every alliance comes with tension and compromise, and little comes through it cleanly.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. Alongside that, something that once held the world together is gone, and competing forces are rising to fill the gap.
+    Players Do: Play tends to focus on choosing who to trust when every alliance comes with tension and compromise, with an additional focus on dealing with alliances and rivalries that shift based on what the group does. Every gain leaves damage behind.
+    Hook: The trouble here is larger than one villain or one event; the whole situation has started to move. Progress depends on navigating layers of access, status, and hidden relationships rather than moving directly toward the answer.
+
+  ▶ ADJACENT
+    Core: War of Ideologies | Power Vacuum
+    Systems: Faction Reputation | Alliance vs Betrayal
+    Genre: Western Frontier
+    Tone: Horror
+    Environment: Frontier Wildlands
+    Pitch: The alternate direction brings a larger struggle over what kind of world should emerge to the foreground. The campaign repeatedly returns to dealing with alliances and rivalries that shift based on what the group does.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. What makes it harder is that something that once held the world together is gone, and competing forces are rising to fill the gap.
+    Players Do: You’ll find the group spending more time dealing with alliances and rivalries that shift based on what the group does while also choosing who to trust when every alliance comes with tension and compromise. The shift becomes clearer as the group commits to it.
+    Hook: The wider shift is already underway by the time the group gets involved. The story keeps pressing into an instability no one can fully step outside of.
+
+  ▶ WILDCARD
+    Core: War of Ideologies
+    Systems: Tactical Positioning / Zone Control | Influence / Social Leverage
+    Genre: Western Frontier
+    Tone: Horror
+    Environment: Dense City / Urban
+    Pitch: The wildcard commits to a campaign centered on a larger struggle over what kind of world should emerge. The tension becomes concrete through managing movement, chokepoints, and battlefield control under pressure.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. What makes it harder is that understanding the truth carries consequences.
+    Players Do: The campaign comes alive through managing movement, chokepoints, and battlefield control under pressure while also using pressure, negotiation, and leverage to move people and situations. The more the group commits, the less familiar the consequences become.
+    Hook: Whatever was changing under the surface is no longer staying there. What happens next depends as much on the changing world as on the group’s intentions.
+
+==================================================
+GROUP: coverage | FILE: identity-fracture.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Fragmented Self | Fate vs Free Will
+    Systems: Corruption / Transformation Track | Modular Build System
+    Genre: Victorian / Gothic
+    Tone: Psychological
+    Environment: Ruined Civilization | Dense City / Urban
+    Pitch: This is a psychological victorian gothic campaign centered on piecing together an identity that doesn’t fully hold together, with the pressure landing close to the characters. The pressure stays close to the characters through power gradually reshaping the characters.
+    About: The self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction. Running underneath it all, the central question is whether the characters are shaping their own path or fulfilling one already written.
+    Players Do: The experience is built around coping with changes that alter who the characters are becoming. You’ll also spend time shaping identity through modular growth and highly customized choices. Each success changes how the group understands what is happening.
+    Hook: What begins out in the world does not stay out there for long. External pressure stops staying separate from what it is doing to the characters.
+
+  ▶ ADJACENT
+    Core: Fragmented Self | Becoming Something Else
+    Systems: Modular Build System | Corruption / Transformation Track
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: Here, the campaign places piecing together an identity that doesn’t fully hold together within a struggle larger than the group first understood. At the table, the larger struggle takes concrete shape through identity shaped through change and self-definition.
+    About: The self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction. Alongside that, the characters are changing, whether they want to or not, and power or circumstance is reshaping who they are.
+    Players Do: You’ll find the group spending more time shaping identity through modular growth and highly customized choices, with an additional focus on dealing with power that gradually reshapes the characters. The altered emphasis reveals another face of the same larger struggle.
+    Hook: The conflict gets closer to the characters more quickly. That shift becomes visible through a city that hides danger behind routine, status, and architecture.
+
+  ▶ WILDCARD
+    Core: Becoming Something Else | Hidden Truth
+    Systems: Clue Web | Legacy / Inheritance System
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Ruined Civilization
+    Pitch: This direction places changing in ways the characters may not fully welcome or understand inside a pattern that reaches beyond the immediate story. At the table, the larger struggle takes concrete shape through following scattered clues and slowly piecing together the bigger picture.
+    About: The characters are changing, whether they want to or not, and power or circumstance is reshaping who they are. Alongside that, the world is not what it seems, and the real danger is buried beneath false appearances.
+    Players Do: What really drives this direction is following scattered clues and slowly piecing together the bigger picture, alongside dealing with past lives, inherited consequences, or old choices that still shape the present. The bolder premise pushes the group into a role larger than they first understood.
+    Hook: The answers get stranger instead of cleaner. Each discovery clarifies one detail while destabilizing the larger picture.
+
+==================================================
+GROUP: coverage | FILE: mystery-hidden-truth.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Hidden Truth | The Investigator's Burden
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Psychological
+    Environment: Dense City / Urban | Ruined Civilization
+    Pitch: This is a psychological victorian gothic campaign where the fact that the world is hiding more than it first reveals keeps destabilizing what the characters trust. At the table, the group keeps reinterpreting the situation through following scattered clues and slowly piecing together the bigger picture.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. Alongside that, knowing the truth makes things worse, and understanding comes with consequences.
+    Players Do: Most sessions center on following scattered clues and slowly piecing together the bigger picture. The group also spends time working with incomplete information and uncovering what others keep hidden. The pressure keeps moving inward as certainty slips.
+    Hook: Everything points somewhere. Nothing agrees. Every answer risks opening a larger contradiction instead of closing the question.
+
+  ▶ ADJACENT
+    Core: Hidden Truth | Lost Knowledge
+    Systems: Influence / Social Leverage | Clue Web
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Ruined Civilization
+    Pitch: The alternate direction reveals the fact that the world is hiding more than it first reveals as another face of a larger pattern. Play carries that significance forward through using pressure, negotiation, and leverage to move people and situations.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. Complicating matters, the answers exist, but they are buried, forgotten, sealed away, or deliberately erased.
+    Players Do: There’s a stronger emphasis on using pressure, negotiation, and leverage to move people and situations while also following scattered clues and slowly piecing together the bigger picture. The altered emphasis reveals another face of the same larger struggle.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Lost Knowledge
+    Systems: Influence / Social Leverage
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The wildcard turns answers that were buried, forgotten, or deliberately pushed out of reach into the direction’s largest and most legendary expression. At the table, the larger struggle takes concrete shape through using pressure, negotiation, and leverage to move people and situations.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Complicating matters, understanding the truth carries consequences.
+    Players Do: Most of the pressure shows up through using pressure, negotiation, and leverage to move people and situations, with an additional focus on exploring hidden information and pushing deeper into the central conflict. The bolder premise pushes the group into a role larger than they first understood.
+    Hook: The truth is there, but it reaches the group in damaged pieces. Each discovery clarifies one detail while destabilizing the larger picture.
+
+==================================================
+GROUP: coverage | FILE: mythic-epic.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Power Comes From Within | Creation vs Destruction
+    Systems: Asymmetrical Boss Design | Upgrade Through Risk
+    Genre: Heroic Fantasy
+    Tone: Heroic
+    Environment: Coastal / Oceanic | Ruined Civilization
+    Pitch: The campaign gains a clear sense of purpose and forward motion through awakening power that has to be discovered and shaped from within. At the table, the group finds a concrete way to push back through adapting to threats that refuse easy answers.
+    About: The source of power is internal, and growth comes through awakening, mastery, or self-realization. At the same time, something must end for something else to begin, and renewal comes at a cost.
+    Players Do: The experience is built around facing enemies that force new tactics instead of routine fights. You’ll also keep coming back to taking bigger risks in order to earn the rewards worth chasing. Each success gives the group another way to shape what follows.
+    Hook: The real pressure starts once the conflict becomes part of who the characters are becoming. Exploration gains weight because each shoreline, island, and passage suggests both opportunity and risk.
+
+  ▶ ADJACENT
+    Core: Power Comes From Within | Lost Knowledge
+    Systems: Exploration Discovery Loop | Asymmetrical Boss Design
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Ruined Civilization | Frontier Wildlands
+    Pitch: Here, the campaign places awakening power that has to be discovered and shaped from within a struggle larger than the group first understood. Play carries that significance forward through pushing into the unknown.
+    About: The source of power is internal, and growth comes through awakening, mastery, or self-realization. Beneath that, the answers exist, but they are buried, forgotten, sealed away, or deliberately erased.
+    Players Do: There’s a stronger emphasis on exploring strange places and uncovering what they reveal while also facing enemies that force new tactics instead of routine fights. The altered emphasis reveals another face of the same larger struggle.
+    Hook: Uncertainty stops feeling accidental very quickly. The past never stays buried; it keeps shaping the present.
+
+  ▶ WILDCARD
+    Core: Lost Knowledge | Cycle / Recurrence
+    Systems: Exploration Discovery Loop | Living World Reaction
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Frontier Wildlands
+    Pitch: This direction places answers that were buried, forgotten, or deliberately pushed out of reach inside a pattern that reaches beyond the immediate story. At the table, the larger struggle takes concrete shape through pushing into the unknown.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Alongside that, this has all happened before, and the world is shaped by loops, returns, and repeating history.
+    Players Do: Its boldest table-facing choice is exploring strange places and uncovering what they reveal, alongside seeing the world change in response to the group’s actions. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: The answers get stranger instead of cleaner. The group has to choose carefully where to intervene, knowing they cannot be everywhere at once.
+
+==================================================
+GROUP: coverage | FILE: political-intrigue.json
+==================================================
+
+  ▶ PRIMARY
+    Core: War of Ideologies | Power Vacuum
+    Systems: Alliance vs Betrayal | Faction Reputation
+    Genre: Victorian / Gothic
+    Tone: Psychological
+    Environment: Dense City / Urban
+    Pitch: This is a psychological victorian gothic campaign centered on a larger struggle over what kind of world should emerge, with the pressure landing close to the characters. The pressure stays close to the characters through choosing who to trust when every alliance comes with tension and compromise.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. Beneath that, something that once held the world together is gone, and competing forces are rising to fill the gap.
+    Players Do: What defines play here is choosing who to trust when every alliance comes with tension and compromise. You’ll also spend time dealing with alliances and rivalries that shift based on what the group does. The pressure keeps moving inward as certainty slips.
+    Hook: The trouble here is larger than one villain or one event; the whole situation has started to move. The setting is changing under real strain, whether the group is ready or not.
+
+  ▶ ADJACENT
+    Core: War of Ideologies | Power Vacuum
+    Systems: Faction Reputation | Alliance vs Betrayal
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The alternate direction raises a larger struggle over what kind of world should emerge into a more symbolic role. At the table, the larger struggle takes concrete shape through dealing with alliances and rivalries that shift based on what the group does.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. At the same time, something that once held the world together is gone, and competing forces are rising to fill the gap.
+    Players Do: Most sessions focus on dealing with alliances and rivalries that shift based on what the group does. The group also spends time choosing who to trust when every alliance comes with tension and compromise. The altered emphasis reveals another face of the same larger struggle.
+    Hook: The setting is moving before the characters understand what set it off. The story keeps pressing into an instability no one can fully step outside of.
+
+  ▶ WILDCARD
+    Core: War of Ideologies
+    Systems: Influence / Social Leverage | Living World Reaction
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The wildcard turns a larger struggle over what kind of world should emerge into the direction’s largest and most legendary expression. Play carries that significance forward through using pressure, negotiation, and leverage to move people and situations.
+    About: The real struggle is not just between sides, but between competing beliefs about how the world should work. Running underneath it all, understanding the truth carries consequences.
+    Players Do: What really drives this direction is using pressure, negotiation, and leverage to move people and situations, alongside seeing the world change in response to the group’s actions. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: Whatever was changing under the surface is no longer staying there. What happens next depends as much on the changing world as on the group’s intentions.
+
+==================================================
+GROUP: coverage | FILE: survival-frontier.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Survival Against Overwhelming Force | The Endless Siege
+    Systems: Resource Scarcity | Attrition Combat
+    Genre: Western Frontier
+    Tone: Grimdark
+    Environment: Desert / Wasteland | Ruined Civilization
+    Pitch: This drops the group into a grimdark western frontier campaign shaped by survival in a world far harsher and stronger than the characters are. At the table, the campaign keeps exacting a price through constant pressure and difficult tradeoffs.
+    About: The world is stronger than the characters are, and victory means lasting long enough to matter. At the same time, pressure never fully relents, safety is temporary, and endurance is as important as any single victory.
+    Players Do: Most sessions center on making hard calls when time, safety, and supplies are always running short while also pushing through repeated pressure and feeling every fight take something out of the group. Every gain leaves damage behind.
+    Hook: This is the kind of situation where delay becomes part of the damage. The first clues emerge through a landscape of remnants, warnings, and unfinished legacies too large to ignore.
+
+  ▶ ADJACENT
+    Core: Survival Against Overwhelming Force | Entropy / Decay
+    Systems: Tactical Positioning / Zone Control | Resource Scarcity
+    Genre: Western Frontier
+    Tone: Grimdark
+    Environment: Ruined Civilization | Frontier Wildlands
+    Pitch: The alternate direction drags survival in a world far harsher and stronger than the characters are closer to the surface. The group's margin for error keeps shrinking through managing movement, chokepoints, and battlefield control under pressure.
+    About: The world is stronger than the characters are, and victory means lasting long enough to matter. At the same time, everything is falling apart, and every success is measured against a world already in decline.
+    Players Do: The alternate direction makes more room for managing movement, chokepoints, and battlefield control under pressure while also making hard calls when time, safety, and supplies are always running short. Each step forward strips away another clean option.
+    Hook: Strain sets in before anyone has a clean way to answer it. That shift becomes visible through borderland spaces where opportunity and danger sit close together, and no one is fully insulated from either.
+
+  ▶ WILDCARD
+    Core: Entropy / Decay
+    Systems: Tactical Positioning / Zone Control | Escalation Meter
+    Genre: Western Frontier
+    Tone: Grimdark
+    Environment: Frontier Wildlands
+    Pitch: The wildcard commits to making a difference in a world already slipping toward collapse without softening what it costs. The group's margin for error keeps shrinking through managing movement, chokepoints, and battlefield control under pressure.
+    About: Everything is falling apart, and every success is measured against a world already in decline. Alongside that, understanding the truth carries consequences.
+    Players Do: The wildcard pushes play toward managing movement, chokepoints, and battlefield control under pressure. A second layer of play comes from managing problems before they spiral out of control. The stranger direction leaves scars even when the group wins.
+    Hook: There is already too much strain in the system for a clean solution. Even successful choices leave the group with less room than before.
+
+==================================================
+GROUP: coverage | FILE: weird-reality-warp.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Lost Knowledge | Hidden Truth
+    Systems: Exploration Discovery Loop | Clue Web
+    Genre: Cosmic / Eldritch
+    Tone: Psychological
+    Environment: Otherworld / Abstract | Underground / Caverns
+    Pitch: This is a psychological cosmic eldritch campaign centered on answers that were buried, forgotten, or deliberately pushed out of reach, with the pressure landing close to the characters. The pressure stays close to the characters through pushing into the unknown.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Beneath that, the world is not what it seems, and the real danger is buried beneath false appearances.
+    Players Do: The group spends most of its time exploring strange places and uncovering what they reveal. A second layer of play comes from following scattered clues and slowly piecing together the bigger picture. The pressure keeps moving inward as certainty slips.
+    Hook: The answers exist, but they do not line up cleanly. The truth arrives in pieces that are useful, incomplete, and difficult to trust all at once.
+
+  ▶ ADJACENT
+    Core: Lost Knowledge | Fragmented Self
+    Systems: Clue Web | Exploration Discovery Loop
+    Genre: Cosmic / Eldritch
+    Tone: Mythic
+    Environment: Underground / Caverns | Ruined Civilization
+    Pitch: Here, the campaign places answers that were buried, forgotten, or deliberately pushed out of reach within a struggle larger than the group first understood. Play carries that significance forward through following scattered clues and slowly piecing together the bigger picture.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. At the same time, the self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction.
+    Players Do: The campaign starts focusing more on following scattered clues and slowly piecing together the bigger picture. You’ll also spend time exploring strange places and uncovering what they reveal. Each step forward carries consequences beyond the present moment.
+    Hook: Every answer opens onto a larger hidden structure. Survival depends on reading darkness, terrain, and enclosure as carefully as any enemy threat.
+
+  ▶ WILDCARD
+    Core: Fragmented Self | The World Is Alive
+    Systems: Environmental Combat
+    Genre: Cosmic / Eldritch
+    Tone: Mythic
+    Environment: Ruined Civilization
+    Pitch: This direction places piecing together an identity that doesn’t fully hold together inside a pattern that reaches beyond the immediate story. Play carries that significance forward through surviving fights where hazards and terrain matter as much as the enemies.
+    About: The self is incomplete, divided, or fractured, and discovery becomes an act of reconstruction. Alongside that, the environment is not passive, and the world reacts, adapts, and resists the characters' presence.
+    Players Do: What really drives this direction is surviving fights where hazards and terrain matter as much as the enemies while also exploring hidden information and pushing deeper into the central conflict. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: The setting itself has already started going unstable. The stranger edge shows itself through shattered monuments, reclaimed corridors, and traces of an older world still shaping the one built on top of it.
+
+==================================================
+GROUP: edge-cases | FILE: conflicting-tones.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Something Is Wrong | Power Has a Cost
+    Systems: Escalation Meter | Corruption / Transformation Track
+    Genre: Victorian / Gothic
+    Tone: Lighthearted / Chaotic
+    Environment: Dense City / Urban | Ruined Civilization
+    Pitch: From the start, the truth that something in the world is off in ways no one can fully explain away keeps the adventure moving in unexpected directions. Play stays lively through keeping situations from escalating, even when the danger is real.
+    About: Reality feels off, patterns break down, and the world carries signs that something fundamental is distorted. What makes it harder is that every gain comes at a cost, forcing sacrifice, corruption, or loss.
+    Players Do: Play usually revolves around managing problems before they spiral out of control. The group also spends time dealing with power that gradually reshapes the characters. The danger stays real, but the campaign keeps moving before anyone can settle in.
+    Hook: The truth is there, just not in one place or one version. The truth arrives in pieces that are useful, incomplete, and difficult to trust all at once.
+
+  ▶ ADJACENT
+    Core: Something Is Wrong | What Is Humanity?
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Lighthearted / Chaotic
+    Environment: Ruined Civilization
+    Pitch: The alternate direction turns the fact that something in the world is off in ways no one can fully explain away into a faster route toward trouble and opportunity. Play stays lively through following scattered clues and slowly piecing together the bigger picture, even when the danger is real.
+    About: Reality feels off, patterns break down, and the world carries signs that something fundamental is distorted. What makes it harder is that the campaign asks where the line lies between person and monster, empathy and power, self and loss.
+    Players Do: You’ll find the group spending more time following scattered clues and slowly piecing together the bigger picture. A second layer of play comes from working with incomplete information and uncovering what others keep hidden. Each step forward creates another problem worth chasing.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: What Is Humanity? | Power Must Be Controlled
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Lighthearted / Chaotic
+    Environment: Dense City / Urban
+    Pitch: This direction keeps the danger sharp and the possibilities moving through questioning what still makes someone human as power, loss, and change blur the edges. At the table, the adventure keeps moving through following scattered clues and slowly piecing together the bigger picture.
+    About: The campaign asks where the line lies between person and monster, empathy and power, self and loss. At the same time, unchecked power destroys everything, and the struggle is not only to gain strength but to restrain it.
+    Players Do: Sessions tend to focus on following scattered clues and slowly piecing together the bigger picture, with an additional focus on working with incomplete information and uncovering what others keep hidden. The stranger premise turns every setback into a messier route onward.
+    Hook: What is happening in the world starts changing the people inside it. The longer the campaign runs, the harder it becomes to separate survival from transformation.
+
+==================================================
+GROUP: edge-cases | FILE: contradictory-bondaries.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Something Is Wrong | What Is Humanity?
+    Systems: Escalation Meter | Clue Web
+    Genre: Victorian / Gothic
+    Tone: Grimdark
+    Environment: Dense City / Urban
+    Pitch: From the start, the truth that something in the world is off in ways no one can fully explain away is already doing damage. At the table, the campaign keeps exacting a price through keeping situations from escalating.
+    About: Reality feels off, patterns break down, and the world carries signs that something fundamental is distorted. Running underneath it all, the campaign asks where the line lies between person and monster, empathy and power, self and loss.
+    Players Do: Most sessions center on managing problems before they spiral out of control, with an additional focus on following scattered clues and slowly piecing together the bigger picture. Every gain leaves damage behind.
+    Hook: Everything points somewhere. Nothing agrees. Every district, faction, and institution filters what the group can learn and how quickly they can act on it.
+
+  ▶ ADJACENT
+    Core: Something Is Wrong | Hidden Truth
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Horror
+    Environment: Dense City / Urban
+    Pitch: The emphasis moves toward the fact that something in the world is off in ways no one can fully explain away. The tension becomes concrete through following scattered clues and slowly piecing together the bigger picture.
+    About: Reality feels off, patterns break down, and the world carries signs that something fundamental is distorted. What gives it extra weight is that the world is not what it seems, and the real danger is buried beneath false appearances.
+    Players Do: The campaign starts focusing more on following scattered clues and slowly piecing together the bigger picture. You’ll also keep coming back to working with incomplete information and uncovering what others keep hidden. The campaign keeps raising the stakes around the new emphasis.
+    Hook: Uncertainty stops feeling accidental very quickly. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Hidden Truth | Power Has a Cost
+    Systems: Hidden Information | Resource Scarcity
+    Genre: Victorian / Gothic
+    Tone: Horror
+    Environment: Dense City / Urban
+    Pitch: This direction follows the truth that the world is hiding more than it first reveals to its sharpest consequences. The group keeps returning to working with incomplete information and uncovering what others keep hidden.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. At the same time, every gain comes at a cost, forcing sacrifice, corruption, or loss.
+    Players Do: Here, the tension comes from working with incomplete information and uncovering what others keep hidden, with an additional focus on making hard calls when time, safety, and supplies are always running short. The more the group commits, the less familiar the consequences become.
+    Hook: The truth is there, but it reaches the group in damaged pieces. Each discovery clarifies one detail while destabilizing the larger picture.
+
+==================================================
+GROUP: edge-cases | FILE: minimal-input.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Hidden Truth | The Investigator's Burden
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Psychological
+    Environment: Dense City / Urban
+    Pitch: This is a psychological victorian gothic campaign where the fact that the world is hiding more than it first reveals keeps destabilizing what the characters trust. The pressure stays close to the characters through following scattered clues and slowly piecing together the bigger picture.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. What makes it harder is that knowing the truth makes things worse, and understanding comes with consequences.
+    Players Do: The gameplay repeatedly centers on following scattered clues and slowly piecing together the bigger picture, with an additional focus on working with incomplete information and uncovering what others keep hidden. Each success changes how the group understands what is happening.
+    Hook: The truth is there, just not in one place or one version. Every answer risks opening a larger contradiction instead of closing the question.
+
+  ▶ ADJACENT
+    Core: Hidden Truth | Lost Knowledge
+    Systems: Hidden Information | Clue Web
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: Here, the truth that the world is hiding more than it first reveals carries symbolic weight beyond the present moment. At the table, the larger struggle takes concrete shape through working with incomplete information and uncovering what others keep hidden.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. Running underneath it all, the answers exist, but they are buried, forgotten, sealed away, or deliberately erased.
+    Players Do: You’ll find the group spending more time working with incomplete information and uncovering what others keep hidden while also following scattered clues and slowly piecing together the bigger picture. Each step forward carries consequences beyond the present moment.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Lost Knowledge
+    Systems: Clue Web
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The wildcard turns answers that were buried, forgotten, or deliberately pushed out of reach into the direction’s largest and most legendary expression. Each decision becomes part of something larger through following scattered clues and slowly piecing together the bigger picture.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. What makes it harder is that understanding the truth carries consequences.
+    Players Do: What really drives this direction is following scattered clues and slowly piecing together the bigger picture. A second layer of play comes from exploring hidden information and pushing deeper into the central conflict. The bolder premise pushes the group into a role larger than they first understood.
+    Hook: The answers get stranger instead of cleaner. The stranger edge shows itself through a city that hides danger behind routine, status, and architecture.
+
+==================================================
+GROUP: edge-cases | FILE: overloaded-input.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Survival Against Overwhelming Force | The Endless Siege
+    Systems: Resource Scarcity | Tactical Positioning / Zone Control
+    Genre: Western Frontier
+    Tone: Grimdark
+    Environment: Dense City / Urban | Desert / Wasteland
+    Pitch: This drops the group into a grimdark western frontier campaign shaped by survival in a world far harsher and stronger than the characters are. The group's margin for error keeps shrinking through constant pressure and difficult tradeoffs.
+    About: The world is stronger than the characters are, and victory means lasting long enough to matter. At the same time, pressure never fully relents, safety is temporary, and endurance is as important as any single victory.
+    Players Do: The campaign leans heavily on making hard calls when time, safety, and supplies are always running short, with an additional focus on managing movement, chokepoints, and battlefield control under pressure. The group can keep moving, but never without losing something along the way.
+    Hook: This is the kind of situation where delay becomes part of the damage. The first clues emerge through tight districts, layered power, and constant movement through spaces built to conceal as much as they reveal.
+
+  ▶ ADJACENT
+    Core: Survival Against Overwhelming Force | Entropy / Decay
+    Systems: Tactical Positioning / Zone Control | Resource Scarcity
+    Genre: Western Frontier
+    Tone: Grimdark
+    Environment: Desert / Wasteland | Coastal / Oceanic
+    Pitch: Here, survival in a world far harsher and stronger than the characters are shifts the damage without reducing it. Play returns to managing movement, chokepoints, and battlefield control under pressure, and little comes through it cleanly.
+    About: The world is stronger than the characters are, and victory means lasting long enough to matter. Alongside that, everything is falling apart, and every success is measured against a world already in decline.
+    Players Do: The campaign starts focusing more on managing movement, chokepoints, and battlefield control under pressure. You’ll also keep coming back to making hard calls when time, safety, and supplies are always running short. The altered approach only changes where the cost lands.
+    Hook: The cost shows up faster than the group is ready for. The world feels larger here, but that scale comes with uncertainty, separation, and the danger of being caught between places.
+
+  ▶ WILDCARD
+    Core: Entropy / Decay | War of Ideologies
+    Systems: Clue Web | Influence / Social Leverage
+    Genre: Western Frontier
+    Tone: Grimdark
+    Environment: Coastal / Oceanic | Ruined Civilization
+    Pitch: The wildcard commits to making a difference in a world already slipping toward collapse without softening what it costs. At the table, the campaign keeps exacting a price through following scattered clues and slowly piecing together the bigger picture.
+    About: Everything is falling apart, and every success is measured against a world already in decline. What makes it harder is that the real struggle is not just between sides, but between competing beliefs about how the world should work.
+    Players Do: The campaign comes alive through following scattered clues and slowly piecing together the bigger picture. The group also spends time using pressure, negotiation, and leverage to move people and situations. The harsher premise makes every success feel temporary.
+    Hook: There is already too much strain in the system for a clean solution. Even successful choices leave the group with less room than before.
+
+==================================================
+GROUP: youth | FILE: exploration-cozy.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Lost Knowledge | Power Comes From Within
+    Systems: Exploration Discovery Loop | Environmental Combat
+    Genre: Heroic Fantasy
+    Tone: Lighthearted / Chaotic
+    Environment: Coastal / Oceanic | Ruined Civilization
+    Pitch: A playful, lighthearted heroic fantasy campaign draws adventurous, unpredictable energy from answers that were hidden, forgotten, or deliberately pushed out of reach. At the table, the adventure keeps moving through pushing into the unknown.
+    About: The answers exist, but they are hidden, forgotten, sealed away, or deliberately erased. Complicating matters, the source of power is internal, and growth comes through awakening, mastery, or self-realization.
+    Players Do: Play usually revolves around exploring strange places and uncovering what they reveal. The group also spends time surviving fights where hazards and terrain matter as much as the enemies. Every complication creates another opening to improvise.
+    Hook: The deeper the group looks, the harder it becomes to believe the obvious explanation. Every answer risks opening a larger contradiction instead of closing the question.
+
+  ▶ ADJACENT
+    Core: Lost Knowledge | The World Is Alive
+    Systems: Environmental Combat | Exploration Discovery Loop
+    Genre: Heroic Fantasy
+    Tone: Heroic
+    Environment: Ruined Civilization
+    Pitch: Here, the group finds another way to make a difference through answers that were buried, forgotten, or deliberately pushed out of reach. At the table, the group finds a concrete way to push back through surviving fights where hazards and terrain matter as much as the enemies.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. What makes it harder is that the environment is not passive, and the world reacts, adapts, and resists the characters' presence.
+    Players Do: The campaign starts focusing more on surviving fights where hazards and terrain matter as much as the enemies. The group also spends time exploring strange places and uncovering what they reveal. Each step forward creates another meaningful chance to act.
+    Hook: The pattern gets harder to explain away the deeper you go. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: The World Is Alive | Cycle / Recurrence
+    Systems: Exploration Discovery Loop
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Coastal / Oceanic
+    Pitch: The wildcard turns moving through a world that reacts, adapts, and pushes back into the direction’s largest and most legendary expression. At the table, the larger struggle takes concrete shape through pushing into the unknown.
+    About: The environment is not passive, and the world reacts, adapts, and resists the characters' presence. Running underneath it all, this has all happened before, and the world is shaped by loops, returns, and repeating history.
+    Players Do: Its boldest table-facing choice is exploring strange places and uncovering what they reveal. You’ll also keep coming back to exploring hidden information and pushing deeper into the central conflict. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: Whatever was changing under the surface is no longer staying there. The stranger edge shows itself through restless coastlines where movement, trade, and danger all depend on forces no one fully controls.
+
+==================================================
+GROUP: youth | FILE: heroic-kids.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Power Comes From Within | Creation vs Destruction
+    Systems: Asymmetrical Boss Design | Upgrade Through Risk
+    Genre: Heroic Fantasy
+    Tone: Lighthearted / Chaotic
+    Environment: Coastal / Oceanic | Frontier Wildlands
+    Pitch: A playful, lighthearted heroic fantasy campaign draws adventurous, unpredictable energy from awakening power that has to be discovered and shaped from within. The campaign keeps creating new problems, openings, and momentum through adapting to threats that refuse easy answers.
+    About: The source of power is internal, and growth comes through awakening, mastery, or self-realization. What makes it harder is that something must end for something else to begin, and renewal comes at a cost.
+    Players Do: The campaign leans heavily on facing enemies that force new tactics instead of routine fights. The group also spends time taking bigger risks in order to earn the rewards worth chasing. The danger stays real, but the campaign keeps moving before anyone can settle in.
+    Hook: The real pressure starts once the conflict becomes part of who the characters are becoming. External pressure stops staying separate from what it is doing to the characters.
+
+  ▶ ADJACENT
+    Core: Power Comes From Within | Lost Knowledge
+    Systems: Exploration Discovery Loop | Asymmetrical Boss Design
+    Genre: Heroic Fantasy
+    Tone: Heroic
+    Environment: Frontier Wildlands
+    Pitch: The alternate direction draws new purposeful momentum from awakening power that has to be discovered and shaped from within. The group turns pressure into purposeful action through pushing into the unknown.
+    About: The source of power is internal, and growth comes through awakening, mastery, or self-realization. Beneath that, the answers exist, but they are buried, forgotten, sealed away, or deliberately erased.
+    Players Do: The experience shifts toward exploring strange places and uncovering what they reveal, alongside facing enemies that force new tactics instead of routine fights. The altered emphasis gives the group new ground to claim.
+    Hook: Uncertainty stops feeling accidental very quickly. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Lost Knowledge | Cycle / Recurrence
+    Systems: Exploration Discovery Loop
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Coastal / Oceanic
+    Pitch: This direction places answers that were buried, forgotten, or deliberately pushed out of reach inside a pattern that reaches beyond the immediate story. Play carries that significance forward through pushing into the unknown.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Alongside that, this has all happened before, and the world is shaped by loops, returns, and repeating history.
+    Players Do: What defines play here is exploring strange places and uncovering what they reveal. You’ll also spend time exploring hidden information and pushing deeper into the central conflict. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: What should fit together keeps refusing to do so. Each discovery clarifies one detail while destabilizing the larger picture.
+
+==================================================
+GROUP: youth | FILE: myster-light.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Hidden Truth | The Investigator's Burden
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Lighthearted / Chaotic
+    Environment: Dense City / Urban
+    Pitch: From the start, the truth that the world is hiding more than it first reveals keeps the adventure moving in unexpected directions. Play stays lively through following scattered clues and slowly piecing together the bigger picture, even when the danger is real.
+    About: The world is not what it seems, and the real mystery is hidden beneath false appearances. What gives it extra weight is that knowing the truth makes things worse, and understanding comes with outcomes.
+    Players Do: The campaign leans heavily on following scattered clues and slowly piecing together the bigger picture. You’ll also keep coming back to working with incomplete information and uncovering what others keep hidden. The danger stays real, but the campaign keeps moving before anyone can settle in.
+    Hook: The deeper the group looks, the harder it becomes to believe the obvious explanation. Every answer risks opening a larger contradiction instead of closing the question.
+
+  ▶ ADJACENT
+    Core: Hidden Truth | Lost Knowledge
+    Systems: Influence / Social Leverage | Clue Web
+    Genre: Victorian / Gothic
+    Tone: Lighthearted / Chaotic
+    Environment: Dense City / Urban
+    Pitch: Here, the truth that the world is hiding more than it first reveals keeps opening lively new complications. The campaign keeps creating new problems, openings, and momentum through using pressure, negotiation, and leverage to move people and situations.
+    About: The world is not what it seems, and the real mystery is hidden beneath false appearances. Running underneath it all, the answers exist, but they are hidden, forgotten, sealed away, or deliberately erased.
+    Players Do: The alternate direction makes more room for using pressure, negotiation, and leverage to move people and situations. The group also spends time following scattered clues and slowly piecing together the bigger picture. Each step forward creates another problem worth chasing.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Lost Knowledge
+    Systems: Influence / Social Leverage
+    Genre: Victorian / Gothic
+    Tone: Lighthearted / Chaotic
+    Environment: Dense City / Urban
+    Pitch: This direction keeps the danger sharp and the possibilities moving through answers that were hidden, forgotten, or deliberately pushed out of reach. The campaign keeps creating new problems, openings, and momentum through using pressure, negotiation, and leverage to move people and situations.
+    About: The answers exist, but they are hidden, forgotten, sealed away, or deliberately erased. Beneath that, understanding the truth carries outcomes.
+    Players Do: Here, the tension comes from using pressure, negotiation, and leverage to move people and situations. You’ll also keep coming back to exploring hidden information and pushing deeper into the central conflict. The stranger premise turns every setback into a messier route onward.
+    Hook: What should fit together keeps refusing to do so. Each discovery clarifies one detail while destabilizing the larger picture.
+
+==================================================
+GROUP: youth | FILE: spooky-but-safe.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Hidden Truth | Something Is Wrong
+    Systems: Escalation Meter | Clue Web
+    Genre: Victorian / Gothic
+    Tone: Psychological
+    Environment: Dense City / Urban | Ruined Civilization
+    Pitch: At its core, the truth that the world is hiding more than it first reveals turns every certainty inward. Play returns to keeping situations from escalating, with certainty growing harder to hold.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. Alongside that, reality feels off, patterns break down, and the world carries signs that something fundamental is distorted.
+    Players Do: Play usually revolves around managing problems before they spiral out of control while also following scattered clues and slowly piecing together the bigger picture. The pressure keeps moving inward as certainty slips.
+    Hook: The deeper the group looks, the harder it becomes to believe the obvious explanation. The first clues emerge through shattered monuments, reclaimed corridors, and traces of an older world still shaping the one built on top of it.
+
+  ▶ ADJACENT
+    Core: Hidden Truth | Power Has a Cost
+    Systems: Clue Web | Hidden Information
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Ruined Civilization
+    Pitch: Here, the truth that the world is hiding more than it first reveals carries symbolic weight beyond the present moment. At the table, the larger struggle takes concrete shape through following scattered clues and slowly piecing together the bigger picture.
+    About: The world is not what it seems, and the real danger is buried beneath false appearances. What makes it harder is that every gain comes at a cost, forcing sacrifice, corruption, or loss.
+    Players Do: This take repeatedly returns to following scattered clues and slowly piecing together the bigger picture, with an additional focus on working with incomplete information and uncovering what others keep hidden. Each step forward carries consequences beyond the present moment.
+    Hook: Every answer opens onto a larger hidden structure. The group is left sorting through answers that only make the larger pattern stranger.
+
+  ▶ WILDCARD
+    Core: Power Has a Cost | The Investigator's Burden
+    Systems: Hidden Information | Resource Scarcity
+    Genre: Victorian / Gothic
+    Tone: Mythic
+    Environment: Dense City / Urban
+    Pitch: The wildcard turns gaining power that always asks for something in return into the direction’s largest and most legendary expression. At the table, the larger struggle takes concrete shape through working with incomplete information and uncovering what others keep hidden.
+    About: Every gain extracts something in return, forcing sacrifice, corruption, or loss. What makes it harder is that knowing the truth makes things worse, and understanding comes with consequences.
+    Players Do: Here, the tension comes from working with incomplete information and uncovering what others keep hidden. You’ll also spend time making hard calls when time, safety, and supplies are always running short. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: Something important is already being squeezed by the time the group arrives. The stranger edge shows itself through crowded streets, closed circles, and too many secrets packed too close together.
+
+==================================================
+GROUP: youth | FILE: youth-adventure.json
+==================================================
+
+  ▶ PRIMARY
+    Core: Lost Knowledge | Power Comes From Within
+    Systems: Exploration Discovery Loop | Clue Web
+    Genre: Heroic Fantasy
+    Tone: Lighthearted / Chaotic
+    Environment: Coastal / Oceanic | Ruined Civilization
+    Pitch: This plays like a playful, lighthearted heroic fantasy campaign powered by answers that were hidden, forgotten, or deliberately pushed out of reach. The campaign keeps creating new problems, openings, and momentum through pushing into the unknown.
+    About: The answers exist, but they are hidden, forgotten, sealed away, or deliberately erased. At the same time, the source of power is internal, and growth comes through awakening, mastery, or self-realization.
+    Players Do: The experience is built around exploring strange places and uncovering what they reveal. You’ll also spend time following scattered clues and slowly piecing together the bigger picture. The danger stays real, but the campaign keeps moving before anyone can settle in.
+    Hook: The truth is there, just not in one place or one version. Every answer risks opening a larger contradiction instead of closing the question.
+
+  ▶ ADJACENT
+    Core: Lost Knowledge | The World Is Alive
+    Systems: Clue Web | Exploration Discovery Loop
+    Genre: Heroic Fantasy
+    Tone: Heroic
+    Environment: Ruined Civilization
+    Pitch: Here, the group finds another way to make a difference through answers that were buried, forgotten, or deliberately pushed out of reach. Play keeps moving forward through following scattered clues and slowly piecing together the bigger picture.
+    About: The answers exist, but they are buried, forgotten, sealed away, or deliberately erased. Complicating matters, the environment is not passive, and the world reacts, adapts, and resists the characters' presence.
+    Players Do: The campaign starts focusing more on following scattered clues and slowly piecing together the bigger picture. You’ll also spend time exploring strange places and uncovering what they reveal. The altered emphasis gives the group new ground to claim.
+    Hook: Every answer opens onto a larger hidden structure. That shift becomes visible through evidence of past greatness now cracked open, abandoned, or repurposed.
+
+  ▶ WILDCARD
+    Core: The World Is Alive | Cycle / Recurrence
+    Systems: Environmental Combat
+    Genre: Heroic Fantasy
+    Tone: Mythic
+    Environment: Coastal / Oceanic
+    Pitch: The wildcard turns moving through a world that reacts, adapts, and pushes back into the direction’s largest and most legendary expression. At the table, the larger struggle takes concrete shape through surviving fights where hazards and terrain matter as much as the enemies.
+    About: The environment is not passive, and the world reacts, adapts, and resists the characters' presence. Running underneath it all, this has all happened before, and the world is shaped by loops, returns, and repeating history.
+    Players Do: The campaign comes alive through surviving fights where hazards and terrain matter as much as the enemies, with an additional focus on exploring hidden information and pushing deeper into the central conflict. What begins as action soon becomes symbol, legacy, and consequence.
+    Hook: The larger shift stops staying in the background. The stranger edge shows itself through restless coastlines where movement, trade, and danger all depend on forces no one fully controls.
+
+✅ Batch test complete. Passed: 24 | Failed: 0

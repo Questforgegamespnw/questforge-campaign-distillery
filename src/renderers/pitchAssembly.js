@@ -21,7 +21,9 @@ const {
 
 const {
     environmentVoiceMap,
-    genreVoiceMap
+    genreVoiceMap,
+    toneRenderMap,
+    resolvePitchToneProfile
 } = require("../voice/voiceMap");
 
 const {
@@ -144,7 +146,9 @@ function classifyLeadShape(text = "") {
 
 function buildPitchLead({ label, toneProfile, genreCampaignText, conceptText, conceptType, leadShape = "theme" }) {
     const genreText = withIndefiniteArticle(genreCampaignText || "campaign");
-    const concept = stripCampaignPrefix(conceptText);
+    const concept = stripCampaignPrefix(conceptText)
+        .replace(/[.,;:!?]+$/g, "")
+        .trim();
     const direction = ["primary", "adjacent", "wildcard"].includes(label)
         ? label
         : "primary";
@@ -196,7 +200,7 @@ function buildPitchLead({ label, toneProfile, genreCampaignText, conceptText, co
             proposition: [
                 `The alternate direction leans into the truth that ${concept}.`,
                 `Here, the fact that ${concept} carries more of the campaign’s weight.`,
-                `The emphasis moves toward ${concept}.`,
+                `The emphasis moves toward the fact that ${concept}.`,
                 `This take treats the truth that ${concept} as a defining pressure.`
             ]
         },
@@ -222,7 +226,7 @@ function buildPitchLead({ label, toneProfile, genreCampaignText, conceptText, co
             proposition: [
                 `The wildcard commits to the truth that ${concept}.`,
                 `Here, the fact that ${concept} becomes impossible to treat as background.`,
-                `The bolder interpretation builds around a world where ${concept}.`,
+                `The bolder interpretation builds around the truth that ${concept}.`,
                 `This direction follows the truth that ${concept} to its sharpest consequences.`
             ]
         }
@@ -235,39 +239,67 @@ function buildPitchLead({ label, toneProfile, genreCampaignText, conceptText, co
             : conceptType;
     let pool = pools[direction]?.[shape] || pools[direction].theme;
 
-    // Tone changes cadence and emphasis without replacing grammatical routing.
-    if (direction === "primary" && shape !== "proposition" && shape !== "activity") {
-        const tonePools = {
-            grimdark: [
-                `This drops the group into ${genreText} shaped by ${concept}.`,
-                `From the start, ${concept} bears down on ${genreText}.`,
-                `This is ${genreText} where ${concept} leaves little room for clean victories.`
-            ],
-            psychological: [
-                `This is ${genreText} centered on ${concept}, with the pressure landing close to the characters.`,
-                `At its core, ${concept} gives ${genreText} a more inward and unstable edge.`,
-                `This plays like ${genreText} where ${concept} keeps the characters questioning what they can trust.`
-            ],
-            mythic: [
-                `This unfolds as ${genreText} built around ${concept}.`,
-                `This plays like ${genreText} where ${concept} carries consequences larger than any one character.`,
-                `At its core, ${concept} gives ${genreText} a mythic sense of weight.`
-            ],
-            heroic: [
-                `This plays like ${genreText} built around ${concept}.`,
-                `At its core, ${concept} gives ${genreText} forward momentum and meaningful stakes.`,
-                `This is ${genreText} where ${concept} keeps opening difficult choices the heroes can still shape.`
-            ],
-            lighthearted: [
-                `This plays like ${genreText} powered by ${concept}.`,
-                `From the start, ${concept} gives ${genreText} an adventurous, unpredictable energy.`,
-                `At its core, this is ${genreText} built around ${concept} without losing its sense of fun.`
-            ]
-        };
-
-        if (tonePools[toneProfile]) {
-            pool = tonePools[toneProfile];
+    // Tone changes cadence and emphasis without bypassing grammatical routing.
+    const toneLeadPools = {
+        heroic: {
+            primary: shape === "proposition"
+                ? [`This is ${genreText} where the truth that ${concept} gives the group something meaningful to answer.`, `At its core, ${genreText} turns the fact that ${concept} into a call to action.`]
+                : [`In ${genreText}, the group keeps moving toward choices that matter through ${concept}.`, `The campaign gains a clear sense of purpose and forward motion through ${concept}.`],
+            adjacent: shape === "proposition"
+                ? [`The alternate direction turns the truth that ${concept} into a new challenge the group can shape.`, `Here, the fact that ${concept} opens another front for meaningful action.`]
+                : [`The alternate direction draws new purposeful momentum from ${concept}.`, `Here, the group finds another way to make a difference through ${concept}.`],
+            wildcard: shape === "proposition"
+                ? [`The wildcard follows the truth that ${concept} into a larger test of resolve.`, `The bolder interpretation makes the fact that ${concept} impossible to leave unanswered.`]
+                : [`The wildcard pushes ${concept} toward its boldest, most consequential expression.`, `This direction turns ${concept} into a larger call to action.`]
+        },
+        grimdark: {
+            primary: shape === "proposition"
+                ? [`This is ${genreText} where the fact that ${concept} leaves no clean way through.`, `From the start, the truth that ${concept} is already doing damage.`]
+                : [`This drops the group into ${genreText} shaped by ${concept}.`, `The campaign lets ${concept} bear down on ${genreText}, leaving little room for clean victories.`],
+            adjacent: shape === "proposition"
+                ? [`The alternate direction leans into the fact that ${concept}, and the cost shows early.`, `Here, the truth that ${concept} strips away another clean option.`]
+                : [`The alternate direction drags ${concept} closer to the surface.`, `Here, ${concept} shifts the damage without reducing it.`],
+            wildcard: shape === "proposition"
+                ? [`The wildcard follows the truth that ${concept} to its ugliest consequences.`, `The bolder interpretation makes the fact that ${concept} impossible to survive unchanged.`]
+                : [`The wildcard commits to ${concept} without softening what it costs.`, `This direction makes the cost of ${concept} harsher, sharper, and harder to escape.`]
+        },
+        psychological: {
+            primary: shape === "proposition"
+                ? [`This is ${genreText} where the fact that ${concept} keeps destabilizing what the characters trust.`, `At its core, the truth that ${concept} turns every certainty inward.`]
+                : [`This is ${genreText} centered on ${concept}, with the pressure landing close to the characters.`, `In ${genreText}, the pressure takes on a more inward and unstable edge through ${concept}.`],
+            adjacent: shape === "proposition"
+                ? [`The alternate direction makes the fact that ${concept} feel less like information and more like intrusion.`, `Here, the truth that ${concept} changes how the characters read everything around them.`]
+                : [`The alternate direction brings ${concept} closer to the characters' sense of self.`, `Here, ${concept} becomes harder to separate from perception, memory, and trust.`],
+            wildcard: shape === "proposition"
+                ? [`The wildcard follows the fact that ${concept} until even interpretation becomes unstable.`, `The bolder interpretation makes the truth that ${concept} impossible to hold at a safe distance.`]
+                : [`The wildcard pushes ${concept} into a more intimate and destabilizing form.`, `This direction lets ${concept} start changing the people trying to understand it.`]
+        },
+        mythic: {
+            primary: shape === "proposition"
+                ? [`This unfolds as ${genreText} where the truth that ${concept} carries meaning beyond the immediate struggle.`, `At its core, the fact that ${concept} gives ${genreText} the weight of an older pattern.`]
+                : [`This unfolds as ${genreText} built around ${concept}.`, `Within ${genreText}, the consequences of ${concept} reach beyond any one character.`],
+            adjacent: shape === "proposition"
+                ? [`The alternate direction reveals the fact that ${concept} as another face of a larger pattern.`, `Here, the truth that ${concept} carries symbolic weight beyond the present moment.`]
+                : [`The alternate direction raises ${concept} into a more symbolic role.`, `Here, the campaign places ${concept} within a struggle larger than the group first understood.`],
+            wildcard: shape === "proposition"
+                ? [`The wildcard follows the truth that ${concept} toward its most world-shaping meaning.`, `The bolder interpretation turns the fact that ${concept} into omen, symbol, and consequence.`]
+                : [`The wildcard turns ${concept} into the direction’s largest and most legendary expression.`, `This direction places ${concept} inside a pattern that reaches beyond the immediate story.`]
+        },
+        lighthearted_chaotic: {
+            primary: shape === "proposition"
+                ? [`This is ${genreText} where the fact that ${concept} keeps throwing the group into lively, dangerous complications.`, `From the start, the truth that ${concept} keeps the adventure moving in unexpected directions.`]
+                : [`This plays like ${genreText} powered by ${concept}.`, `${capitalizeFirst(genreText)} draws adventurous, unpredictable energy from ${concept}.`],
+            adjacent: shape === "proposition"
+                ? [`The alternate direction turns the fact that ${concept} into a faster route toward trouble and opportunity.`, `Here, the truth that ${concept} keeps opening lively new complications.`]
+                : [`The alternate direction gives ${concept} more room to create motion, risk, and surprise.`, `Here, ${concept} keeps the group improvising through real danger.`],
+            wildcard: shape === "proposition"
+                ? [`The wildcard follows the fact that ${concept} into its wildest workable consequences.`, `The bolder interpretation turns the truth that ${concept} into a chain of dangerous opportunities.`]
+                : [`The wildcard pushes ${concept} into a faster, stranger, and more unpredictable form.`, `This direction keeps the danger sharp and the possibilities moving through ${concept}.`]
         }
+    };
+
+    if (toneLeadPools[toneProfile]?.[direction]) {
+        pool = toneLeadPools[toneProfile][direction];
     }
 
     return pickOne(pool, `This feels like ${genreText} built around ${concept}.`, true);
@@ -358,13 +390,22 @@ function buildSettingIdentityLine({ label = "primary", genre = {}, environments 
     return pickOne(genreCandidates, "", true);
 }
 
-function buildPitchSupportLine({ systemText = "", coreText = "", usedText = "" }) {
+function renderToneTemplate(template = "", systemText = "") {
+    const system = String(systemText || "").trim();
+    return String(template || "")
+        .replace(/\{System\}/g, capitalizeFirst(system))
+        .replace(/\{system\}/g, system);
+}
+
+function buildPitchSupportLine({ systemText = "", coreText = "", usedText = "", toneProfile = "neutral" }) {
     const used = String(usedText || "").toLowerCase();
 
-    if (
-        systemText &&
-        !used.includes(systemText.toLowerCase())
-    ) {
+    if (systemText && !used.includes(systemText.toLowerCase())) {
+        const toneTemplates = toneRenderMap[toneProfile]?.support || [];
+        if (toneTemplates.length) {
+            return renderToneTemplate(pickOne(toneTemplates, "", true), systemText);
+        }
+
         return pickOne([
             `At the table, that means ${systemText}.`,
             `The group keeps returning to ${systemText}.`,
@@ -377,15 +418,12 @@ function buildPitchSupportLine({ systemText = "", coreText = "", usedText = "" }
         ], "", true);
     }
 
-    if (
-        coreText &&
-        !used.includes(coreText.toLowerCase())
-    ) {
+    if (coreText && !used.includes(coreText.toLowerCase())) {
         return pickOne([
-    `Everything keeps circling back to ${coreText}.`,
-    `That central tension keeps pulling the campaign back to ${coreText}.`,
-    `It keeps returning to ${coreText}.`
-], "", true);
+            `Everything keeps circling back to ${coreText}.`,
+            `That central tension keeps pulling the campaign back to ${coreText}.`,
+            `It keeps returning to ${coreText}.`
+        ], "", true);
     }
 
     return "";
@@ -451,17 +489,7 @@ function buildPitchParagraph({
 
     const genreCampaignText = dedupedGenreText ? `${dedupedGenreText} campaign` : "campaign";
 
-    const toneProfile = (() => {
-        const tone = toneText.toLowerCase();
-
-        if (tone.includes("grim")) return "grimdark";
-        if (tone.includes("psychological")) return "psychological";
-        if (tone.includes("mythic")) return "mythic";
-        if (tone.includes("lighthearted")) return "lighthearted";
-        if (tone.includes("heroic")) return "heroic";
-
-        return "neutral";
-    })();
+    const toneProfile = resolvePitchToneProfile(toneText);
 
     const coreAOnly = getCorePitchTextForProfile(
         coreA,
@@ -501,7 +529,8 @@ function buildPitchParagraph({
     const second = buildPitchSupportLine({
         systemText: primarySystemText,
         coreText: rawConcept,
-        usedText: first
+        usedText: first,
+        toneProfile
     });
 
     const settingLine = buildSettingIdentityLine({
