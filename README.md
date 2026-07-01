@@ -67,7 +67,7 @@ This separation allows for:
 
 ## Example Outputs
 
-These examples reflect current output quality following voice layer stabilization and renderer refactor (v0.7.4).
+These examples reflect the stabilized renderer and phrase-aware assembly system through v0.8.2.
 
 ---
 
@@ -165,7 +165,7 @@ It is designed to:
 
 ---
 
-## Renderer Architecture (v0.7.4)
+## Renderer Architecture (v0.8.2)
 
 The rendering layer has been refactored into a modular pipeline to separate responsibilities and improve maintainability without altering output behavior.
 
@@ -178,7 +178,9 @@ The renderer now operates as a composed system of focused modules:
 - **pitchSafetyFilters** → applies tone constraints and audience safety rules  
 - **generateCampaignPitch** → orchestrates the full pipeline  
 
-This replaces the previous monolithic renderer and enables safer iteration, clearer debugging, and controlled language tuning going forward.
+This replaces the previous monolithic renderer and enables safer iteration, clearer debugging, and controlled language tuning.
+
+As of v0.8.2, `pitchAssembly` also classifies campaign identity, activity/process, abstract pressure/theme, and proposition/clause phrases before selecting sentence shapes. This keeps campaign identity in the lead, routes system behavior into support sentences, and limits cleanup to punctuation, duplication, and other surface corrections.
 
 ---
 
@@ -239,14 +241,17 @@ For detailed file-level documentation, see:
 
   ---
 
-## Current State (v0.8.0 — Stable Narrative Input Layer)
+## Current State (v0.8.2 — Phrase-Aware Narrative Assembly)
 
 - End-to-end pipeline is stable and fully operational
-- Renderer is fully modular and maintainable
-- Sentence assembly and cleanup layers are finalized
-- Outputs are grammatically stable and structurally consistent
-- Designed for AI expansion workflows rather than final prose
+- Renderer remains modular and maintainable
+- Pitch concepts are classified before sentence assembly
+- Primary, Adjacent, and Wildcard use distinct structural rhythms
+- Campaign identity leads the pitch while system behavior supports it
+- Cleanup is limited to surface normalization rather than grammar rescue
+- Tone, genre, environment, and youth-safe routing are active
 - Full batch test coverage passing (24/24)
+
 ---
 
 ## 🛡️ Intake & Safety System (v0.6 Highlights)
@@ -280,28 +285,27 @@ This ensures:
 
 ## Known Gaps
 
-- Some phrasing patterns still repeat across large batch outputs  
-- Tone and genre variation can be expanded further  
-- VoiceMap depth is still limited for certain combinations  
-- AI expansion layer not fully tuned for voice consistency  
-- No real-time intake → pipeline execution yet  
+- Some polish-level phrasing repetition remains across large batch outputs
+- VoiceMap depth can still expand for less common tone and genre combinations
+- AI expansion layer is not yet fully tuned for final voice consistency
+- No real-time intake → pipeline execution yet
 
 --- 
 
 ## Next Focus (v0.8.x)
 
-### Voice Expansion & Depth
-- Expand voiceMap coverage across tone and genre combinations  
-- Increase phrasing variation and stylistic diversity  
-
 ### AI Expansion Layer
-- Refine AI prompt for expansion
+- Refine the expansion prompt around the stabilized renderer output
 - Improve downstream voice consistency
-- Tune narrative amplification behavior 
+- Tune narrative amplification without reintroducing structural drift
+
+### Remaining Voice Depth
+- Expand less-common tone and genre combinations
+- Continue polish-level variation work without broadening cleanup logic
 
 ### Integration
-- Connect Formspree → pipeline execution  
-- Format outputs for direct client delivery  
+- Connect Formspree → pipeline execution
+- Format outputs for direct client delivery
 ---
 
 ## Next Priorities

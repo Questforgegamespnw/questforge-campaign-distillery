@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## v0.8.2 — Voice Variation + Assembly Audit
+
+### 🎯 Summary
+This patch improves first-impression quality while tightening the pitch assembly layer around explicit phrase types and safer sentence shapes.
+
+### ✅ Improved
+- Expanded structural and tonal variation across Pitch, Players Do, and Hook output
+- Strengthened genre and environment routing so setting details reinforce the selected campaign direction
+- Reduced repeated opener patterns and generic “something is wrong” phrasing
+- Differentiated Primary, Adjacent, and Wildcard rhythm through sentence structure:
+  - Primary is more definitive and marketable
+  - Adjacent communicates a clear shift in gameplay emphasis
+  - Wildcard uses bolder or stranger framing
+
+### 🧠 Assembly Audit
+- Classified pitch concepts before assembly as:
+  - campaign identity phrases
+  - activity / process phrases
+  - abstract pressure / theme phrases
+  - proposition / clause phrases
+- Replaced templates that depended on dangling articles or prepositions
+- Removed routine reliance on the generic `campaign defined by` fallback
+- Added separate bare-clause and nominalized-clause routing for proposition concepts
+- Rebalanced pitch construction so campaign identity leads and system behavior supports it
+- Reduced cleanup responsibility to surface corrections rather than grammar repair
+
+### 🧪 Validation
+- Full batch test suite: **24/24 passing**
+- Verified against three live campaign submissions
+- No regressions found in youth-safe routing, tone handling, or prior variation work
+
+### 🚀 Result
+v0.8.2 moves the renderer from broadly stable phrasing to controlled, phrase-aware assembly with stronger direction identity and less dependence on post-hoc cleanup.
+
+---
+
 ## v0.8.1 — Pipeline Integrity + Youth System Activation
 
 ### 🎯 Summary

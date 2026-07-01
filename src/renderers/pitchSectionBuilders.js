@@ -88,7 +88,7 @@ function detectHookCategory({ coreIds = [], toneName = "", genreName = "", label
     return "disruption";
 }
 
-function buildHookLineByCategory(category, label = "primary") {
+function buildHookLineByCategory(category, label = "primary", toneProfile = "neutral") {
     const hookPools = {
         disruption: [
             "It starts small—easy to dismiss—until it stops staying small.",
@@ -182,6 +182,134 @@ function buildHookLineByCategory(category, label = "primary") {
             "What is happening in the world starts changing the people inside it."
         ]
     };
+
+    const toneHookLeads = {
+        heroic: {
+            primary: [
+                "The first real test arrives with a chance to matter.",
+                "Danger is already moving, but so is the opportunity to answer it.",
+                "The group enters at the moment determined action can still change the outcome.",
+                "The opening crisis gives the group a clear chance to stand for something.",
+                "The first obstacle arrives with a meaningful choice still within reach.",
+                "The campaign opens on danger the group can meet with purpose rather than resignation."
+            ],
+            adjacent: [
+                "A new front opens where the group can still make a meaningful difference.",
+                "The altered direction reveals another place where courage can change what follows.",
+                "The new emphasis gives the group another concrete way to protect what matters.",
+                "A different challenge brings another chance for deliberate action.",
+                "The shift opens a fresh route for the group to leave a meaningful mark."
+            ],
+            wildcard: [
+                "The bolder threat demands a larger answer from the group.",
+                "The stranger version raises the stakes without taking agency off the table.",
+                "The boldest route asks more of the group while making their choices matter more.",
+                "The wildcard opens with a difficult chance to change the direction of events.",
+                "The largest threat arrives with an equally large reason to act."
+            ]
+        },
+        grimdark: {
+            primary: [
+                "The damage has already started before anyone understands its full shape.",
+                "By the time the group arrives, the clean options are already disappearing.",
+                "The first decision comes after something important has begun to fail.",
+                "The campaign opens after the damage has already outrun the easy remedies.",
+                "Before the group can act, the situation has already taken something away.",
+                "The first clear choice appears only after the cost has begun to accumulate."
+            ],
+            adjacent: [
+                "The altered pressure reveals its cost sooner than expected.",
+                "Another route opens, but it is no cleaner than the first.",
+                "The changed emphasis exposes a different wound in the same failing situation.",
+                "A second path appears only after the cost of the first becomes visible.",
+                "The alternate route offers movement, but no relief from what it demands."
+            ],
+            wildcard: [
+                "The bolder version begins where compromise has already failed.",
+                "The stranger direction makes the existing damage harder to contain.",
+                "The wildcard begins after the last reasonable compromise has already narrowed.",
+                "The boldest route turns existing loss into the price of every next decision.",
+                "The stranger version exposes how little remains untouched by the damage."
+            ]
+        },
+        psychological: {
+            primary: [
+                "The first contradiction changes how the group reads everything that follows.",
+                "What unsettles the group first is not the danger, but how familiar it feels.",
+                "The opening discovery makes certainty feel personal and unstable.",
+                "The first clue unsettles the group's understanding of something they thought they knew.",
+                "The campaign opens with a detail that changes meaning every time it is reconsidered.",
+                "The earliest discovery makes the characters question their own reading of events."
+            ],
+            adjacent: [
+                "The altered emphasis turns a familiar clue into a more intimate uncertainty.",
+                "The shift becomes visible when the characters stop trusting the same details.",
+                "A familiar answer starts feeling different once the new emphasis takes hold.",
+                "The alternate route makes an external mystery feel uncomfortably personal.",
+                "The changed focus unsettles what the characters believed was reliable."
+            ],
+            wildcard: [
+                "The bolder version begins by making interpretation itself unreliable.",
+                "The stranger direction closes the distance between the mystery and the people studying it.",
+                "The wildcard opens by making the characters part of the contradiction they are tracing.",
+                "The boldest route turns uncertainty into something the group carries with them.",
+                "The stranger version begins where observation and involvement can no longer be separated."
+            ]
+        },
+        mythic: {
+            primary: [
+                "The first sign feels older and more consequential than the present crisis.",
+                "The group steps into a moment already carrying the weight of a larger pattern.",
+                "What begins here immediately points beyond the people standing inside it.",
+                "The opening event feels like one chapter in a story older than anyone present.",
+                "The first choice carries echoes of a pattern the world has seen before.",
+                "The campaign begins with a moment already gathering the weight of legend."
+            ],
+            adjacent: [
+                "The altered direction reveals another symbol inside the same larger struggle.",
+                "A different path opens onto consequences larger than the immediate moment.",
+                "The new emphasis reveals a second thread in the same enduring pattern.",
+                "Another route gives the present struggle a wider symbolic meaning.",
+                "The altered direction connects the group's next choice to an older legacy."
+            ],
+            wildcard: [
+                "The bolder version arrives like an omen the world can no longer ignore.",
+                "The stranger direction turns the first decision into part of a larger legacy.",
+                "The wildcard begins with a choice that feels destined to outlive the people making it.",
+                "The boldest route opens on a sign whose meaning reaches far beyond the present crisis.",
+                "The stranger version makes the group's first move echo through a much larger pattern."
+            ]
+        },
+        lighthearted_chaotic: {
+            primary: [
+                "The first complication arrives with too much momentum to ignore.",
+                "Trouble appears early, loudly, and with several tempting ways to chase it.",
+                "The adventure begins when one manageable problem becomes three interesting ones.",
+                "The campaign opens with a promising idea immediately attracting lively complications.",
+                "The first opportunity arrives carrying more trouble than anyone planned for.",
+                "The group gets moving when a simple job suddenly develops several tempting directions."
+            ],
+            adjacent: [
+                "The altered direction finds a faster route into trouble and opportunity.",
+                "A new complication sends the group moving before anyone can overplan it.",
+                "The changed emphasis turns the next problem into a lively opportunity to improvise.",
+                "Another route appears just as the plan becomes interestingly obsolete.",
+                "The alternate direction gives the group fresh trouble and several ways to chase it."
+            ],
+            wildcard: [
+                "The bolder version starts with the most dangerous opportunity on the table.",
+                "The stranger direction turns the first setback into several lively routes forward.",
+                "The wildcard begins with an opportunity too strange and useful to leave alone.",
+                "The boldest route turns immediate trouble into a fast-moving chain of possibilities.",
+                "The stranger version starts by giving the group too many exciting problems at once."
+            ]
+        }
+    };
+
+    const toneCandidates = toneHookLeads[toneProfile]?.[label] || [];
+    if (toneCandidates.length) {
+        return pickOne(toneCandidates, "", true);
+    }
 
     if (label === "adjacent") {
         return pickOne(adjacentTweaks[category], pickOne(hookPools[category], ""));
@@ -744,8 +872,8 @@ function buildDistinctHook({
         label
     });
 
-    const hookLead = buildHookLineByCategory(hookCategory, label);
     const toneProfile = resolvePitchToneProfile(toneName);
+    const hookLead = buildHookLineByCategory(hookCategory, label, toneProfile);
 
     const followupPools = {
         disruption: [
