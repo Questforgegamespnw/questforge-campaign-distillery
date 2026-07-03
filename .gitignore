@@ -9,7 +9,8 @@ build/
 submissions/
 results/
 text submission forms/
-
+ai-round-trips/
+exports/
 # Optional: local regression exports
 *.result.json
 *.submission.json

@@ -1,0 +1,52 @@
+🧪 USING INPUT FILE: D:\GitHubProjects\questforge-campaign-distillery\misc\submissions\results\submission-03-johannab253.result.json
+🔐 SOURCE FINGERPRINT: sha256:94c3cee3f61f2365c6b8bfabaa779752b07a8af70967174f015e8af446be85b0
+
+==================================================
+🧭 PRIMARY RESPONSE CHECK
+==================================================
+Title: The Power Awakening
+Source matched: true
+Accepted: true
+Fallback used: false
+Errors: (none)
+Output: {
+  pitch: 'A heroic fantasy campaign about awakening the power within and learning how to shape it together. As threats demand new answers, the group takes meaningful risks, adapts, and grows into a force capable of creating lasting change. Teamwork, shared victories, and constructive outcomes remain at the heart of the experience.',
+  about: 'Power begins as something internal: an unrealized potential revealed through courage, mastery, and self-understanding. That growth carries a necessary tension, because creating something better often means allowing an old limitation, certainty, or way of being to end. The campaign treats that cost as a path toward renewal rather than despair.',
+  playersDo: 'Players confront powerful enemies that cannot be overcome through the same tactics every time, pushing the group to observe, adapt, and combine their strengths. They take greater risks to pursue meaningful rewards, expanding what they can accomplish as pressure rises. Each success reinforces the sense that the group is growing together and earning its ability to shape what comes next.',
+  hook: 'Danger is already closing in, but it may also reveal what the characters are capable of becoming. The pressure outside is awakening something within.'
+}
+
+==================================================
+🧭 ADJACENT RESPONSE CHECK
+==================================================
+Title: Lines of Battle
+Source matched: true
+Accepted: true
+Fallback used: false
+Errors: (none)
+Output: {
+  pitch: 'This adjacent direction centers on power awakened from within and shaped through courage, discipline, and shared purpose. The group advances by controlling movement, securing vital ground, and working together under pressure, with every hard-won gain reinforcing the possibility of a better outcome.',
+  about: 'Power begins as an inner potential, but its meaning is defined through awakening, mastery, and self-realization. The deeper conflict lies in competing beliefs about how that power should be used and what kind of world it should help create, giving each confrontation both personal and ideological weight.',
+  playersDo: 'You’ll coordinate movement through confined caverns and ruined spaces, protect key positions, and adapt when powerful enemies disrupt familiar tactics. Progress comes through teamwork, careful control of the battlefield, and repeated opportunities to turn difficult situations toward positive outcomes.',
+  hook: 'Every narrow passage can become a line worth holding. When visibility fades and retreat grows uncertain, protecting what matters depends on how well the group moves together.'
+}
+
+==================================================
+🧭 WILDCARD RESPONSE CHECK
+==================================================
+Title: The War for What Comes Next
+Source matched: true
+Accepted: true
+Fallback used: false
+Errors: (none)
+Output: {
+  pitch: 'This heroic fantasy campaign centers on a struggle to decide what kind of world will rise from the ruins. The group turns mounting pressure into purposeful action, working together to control movement, hold critical ground, and create opportunities for lasting, constructive change.',
+  about: 'The conflict reaches beyond rival sides to competing beliefs about how the world should be rebuilt. With the force that once held everything together now absent, new powers are moving into the gap, and every shared victory helps shape what comes next.',
+  playersDo: 'Players explore the remains of a fallen civilization, uncover what those places reveal, and use that knowledge to guide their next moves. Under pressure, they coordinate movement, manage chokepoints, and control the battlefield while pursuing difficult opportunities to make a positive difference.',
+  hook: 'The old order is gone, and the future is still undecided. The changing world will test not only what the group intends, but what they can build together.'
+}
+
+==================================================
+✅ Source matched: submission-03-johannab253.result.json
+✅ Accepted 3/3 AI responses
+📄 Full output written to: D:\GitHubProjects\questforge-campaign-distillery\misc\ai-response-validation-output.txt

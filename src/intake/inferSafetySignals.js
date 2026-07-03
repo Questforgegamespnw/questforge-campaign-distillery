@@ -24,98 +24,162 @@ function inferSafetySignals(raw = {}) {
     const normalizedMustHaves = mustHaves.toLowerCase();
     const normalizedAvoid = avoid.toLowerCase();
 
+    // Legacy binary switch: "yes" historically meant the full kid-safe / Hero Kids route.
     const explicitYouthMode =
         youthModeValues.some((value) => normalizeText(value) === "yes");
 
-    const audienceSuggestsYouth = [
-        "teens (13–17)",
-        "mixed ages",
+    const audienceSuggestsKids = [
         "kids (under 13)",
         "family-friendly / kid-safe experience"
     ].includes(normalizedAudience);
 
-    const ageBandSuggestsYouth = [
-        "teens_14_17",
+    const audienceSuggestsYouth = [
+        "teens (13–17)",
+        "mixed ages"
+    ].includes(normalizedAudience);
+
+    const ageBandSuggestsKids = [
         "kids_11_13",
         "kids_8_10",
-        "kids_5_7",
+        "kids_5_7"
+    ].includes(normalizedAgeBand);
+
+    const ageBandSuggestsYouth = [
+        "teens_14_17",
         "mixed_age"
     ].includes(normalizedAgeBand);
 
-    const familyFriendlyBoundary =
-        includesAny(normalizedBoundaryText, [
-            "family-friendly",
-            "kid-safe",
-            "avoid horror",
-            "avoid dark",
-            "positive outcomes",
-            "non-lethal",
-            "low danger"
+    const textSuggestsKids =
+        includesAny(normalizedMustHaves, [
+            "for kids",
+            "for children",
+            "younger children",
+            "hero kids",
+            "kid friendly",
+            "kid-friendly",
+            "kid safe",
+            "kid-safe"
         ]);
-
-    const softYouthCueCount =
-        [
-            audienceSuggestsYouth,
-            ageBandSuggestsYouth,
-            familyFriendlyBoundary
-        ].filter(Boolean).length;
 
     const textSuggestsYouth =
         includesAny(normalizedMustHaves, [
-            "family friendly",
-            "family-friendly",
-            "kid friendly",
-            "kid-friendly",
-            "lighthearted",
-            "heroic",
-            "teamwork",
-            "positive"
+            "for teens",
+            "teen players",
+            "teen audience",
+            "younger players",
+            "mixed age",
+            "mixed-age"
+        ]);
+
+    const familyFriendlyBoundary = includesAny(normalizedBoundaryText, [
+        "family-friendly",
+        "kid-safe",
+        "positive outcomes",
+        "non-lethal",
+        "low danger"
+    ]);
+
+    const horrorRestricted =
+        includesAny(normalizedBoundaryText, [
+            "avoid horror",
+            "no horror",
+            "not scary",
+            "too scary"
+        ]) ||
+        includesAny(normalizedAvoid, [
+            "no horror",
+            "avoid horror",
+            "body horror",
+            "too scary"
+        ]);
+
+    const graphicContentRestricted =
+        includesAny(normalizedBoundaryText, [
+            "avoid gore",
+            "no gore",
+            "non-lethal",
+            "low violence",
+            "no graphic violence"
         ]) ||
         includesAny(normalizedAvoid, [
             "gore",
-            "body horror",
-            "grimdark",
-            "hopeless",
-            "too scary",
-            "excessive violence",
-            "mature themes"
+            "graphic violence",
+            "excessive violence"
         ]);
 
-    const inferredYouthSafe =
-        explicitYouthMode ||
-        softYouthCueCount >= 2 ||
-        (softYouthCueCount >= 1 && textSuggestsYouth);
+    const oppressiveToneRestricted =
+        includesAny(normalizedBoundaryText, [
+            "avoid dark",
+            "positive outcomes",
+            "low danger",
+            "not hopeless"
+        ]) ||
+        includesAny(normalizedAvoid, [
+            "grimdark",
+            "hopeless",
+            "oppressive",
+            "bleak"
+        ]);
 
-    const youthSafeMode = explicitYouthMode || inferredYouthSafe;
+    const experienceProfile =
+        explicitYouthMode || audienceSuggestsKids || ageBandSuggestsKids || textSuggestsKids
+            ? "kids"
+            : audienceSuggestsYouth || ageBandSuggestsYouth || textSuggestsYouth
+                ? "youth"
+                : "standard";
+
+    const inferredYouthSafe = experienceProfile !== "standard";
+    const softerThemesMode = experienceProfile === "youth";
+    const fullSafeMode = experienceProfile === "kids";
+    const heroKidsMode = fullSafeMode;
+
+    // Backward compatibility: the old safe-mode switch represented the full kid-safe path.
+    const youthSafeMode = fullSafeMode;
+
+    const softYouthCueCount = [
+        audienceSuggestsYouth,
+        ageBandSuggestsYouth,
+        textSuggestsYouth
+    ].filter(Boolean).length;
 
     const contradictionNotes = [];
 
     if (
         normalizedAudience === "adults" &&
-        (explicitYouthMode || familyFriendlyBoundary || ageBandSuggestsYouth)
+        (experienceProfile === "youth" || experienceProfile === "kids")
     ) {
         contradictionNotes.push(
-            "Audience is marked as Adults, but other safety signals suggest a youth-safe or clean-content preference."
+            "Audience is marked as Adults, but other audience signals select a youth or kids experience profile."
         );
     }
 
     if (
         normalizedAgeBand === "adult" &&
-        (explicitYouthMode || familyFriendlyBoundary)
+        (experienceProfile === "youth" || experienceProfile === "kids")
     ) {
         contradictionNotes.push(
-            "Age band is adult, but safety inputs still indicate a youth-safe or family-friendly mode."
+            "Age band is adult, but other audience signals select a youth or kids experience profile."
         );
     }
 
     return {
+        experienceProfile,
         explicitYouthMode,
         audienceSuggestsYouth,
+        audienceSuggestsKids,
         ageBandSuggestsYouth,
+        ageBandSuggestsKids,
         familyFriendlyBoundary,
         textSuggestsYouth,
+        textSuggestsKids,
         inferredYouthSafe,
         youthSafeMode,
+        softerThemesMode,
+        fullSafeMode,
+        heroKidsMode,
+        horrorRestricted,
+        graphicContentRestricted,
+        oppressiveToneRestricted,
         softYouthCueCount,
         contradictionNotes
     };

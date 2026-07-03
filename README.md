@@ -2,11 +2,24 @@
 
 ## What This Is (Non-Technical)
 
-The Campaign Distillery turns rough campaign ideas or client input into structured, high-quality tabletop RPG experiences.
+The QuestForge Campaign Distillery turns rough campaign ideas and client intake into a disciplined, repeatable campaign-development process.
 
-It is designed to produce consistent, playable, and sellable campaign concepts—not just one-off AI-generated text.
+Its current implemented output is a set of three **Phase 1 Identity Pitches**:
 
-It produces structured, reliable narrative inputs that can be expanded into full campaign pitches using AI.
+- **Primary** — the strongest overall interpretation of the group’s preferences;
+- **Adjacent** — a closely related direction with a shifted emphasis;
+- **Wildcard** — a credible but more adventurous interpretation.
+
+These pitches identify what the campaign is fundamentally about, what kind of play it emphasizes, and what emotional or thematic promise best fits the group. They are intentionally broad, generally system-agnostic, and setting-agnostic.
+
+They are not yet complete campaign concepts. After the client selects an Identity Pitch, **Phase 2 Campaign Concept Development** turns that direction into a concrete, playable premise with a starting situation, central conflict, factions or forces in tension, recurring campaign engine, escalation, meaningful choices, and a clear hook.
+
+The guiding principle is:
+
+> **Phase 1 discovers what the campaign wants to be.**  
+> **Phase 2 decides what is actually happening and what the players can change.**
+
+The goal is not to produce one-off AI text. It is to create a consistent, testable, safety-aware workflow that can support professional campaign development at scale.
 
 ## Why Not Just Use GPT?
 
@@ -17,10 +30,10 @@ You can absolutely paste notes into GPT and get a campaign pitch.
   - difficult to repeat at scale
   - prone to ignoring tone, safety, or audience constraints
   
-This Distillery however, is built to understand the intake first, make disciplined decisions about it, and only then write the pitch. 
+The Distillery is built to understand the intake first, make disciplined decisions about it, and only then produce a controlled campaign direction. 
 This disciplined process is what makes the output more consistent, safer, easier to tune, and more scalable for a professional GM service.
 
-In other words, GPT alone gives you a response but this Distillery gives you a consistant, dependable and repeatable process that delivers results even after thousands of iterations. 
+In other words, GPT alone gives you a response. The Distillery provides a consistent, dependable, and repeatable process that can be tested and refined across many submissions. 
 
 ### The Campaign Distillery is designed to do the parts that raw prompting handles unreliably:
   - normalize messy client input into structured intent
@@ -36,7 +49,7 @@ In other words, GPT alone gives you a response but this Distillery gives you a c
   - consistency across many submissions
   - a refinable system over time without starting over
 
-In short, GPT improvises. This system interprets first, then generates.
+In short, GPT improvises. This system interprets first, then generates within defined boundaries.
 
 ---
 
@@ -44,30 +57,41 @@ In short, GPT improvises. This system interprets first, then generates.
 
 ## 🧠 How This Fits With AI
 
-This system is not meant to replace AI writing—it is meant to improve it.
+This system is not meant to replace AI writing—it is meant to constrain and improve it.
 
 The Distillery handles:
-- structure
-- intent clarity
-- tone consistency
-- safety constraints
+
+- intake normalization;
+- structured interpretation;
+- direction selection;
+- tone and audience consistency;
+- safety constraints;
+- deterministic narrative scaffolding;
+- validation and audit data.
 
 AI handles:
-- expression
-- flow
-- stylistic polish
-- narrative richness
 
-This separation allows for:
-- more consistent outputs
-- better control over tone and content
-- higher-quality final results when expanded
+- expression;
+- flow;
+- stylistic polish;
+- narrative richness;
+- bounded invention during later campaign-concept development.
 
----
+The AI role changes by phase:
+
+### Phase 1 — Identity Pitch Polish
+
+AI may improve readability, cadence, and presentation while preserving the selected identity. It should not invent a setting crisis, factions, plot structure, or mechanics.
+
+### Phase 2 — Campaign Concept Development
+
+AI may invent bounded fiction such as locations, factions, a starting crisis, threats, campaign pressures, and recurring structures. It must preserve the approved identity and may not impose a fixed ending, mandatory protagonist history, railroaded quest chain, or contradictory genre and tone.
+
+This separation creates more consistent outputs, clearer human review points, and stronger control over what the AI is permitted to add.
 
 ## Example Outputs
 
-These examples reflect the stabilized renderer and phrase-aware assembly system through v0.8.2.
+These examples reflect the stabilized renderer and phrase-aware assembly system through v0.8.2. They demonstrate **Phase 1 Identity Pitch language**: broad campaign direction, thematic promise, and table experience rather than a fully specified campaign premise.
 
 ---
 
@@ -136,8 +160,24 @@ What matters is not just what you discover—but who you are by the time it fina
 
 ## Quick Start
 
-Run the full pipeline locally:
-node scripts/testFormFlow.js
+- Process a raw submission:
+
+```powershell
+node scripts/workflows/runSubmission.js "path/to/submission.json"
+```
+
+- Prepare the Phase 1 manual AI round trip:
+
+node scripts/phase1/prepareIdentityPolishRoundTrip.js "submissions/<submission-slug>/02_PIPELINE_RESULT.json"
+
+- After pasting the generated prompt into ChatGPT and saving the returned JSON:
+
+node scripts/phase1/completeIdentityPolishRoundTrip.js "exports/submissions/<submission-slug>/phase-1/round-trip"
+
+- Create the Phase 1 client packet:
+
+node scripts/phase1/exportIdentityPitchPdf.js "exports/submissions/<submission-slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json"
+
 
 ---
 
@@ -151,19 +191,31 @@ If you are looking for internal implementation details, see the developer docume
 
 ## System Overview
 
-The Campaign Distillery is a structured pipeline that transforms raw tabletop RPG client intake into clean, consistent narrative scaffolding.
+The Campaign Distillery is a structured pipeline that transforms raw tabletop RPG client intake into controlled campaign-development outputs.
 
-The output is designed as **AI-ready input**, not final prose, enabling downstream AI systems to expand and refine it into client-facing copy.
+The current implemented pipeline produces three **Phase 1 Identity Pitches**. Each direction is assembled from structured campaign frames, intake signals, audience constraints, and safety guidance.
 
-It is designed to:
+Phase 1 is designed to:
 
-- Extract intent from messy human input  
-- Normalize that input into a controlled schema  
-- Select and resolve campaign direction components  
-- Render a cohesive, sellable narrative output  
-- Prioritize deterministic, safety-aware interpretation over generative ambiguity  
+- extract intent from messy human input;
+- normalize that input into a controlled schema;
+- infer audience, safety, and experience constraints;
+- translate preferences into weighted signals;
+- select three distinct but credible identity directions;
+- resolve those directions into canonical frame data;
+- render stable, human-readable Identity Pitch sections;
+- provide normalized client output and richer audit output;
+- support AI polish without allowing new campaign facts to drift into the result.
 
----
+The planned Phase 2 pipeline begins only after the client selects an Identity Pitch. It will add the concrete campaign situation, central conflict, factions or forces, starting position, recurring campaign engine, escalation, distinctive elements, and meaningful player choices.
+
+The Distillery therefore separates two different creative decisions:
+
+```text
+Identity discovery → concrete campaign development
+```
+
+This prevents the system from inventing setting facts before the client has approved the campaign’s fundamental direction.
 
 ## Renderer Architecture (v0.8.2)
 
@@ -182,57 +234,105 @@ This replaces the previous monolithic renderer and enables safer iteration, clea
 
 As of v0.8.2, `pitchAssembly` also classifies campaign identity, activity/process, abstract pressure/theme, and proposition/clause phrases before selecting sentence shapes. This keeps campaign identity in the lead, routes system behavior into support sentences, and limits cleanup to punctuation, duplication, and other surface corrections.
 
+### Runtime Naming Note
+
+Some current source files and exported functions still use earlier names such as `generateCampaignPitch`, `clientPitch`, and `auditPitch`. During v0.9.x documentation work, these identifiers remain unchanged to avoid unnecessary code churn.
+
+Conceptually, their current outputs should be understood as:
+
+- `generateCampaignPitch` → deterministic Phase 1 Identity Pitch rendering;
+- `clientPitch` → client-facing Identity Pitch sections;
+- `auditPitch` → internal Identity Pitch reasoning and safety data.
+
+Runtime naming can be migrated later as a controlled refactor.
+
 ---
 
 ## Pipeline Overview
 
-The system operates as a staged transformation pipeline:
+### Implemented Phase 1 Flow
 
-Raw Intake  
-→ Intake Normalization  
-→ Canonical Validation  
-→ Translation  
-→ Selection  
-→ Resolution  
-→ Rendering  
-→ Voice Shaping  
+```text
+Raw Form Submission
+→ Form Mapping
+→ Intake Normalization
+→ Canonical Intake
+→ Canonical Validation
+→ Translator Input
+→ Signal Translation
+→ Adjudication and Safety Inference
+→ Identity Direction Selection
+→ Frame Resolution
+→ Deterministic Identity Pitch Rendering
+→ AI Identity Pitch Polish
+→ Validation
+→ Client Identity Pitch Delivery
+→ Client Direction Selection
+```
 
----
+### Planned Phase 2 Flow
+
+```text
+Selected Identity Pitch
++ Identity Selection Record
++ Canonical Intake
+→ Campaign Concept Expansion
+→ Concept Validation
+→ System Recommendation
+→ Client PDF Export
+→ Campaign Concept Delivery
+```
+
+The client’s structured selection record forms the authoritative boundary between the two phases. Phase 2 should not rely on informal email summaries as its primary input.
 
 ## Project Structure
 
 The project is organized by pipeline responsibility to maintain clear separation between stages.
 
 ```text
-/misc
-  test inputs and supporting materials
+/submissions
+  authoritative raw, normalized, and deterministic submission records
+
+/exports
+  production round trips, validation results, previews, and client PDFs
 
 /scripts
-  runCoreFrameSmokeTest.js   – core frame validation
-  testAiExpansion.js         – AI expansion testing
-  testBatchForms.js          – batch input testing
-  testFormFlow.js            – full pipeline test runner
+  /diagnostics
+  /docs
+  /fixtures
+  /phase1
+  /phase2
+  /shared
+  /tests
+  /workflows
 
 /src
-  /ai        – AI integration and expansion logic
-  /config    – enums, aliases, and normalization config
-  /data      – core data sources (frames, skins, mappings)
-  /intake    – intake processing and canonical shaping
-  /parsers   – form/input translation
-  /renderers – pitch generation pipeline (modular)
-    generateCampaignPitch.js  – orchestration layer
-    pitchCore.js              – context extraction
-    pitchSectionBuilders.js   – section generation
-    pitchAssembly.js          – sentence + pitch composition
-    pitchCleanup.js           – normalization and utilities
-    pitchSafetyFilters.js     – tone and safety enforcement
+  /ai
+    existing Phase 1 AI modules
+    /phase2
+  /exporters
+    /shared
+    /phase1
+    /phase2
+  /config
+  /data
+  /intake
+  /parsers
+  /renderers
+  /resolvers
+  /selectors
+  /utils
+  /voice
 
-  /resolvers – ID → object resolution
-  /selectors – campaign direction selection logic
-  /utils     – shared helpers
-  /voice     – phrasing and voice system data
+/templates
+  identity-pitch-pdf.css
+  campaign-concept-pdf.css
 
-  index.js   – pipeline entry point
+/examples
+  sanitized example inputs and generated deliverables
+
+/misc
+  temporary, legacy, or unclassified development material
   ```
 
 For detailed file-level documentation, see:
@@ -241,37 +341,21 @@ For detailed file-level documentation, see:
 
   ---
 
-## Current State (v0.8.2 — Phrase-Aware Narrative Assembly)
+## Current State
 
-- End-to-end pipeline is stable and fully operational
-- Renderer remains modular and maintainable
-- Pitch concepts are classified before sentence assembly
-- Primary, Adjacent, and Wildcard use distinct structural rhythms
-- Campaign identity leads the pitch while system behavior supports it
-- Cleanup is limited to surface normalization rather than grammar rescue
-- Tone, genre, environment, and youth-safe routing are active
-- Full batch test coverage passing (24/24)
+### Current Runtime: v0.9.1 — Two-Phase Client Delivery Workflow
 
----
+- Phase 1 deterministic Identity Pitch generation is stable.
+- Combined manual AI polish is operational.
+- Source-bound Identity Pitch validation is operational.
+- Phase 1 HTML and PDF client delivery is operational.
+- Phase 2 Campaign Concept generation contracts are implemented.
+- Phase 2 manual AI round trip is operational.
+- Phase 2 structural and semantic validation is operational.
+- Phase 2 HTML and PDF client delivery is operational.
+- Submission and export storage are separated.
+- Scripts, tests, shared utilities, and exporters are modularized.
 
-## 🛡️ Intake & Safety System (v0.6 Highlights)
-
-The system includes a normalized intake and safety inference layer that ensures reliable, structured outputs even from messy or incomplete input.
-
-### Core Capabilities
-
-- Input normalization (handles inconsistent formatting)
-- Structured safety model (explicit vs inferred vs enforced)
-- Automatic youth-safe detection
-- Constraint-aware output shaping (softening instead of stripping)
-
-This ensures:
-
-- Stable outputs from inconsistent input  
-- Consistent safety enforcement  
-- Clean, validated data across the pipeline  
-
----
 
 ## Design Principles
 
@@ -285,28 +369,52 @@ This ensures:
 
 ## Known Gaps
 
-- Some polish-level phrasing repetition remains across large batch outputs
-- VoiceMap depth can still expand for less common tone and genre combinations
-- AI expansion layer is not yet fully tuned for final voice consistency
-- No real-time intake → pipeline execution yet
-
+- The Identity Selection Record is not yet implemented as a formal validated runtime schema.
+- Client feedback must still be entered manually into the Phase 2 handoff.
+- The system-recommendation stage is not yet implemented.
+- The final selected Campaign Concept does not yet have a dedicated refinement/finalization stage.
+- Submission lifecycle status is not yet automatically updated by every workflow command.
+- Email templates exist, but email delivery is not automated.
+- Formspree or other form-provider execution is not connected.
+- Real client records still require a completed migration from legacy `misc` folders.
+- Matchmaking and compatibility scoring for individual players remains a future pathway.
+- 
 --- 
 
-## Next Focus (v0.8.x)
+## Next Focus
 
-### AI Expansion Layer
-- Refine the expansion prompt around the stabilized renderer output
-- Improve downstream voice consistency
-- Tune narrative amplification without reintroducing structural drift
+1. Formalize and validate the Identity Selection Record.
+2. Build the system-recommendation stage.
+3. Add selected-concept refinement and final campaign-foundation output.
+4. Add submission lifecycle/status orchestration.
+5. Complete legacy data and fixture migration.
+6. Build an operator-facing workflow guide.
+7. Design the individual-player matchmaking compatibility pathway.
 
-### Remaining Voice Depth
-- Expand less-common tone and genre combinations
-- Continue polish-level variation work without broadening cleanup logic
+### Human Selection Handoff
+
+- Create a structured Identity Selection Record.
+- Preserve liked elements, exclusions, requested changes, system decisions, and setting decisions.
+- Make this record the authoritative Phase 2 input.
+
+### System Recommendation
+
+- Recommend one familiar system and one or two mechanically distinct alternatives.
+- Consider group experience, complexity tolerance, tactical versus narrative preference, campaign length, age profile, and required mechanics.
+- Explain implementation notes and tradeoffs.
+
+### Client Delivery
+
+- Export normalized Identity Pitch data into a polished combined PDF.
+- Support optional individual Primary, Adjacent, and Wildcard PDFs.
+- Reuse the export architecture later for Phase 2 Campaign Concept Pitches.
+- Create professional email templates for intake receipt, Identity Pitch delivery, and Campaign Concept delivery.
 
 ### Integration
-- Connect Formspree → pipeline execution
-- Format outputs for direct client delivery
----
+
+- Connect form intake to the production pipeline.
+- Record client selections in a structured handoff.
+- Integrate Phase 2 generation, recommendation, validation, PDF export, and delivery.
 
 ## Next Priorities
 

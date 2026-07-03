@@ -1,0 +1,122 @@
+[
+  {
+    "category": "Start Here",
+    "title": "Developer Documentation",
+    "file": "README.md",
+    "status": "Current"
+  },
+  {
+    "category": "Architecture",
+    "title": "Pipeline Overview",
+    "file": "architecture/PIPELINE_OVERVIEW.md",
+    "status": "Current"
+  },
+  {
+    "category": "Architecture",
+    "title": "Phase Model and Terminology",
+    "file": "architecture/PHASE_MODEL_AND_TERMINOLOGY.md",
+    "status": "Current"
+  },
+  {
+    "category": "Architecture",
+    "title": "Program Architecture",
+    "file": "architecture/QUESTFORGE_PROGRAM_ARCHITECTURE.md",
+    "status": "Current"
+  },
+  {
+    "category": "Phase 1",
+    "title": "Renderer Architecture",
+    "file": "phase1/RENDERER_ARCHITECTURE.md",
+    "status": "Current"
+  },
+  {
+    "category": "Phase 1",
+    "title": "Voice System Overview",
+    "file": "phase1/VOICE_SYSTEM_OVERVIEW.md",
+    "status": "Current"
+  },
+  {
+    "category": "Phase 1",
+    "title": "Manual AI Round Trip",
+    "file": "phase1/PHASE_1_MANUAL_ROUND_TRIP.md",
+    "status": "Current"
+  },
+  {
+    "category": "Phase 1",
+    "title": "PDF Export",
+    "file": "phase1/PHASE_1_PDF_EXPORT.md",
+    "status": "Current"
+  },
+  {
+    "category": "Phase 2",
+    "title": "Campaign Concept Contract",
+    "file": "phase2/PHASE_2_CAMPAIGN_CONCEPT_CONTRACT.md",
+    "status": "Current"
+  },
+  {
+    "category": "Phase 2",
+    "title": "Manual AI Round Trip",
+    "file": "phase2/PHASE_2_MANUAL_ROUND_TRIP.md",
+    "status": "Current"
+  },
+  {
+    "category": "Phase 2",
+    "title": "PDF Export",
+    "file": "phase2/PHASE_2_PDF_EXPORT.md",
+    "status": "Current"
+  },
+  {
+    "category": "Data",
+    "title": "Data Model Overview",
+    "file": "data/DATA_MODEL_OVERVIEW.md",
+    "status": "Current"
+  },
+  {
+    "category": "Data",
+    "title": "Campaign Frame Library",
+    "file": "data/CAMPAIGN_FRAME_LIBRARY.md",
+    "status": "Reference"
+  },
+  {
+    "category": "Data",
+    "title": "Data Expansion Guidelines",
+    "file": "data/DATA_EXPANSION_GUIDELINES.md",
+    "status": "Current"
+  },
+  {
+    "category": "Data",
+    "title": "New Entry Review",
+    "file": "data/NEW_ENTRY_REVIEW.md",
+    "status": "Template"
+  },
+  {
+    "category": "Data",
+    "title": "Entry Decisions Log",
+    "file": "data/ENTRY_DECISIONS_LOG.md",
+    "status": "Log"
+  },
+  {
+    "category": "Operations",
+    "title": "Submission and Export Storage",
+    "file": "operations/SUBMISSION_AND_EXPORT_STORAGE.md",
+    "status": "Current"
+  },
+  {
+    "category": "Operations",
+    "title": "Script Workflow Guide",
+    "file": "operations/SCRIPT_WORKFLOW_GUIDE.md",
+    "status": "Current"
+  },
+  {
+    "category": "Operations",
+    "title": "Test Suite Guide",
+    "file": "operations/TEST_SUITE_GUIDE.md",
+    "status": "Current"
+  },
+  {
+    "category": "Operations",
+    "title": "Debugging Guide",
+    "file": "operations/DEBUGGING_GUIDE.md",
+    "status": "Current"
+  }
+]

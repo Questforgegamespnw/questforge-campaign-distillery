@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "contractVersion": "0.9.1",
+    "sourceFile": "submission-03-johannab253.result.json",
+    "sourceFingerprint": "sha256:94c3cee3f61f2365c6b8bfabaa779752b07a8af70967174f015e8af446be85b0",
+    "sourceMatched": true,
+    "acceptedCount": 3,
+    "directionCount": 3
+  },
+  "directions": {
+    "primary": {
+      "title": "The Power Awakening",
+      "accepted": true,
+      "fallbackUsed": false,
+      "errors": [],
+      "deterministic": {
+        "title": "The Power Awakening",
+        "pitch": "Play begins with awakening power that has to be discovered and shaped from within as the group’s recurring focus. At the table, the group finds a concrete way to push back through adapting to threats that refuse easy answers. The campaign keeps teamwork, shared victories, and constructive outcomes at the center.",
+        "about": "The source of power is internal, and growth comes through awakening, mastery, or self-realization. Beneath that, something must end for something else to begin, and renewal comes at a cost.",
+        "playersDo": "Play frequently returns to facing enemies that force new tactics instead of routine fights. A second layer of play comes from taking bigger risks in order to earn the rewards worth chasing. Pressure keeps rising, but so does the group's ability to answer it.",
+        "hook": "Danger is already moving, but so is the opportunity to answer it. External pressure stops staying separate from what it is doing to the characters."
+      },
+      "output": {
+        "pitch": "A heroic fantasy campaign about awakening the power within and learning how to shape it together. As threats demand new answers, the group takes meaningful risks, adapts, and grows into a force capable of creating lasting change. Teamwork, shared victories, and constructive outcomes remain at the heart of the experience.",
+        "about": "Power begins as something internal: an unrealized potential revealed through courage, mastery, and self-understanding. That growth carries a necessary tension, because creating something better often means allowing an old limitation, certainty, or way of being to end. The campaign treats that cost as a path toward renewal rather than despair.",
+        "playersDo": "Players confront powerful enemies that cannot be overcome through the same tactics every time, pushing the group to observe, adapt, and combine their strengths. They take greater risks to pursue meaningful rewards, expanding what they can accomplish as pressure rises. Each success reinforces the sense that the group is growing together and earning its ability to shape what comes next.",
+        "hook": "Danger is already closing in, but it may also reveal what the characters are capable of becoming. The pressure outside is awakening something within."
+      }
+    },
+    "adjacent": {
+      "title": "Lines of Battle",
+      "accepted": true,
+      "fallbackUsed": false,
+      "errors": [],
+      "deterministic": {
+        "title": "Lines of Battle",
+        "pitch": "The adjacent direction shifts play toward awakening power that has to be discovered and shaped from within. Play keeps moving forward through managing movement, chokepoints, and battlefield control under pressure. Cooperation and hard-won positive outcomes remain central throughout.",
+        "about": "The source of power is internal, and growth comes through awakening, mastery, or self-realization. What gives it extra weight is that the real struggle is not just between sides, but between competing beliefs about how the world should work.",
+        "playersDo": "You’ll find the group spending more time managing movement, chokepoints, and battlefield control under pressure. You’ll also keep coming back to facing enemies that force new tactics instead of routine fights. Each step forward creates another meaningful chance to act.",
+        "hook": "The new emphasis gives the group another concrete way to protect what matters. Movement becomes more dangerous when space is confined, visibility is limited, and retreat is uncertain."
+      },
+      "output": {
+        "pitch": "This adjacent direction centers on power awakened from within and shaped through courage, discipline, and shared purpose. The group advances by controlling movement, securing vital ground, and working together under pressure, with every hard-won gain reinforcing the possibility of a better outcome.",
+        "about": "Power begins as an inner potential, but its meaning is defined through awakening, mastery, and self-realization. The deeper conflict lies in competing beliefs about how that power should be used and what kind of world it should help create, giving each confrontation both personal and ideological weight.",
+        "playersDo": "You’ll coordinate movement through confined caverns and ruined spaces, protect key positions, and adapt when powerful enemies disrupt familiar tactics. Progress comes through teamwork, careful control of the battlefield, and repeated opportunities to turn difficult situations toward positive outcomes.",
+        "hook": "Every narrow passage can become a line worth holding. When visibility fades and retreat grows uncertain, protecting what matters depends on how well the group moves together."
+      }
+    },
+    "wildcard": {
+      "title": "The War for What Comes Next",
+      "accepted": true,
+      "fallbackUsed": false,
+      "errors": [],
+      "deterministic": {
+        "title": "The War for What Comes Next",
+        "pitch": "The bolder version rebuilds the campaign around a larger struggle over what kind of world should emerge. The group turns pressure into purposeful action through managing movement, chokepoints, and battlefield control under pressure. The campaign keeps teamwork, shared victories, and constructive outcomes at the center.",
+        "about": "The real struggle is not just between sides, but between competing beliefs about how the world should work. Complicating matters, something that once held the world together is gone, and competing forces are rising to fill the gap.",
+        "playersDo": "Here, the tension comes from managing movement, chokepoints, and battlefield control under pressure, alongside exploring strange places and uncovering what they reveal. The stranger direction keeps opening difficult chances to make a difference.",
+        "hook": "The stranger version raises the stakes without taking agency off the table. What happens next depends as much on the changing world as on the group’s intentions."
+      },
+      "output": {
+        "pitch": "This heroic fantasy campaign centers on a struggle to decide what kind of world will rise from the ruins. The group turns mounting pressure into purposeful action, working together to control movement, hold critical ground, and create opportunities for lasting, constructive change.",
+        "about": "The conflict reaches beyond rival sides to competing beliefs about how the world should be rebuilt. With the force that once held everything together now absent, new powers are moving into the gap, and every shared victory helps shape what comes next.",
+        "playersDo": "Players explore the remains of a fallen civilization, uncover what those places reveal, and use that knowledge to guide their next moves. Under pressure, they coordinate movement, manage chokepoints, and control the battlefield while pursuing difficult opportunities to make a positive difference.",
+        "hook": "The old order is gone, and the future is still undecided. The changing world will test not only what the group intends, but what they can build together."
+      }
+    }
+  }
+}

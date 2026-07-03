@@ -40,7 +40,8 @@ Wrong section content? → pitchSectionBuilders
 Wrong sentence flow?   → pitchAssembly
 Wrong cleanup?         → pitchCleanup
 Wrong tone/safety?     → pitchSafetyFilters
-Wrong AI expansion?    → AI Layer
+Wrong Identity Pitch polish? → Phase 1 AI Layer
+Wrong concrete concept?      → Phase 2 Expansion / Validation
 ```
 
 Use this when something looks wrong and you need to decide **which layer to inspect first**.
@@ -109,13 +110,13 @@ RENDERING PIPELINE
         tone drift / too harsh / too soft / safety rules not applied
 
   ↓
-FINAL OUTPUT
+PHASE 1 IDENTITY PITCH OUTPUT
   Symptoms:
     output is structurally correct but still reads poorly
     → usually Assembly, Cleanup, or Safety Filters
 
   ↓
-AI LAYER (v0.9+)
+PHASE 1 AI POLISH LAYER (v0.9+)
   Symptoms:
     hallucinations / structure drift / new ideas introduced unexpectedly
 
@@ -391,7 +392,7 @@ Do NOT:
 
 ---
 
-## 6. AI Layer Issues (v0.9+)
+## 6. Phase 1 AI Polish Issues (v0.9+)
 
 ### Symptoms
 
@@ -408,7 +409,7 @@ Do NOT:
 ### Common Problems
 
 * weak prompt constraints
-* AI adding new systems or lore
+* AI adding concrete systems, settings, factions, crises, or lore that belong to Phase 2
 * inconsistent formatting
 
 ### Fix
@@ -486,3 +487,18 @@ Debugging is easiest when:
 * issues are traced from source to output
 
 If the pipeline is respected, problems are easy to locate and fix.
+
+
+## 7. Phase Boundary Issues
+
+### Symptoms
+
+* a Phase 1 output names a concrete setting, crisis, faction, antagonist, or starting event
+* a Phase 2 concept changes the approved identity, tone, audience profile, or player experience
+* Phase 2 relies on an informal email summary rather than the authoritative Identity Selection Record
+
+### Fix
+
+* remove concrete invention from Phase 1 prompts and validation allowances
+* compare Phase 2 output against the selected Identity Pitch and client handoff record
+* fail validation when the output crosses the wrong phase boundary

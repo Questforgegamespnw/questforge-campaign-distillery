@@ -3,7 +3,7 @@ const {
 } = require("./pitchCleanup");
 
 function isYouthProfile(experienceProfile) {
-    return cleanName(experienceProfile, "").toLowerCase() === "youth";
+    return ["youth", "kids"].includes(cleanName(experienceProfile, "").toLowerCase());
 }
 
 function softenYouthText(text) {
@@ -72,9 +72,13 @@ function appendAudienceGuidance(text = "", selections = {}) {
 
     let result = text;
 
-    if (safetyProfile.youthSafeMode) {
+    if (safetyProfile.fullSafeMode || safetyProfile.youthSafeMode) {
         if (!/kid-safe|family-friendly|wonder|curiosity|adventure/i.test(result)) {
             result += " The tone stays light, family-friendly, and rooted in wonder and curiosity.";
+        }
+    } else if (safetyProfile.softerThemesMode) {
+        if (!/agency|resilience|teamwork|manageable/i.test(result)) {
+            result += " The tone keeps its emotional weight manageable while preserving agency and forward momentum.";
         }
     }
 
@@ -114,7 +118,7 @@ function applyToneFilters(text, toneName = "", excludeNotes = "", selections = {
             .replace(/the real danger is/gi, "the real mystery is");
     }
 
-    if (safetyProfile.youthSafeMode) {
+    if (safetyProfile.softerThemesMode || safetyProfile.fullSafeMode || safetyProfile.youthSafeMode) {
         result = result
             .replace(/dangerous in its own right/gi, "important in its own right")
             .replace(/uncertainty becomes part of the tension/gi, "uncertainty becomes part of the discovery and exploration")

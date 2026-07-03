@@ -1,151 +1,205 @@
 // src/ai/expandPitch.js
 
-function buildExpansionPrompt(input) {
-  const {
-    directionLabel = "",
-    coreNames = [],
-    systemNames = [],
-    genreName = "",
-    toneName = "",
-    environmentNames = [],
-    includeNotes = "",
-    excludeNotes = "",
-    basePitch = ""
-  } = input || {};
+const {
+  SECTION_RULES,
+  PRESERVE_RULES,
+  ALLOWED_CHANGES,
+  FORBIDDEN_CHANGES,
+  VOICE_RULES
+} = require("./expansionContract");
+const { validateExpansionOutput } = require("./validateExpansionOutput");
+
+function listRules(rules) {
+  return rules.map((rule) => `- ${rule}`).join("\n");
+}
+
+function sectionInstructions() {
+  return Object.entries(SECTION_RULES)
+    .map(([field, rule]) => `- ${field}: ${rule.purpose} ${rule.limits}`)
+    .join("\n");
+}
+
+function buildExpansionPrompt(input = {}) {
+  const direction = input.direction || {};
+  const source = input.source || {};
+  const context = input.context || {};
+  const constraints = input.constraints || {};
+
+  const payload = {
+    direction,
+    source,
+    context,
+    constraints
+  };
 
   return `
-You are helping turn a structured tabletop campaign concept into polished, client-facing copy for a professional game master service.
+You are a controlled editorial collaborator for QuestForge Campaign Distillery.
+Improve deterministic campaign copy without changing its underlying decisions.
 
-Your job:
-- Expand the material into evocative, readable prose
-- Preserve the selected campaign identity
-- Make it feel human and sellable
-- Do not add major setting assumptions that conflict with the source
-- Do not invent mechanics, factions, or plot specifics unless strongly implied
-- Do not become melodramatic or purple-prose heavy
-- Keep the result grounded, clear, and immersive
-- Show the experience through implication rather than explaining it directly
-- Avoid overly repetitive phrasing patterns (e.g., “new X, new Y, new Z”)
-- Avoid repeating the same metaphor or concept using different wording (e.g., “cycle” and “pattern”)
-- Avoid phrases like “this campaign is about” or “the experience is” unless absolutely necessary
-- Reinforce important ideas when needed, but vary phrasing and deepen meaning instead of repeating the same wording
+PRESERVE:
+${listRules(PRESERVE_RULES)}
 
-Output requirements:
-- Return valid JSON only
-- Use this exact shape:
+ALLOWED EDITS:
+${listRules(ALLOWED_CHANGES)}
+
+FORBIDDEN:
+${listRules(FORBIDDEN_CHANGES)}
+
+VOICE:
+${listRules(VOICE_RULES)}
+
+SECTION PURPOSES:
+${sectionInstructions()}
+
+DIRECTION REQUIREMENT:
+- Current direction: ${direction.key || "unspecified"}
+- Intended distinction: ${direction.intent || "preserve the supplied direction"}
+- The result must retain this direction's structural and thematic emphasis.
+
+SAFETY AND AUDIENCE REQUIREMENT:
+- Treat every value in constraints as binding.
+- Do not intensify restricted material.
+- For youth-safe or family-friendly input, favor teamwork, curiosity, agency, and manageable stakes.
+- If horror is restricted, mystery may remain but dread-heavy framing may not.
+
+OUTPUT CONTRACT:
+- Return valid JSON only.
+- Return exactly these four keys and no others:
 {
-  "hook": "one short, punchy opening line grounded in the campaign’s core tension (avoid generic epic phrasing and make it feel specific to this campaign, not reusable)",
-  "brief": "one concise paragraph, 3-5 sentences",
-  "expandedPitch": "one richer client-facing paragraph, 5-8 sentences"
+  "pitch": "expanded pitch paragraph",
+  "about": "expanded about paragraph",
+  "playersDo": "expanded player-activity paragraph",
+  "hook": "sharpened hook"
 }
+- Do not wrap the JSON in markdown fences.
+- Do not include the title. The deterministic title is preserved separately.
+- Every field must be a non-empty string.
 
-Campaign direction:
-${directionLabel}
-
-Direction intent:
-- primary: the clearest expression of the campaign’s core fantasy
-- adjacent: a gameplay-focused variation that shifts how the experience plays
-- wildcard: a conceptual or thematic twist that reframes the campaign in a surprising but fitting way
-
-Selected ingredients:
-- Core: ${coreNames.join(" | ") || "None"}
-- Systems: ${systemNames.join(" | ") || "None"}
-- Genre: ${genreName || "None"}
-- Tone: ${toneName || "None"}
-- Environment: ${environmentNames.join(" | ") || "None"}
-
-Must include / emphasize:
-${includeNotes || "None"}
-
-Avoid / de-emphasize:
-${excludeNotes || "None"}
-
-Base pitch backbone:
-${basePitch || "None"}
-
-Each direction must feel meaningfully different in focus, not just wording.
-If two outputs could be mistaken for the same campaign, adjust emphasis and framing.
-
-Write in a polished QuestForge-style voice:
-- immersive and grounded
-- confident but not exaggerated
-- client-facing and easy to understand
-- focused on experience and stakes over lore
-- clear and direct, not flowery or poetic
-
-If the tone is lighthearted, adventurous, or youth-oriented:
-- Lean into curiosity, discovery, and a sense of wonder
-- Keep stakes meaningful but not overwhelming or oppressive
-- Favor forward momentum and excitement over pressure and endurance
-- Avoid framing the world as crushing, hopeless, or relentlessly punishing
-
-If the audience is teens (14–17):
-- Keep the tone adventurous but grounded
-- Allow some uncertainty, mystery, or emotional weight, but keep it manageable
-- Let discoveries feel meaningful without becoming overwhelming or existential
-
-If the audience is younger (kids or early youth):
-- Use clear, simple, and energetic language
-- Focus on teamwork, cooperation, and shared success
-- Frame challenges as exciting problems to solve rather than sources of stress
-- Emphasize fun, exploration, and the thrill of discovery
-- Let successes feel frequent and rewarding
-- Avoid identity instability, existential themes, or anything psychologically heavy
-- Favor moments of cleverness, bravery, or teamwork over ambiguity or tension
+SOURCE PAYLOAD:
+${JSON.stringify(payload, null, 2)}
 `.trim();
-
-
 }
 
-function parseExpansionResponse(rawText) {
+function emptyOutput() {
+  return {
+    pitch: "",
+    about: "",
+    playersDo: "",
+    hook: ""
+  };
+}
+
+function sourceFallback(input = {}) {
+  const source = input.source || {};
+  return {
+    pitch: typeof source.pitch === "string" ? source.pitch.trim() : "",
+    about: typeof source.about === "string" ? source.about.trim() : "",
+    playersDo: typeof source.playersDo === "string" ? source.playersDo.trim() : "",
+    hook: typeof source.hook === "string" ? source.hook.trim() : ""
+  };
+}
+
+function parseExpansionResponse(rawText, options = {}) {
   if (!rawText || typeof rawText !== "string") {
     return {
-      hook: "",
-      brief: "",
-      expandedPitch: ""
+      isValid: false,
+      output: emptyOutput(),
+      errors: ["AI response was empty or not text."],
+      rawText: ""
     };
   }
+
+  let parsed;
 
   try {
-    const parsed = JSON.parse(rawText);
-
-    return {
-      hook: typeof parsed.hook === "string" ? parsed.hook.trim() : "",
-      brief: typeof parsed.brief === "string" ? parsed.brief.trim() : "",
-      expandedPitch:
-        typeof parsed.expandedPitch === "string"
-          ? parsed.expandedPitch.trim()
-          : ""
-    };
+    parsed = JSON.parse(rawText);
   } catch (error) {
     return {
-      hook: "",
-      brief: "",
-      expandedPitch: rawText.trim()
+      isValid: false,
+      output: emptyOutput(),
+      errors: [`AI response was not valid JSON: ${error.message}`],
+      rawText
     };
   }
+
+  const validation = validateExpansionOutput(parsed, options);
+
+  return {
+    isValid: validation.isValid,
+    output: validation.value || emptyOutput(),
+    errors: validation.errors,
+    rawText
+  };
+}
+
+function evaluateExpansionResponse(input, rawText, options = {}) {
+  const fallback = sourceFallback(input);
+  const parsed = parseExpansionResponse(rawText, options);
+
+  if (!parsed.isValid) {
+    return {
+      attempted: true,
+      accepted: false,
+      fallbackUsed: true,
+      output: fallback,
+      candidate: parsed.output,
+      errors: parsed.errors,
+      rawText: parsed.rawText
+    };
+  }
+
+  return {
+    attempted: true,
+    accepted: true,
+    fallbackUsed: false,
+    output: parsed.output,
+    errors: [],
+    rawText: parsed.rawText
+  };
 }
 
 /**
  * Provider-agnostic expansion entry point.
  *
  * Pass a function in `generateText` that takes a prompt string and returns raw text.
+ * Invalid or unavailable AI output falls back to the deterministic source sections.
  */
 async function expandPitchWithAI(input, options = {}) {
   const { generateText } = options;
+  const fallback = sourceFallback(input);
 
   if (typeof generateText !== "function") {
-    throw new Error("expandPitchWithAI requires a generateText(prompt) function.");
+    return {
+      attempted: false,
+      accepted: false,
+      fallbackUsed: true,
+      output: fallback,
+      errors: ["No generateText(prompt) function was supplied."],
+      rawText: ""
+    };
   }
 
   const prompt = buildExpansionPrompt(input);
-  const rawText = await generateText(prompt);
 
-  return parseExpansionResponse(rawText);
+  try {
+    const rawText = await generateText(prompt);
+    return evaluateExpansionResponse(input, rawText, options);
+  } catch (error) {
+    return {
+      attempted: true,
+      accepted: false,
+      fallbackUsed: true,
+      output: fallback,
+      errors: [`AI expansion failed: ${error.message}`],
+      rawText: ""
+    };
+  }
 }
 
 module.exports = {
   buildExpansionPrompt,
   parseExpansionResponse,
-  expandPitchWithAI
+  evaluateExpansionResponse,
+  expandPitchWithAI,
+  sourceFallback
 };

@@ -1,89 +1,133 @@
-# Developer Documentation
+# QuestForge Campaign Distillery — Developer Documentation
 
 ## Overview
 
-This folder contains internal documentation for the QuestForge Campaign Distillery.
+This directory contains the technical and design documentation for the QuestForge Campaign Distillery.
 
-Use these documents to understand, extend, and safely maintain the system.
+The current system implements a complete human-in-the-loop, two-phase campaign-development workflow:
 
----
+1. **Phase 1 — Identity Discovery**
+   - deterministic intake interpretation;
+   - Primary, Adjacent, and Wildcard Identity Pitches;
+   - combined AI polish round trip;
+   - source-bound validation;
+   - client-facing HTML and PDF export.
 
-## System Overview
+2. **Phase 2 — Campaign Concept Development**
+   - selected-identity handoff;
+   - bounded Campaign Concept generation;
+   - three playable concept variants;
+   - structural, semantic, and source validation;
+   - client-facing HTML and PDF export.
 
-* [Pipeline Overview](./PIPELINE_OVERVIEW.md)  
-  End-to-end flow: intake → mapping → selection → resolution → rendering → AI  
+The guiding principle remains:
 
-* [Renderer Architecture](./RENDERER_ARCHITECTURE.md)  
-  Modular renderer structure: context → sections → assembly → cleanup → safety  
+> **Phase 1 discovers what the campaign wants to be.**  
+> **Phase 2 decides what is actually happening and what the players can change.**
 
-* [Voice System Overview](./VOICE_SYSTEM_OVERVIEW.md)  
-  How structured data becomes player-facing narrative output  
-
----
-
-## System Evolution
-
-The Campaign Distillery has progressed through distinct capability stages:
-
-- **v0.4** → The system works (end-to-end pipeline established)  
-- **v0.5** → The system understands intent (signal adjudication + intelligence layer)  
-- **v0.6** → The system normalizes and enforces safety constraints  
-- **v0.7** → The system produces stable, consistent outputs across all scenarios  
-- **v0.7.4** → Renderer modularized into a maintainable pipeline architecture  
-- **v0.8.0** → The system produces stable, AI-expandable narrative scaffolding
+The system-recommendation stage and formal Identity Selection Record schema remain future work.
 
 ---
 
-## Data Layer
+## Start Here
 
-* [Data Expansion Guidelines](./DATA_EXPANSION_GUIDELINES.md)
-  Rules for adding new entries without introducing bloat
+### Architecture
 
-* [New Entry Review Template](./NEW_ENTRY_REVIEW.md)
-  Checklist for validating proposed additions
+- [Pipeline Overview](./architecture/PIPELINE_OVERVIEW.md)
+- [Phase Model and Terminology](./architecture/PHASE_MODEL_AND_TERMINOLOGY.md)
+- [Program Architecture Map](./architecture/QUESTFORGE_PROGRAM_ARCHITECTURE.md)
 
-* [Entry Decision Log](./ENTRY_DECISIONS_LOG.md)
-  Record of accepted, refined, and rejected concepts
+### Phase 1
+
+- [Renderer Architecture](./phase1/RENDERER_ARCHITECTURE.md)
+- [Voice System Overview](./phase1/VOICE_SYSTEM_OVERVIEW.md)
+- [Phase 1 Manual Round Trip](./phase1/PHASE_1_MANUAL_ROUND_TRIP.md)
+- [Phase 1 PDF Export](./phase1/PHASE_1_PDF_EXPORT.md)
+
+### Phase 2
+
+- [Campaign Concept Contract](./phase2/PHASE_2_CAMPAIGN_CONCEPT_CONTRACT.md)
+- [Phase 2 Manual Round Trip](./phase2/PHASE_2_MANUAL_ROUND_TRIP.md)
+- [Phase 2 PDF Export](./phase2/PHASE_2_PDF_EXPORT.md)
+
+### Data
+
+- [Data Model Overview](./data/DATA_MODEL_OVERVIEW.md)
+- [Campaign Frame Library](./data/CAMPAIGN_FRAME_LIBRARY.md)
+- [Data Expansion Guidelines](./data/DATA_EXPANSION_GUIDELINES.md)
+- [New Entry Review](./data/NEW_ENTRY_REVIEW.md)
+- [Entry Decisions Log](./data/ENTRY_DECISIONS_LOG.md)
+
+### Operations
+
+- [Submission and Export Storage](./operations/SUBMISSION_AND_EXPORT_STORAGE.md)
+- [Script Workflow Guide](./operations/SCRIPT_WORKFLOW_GUIDE.md)
+- [Test Suite Guide](./operations/TEST_SUITE_GUIDE.md)
+- [Debugging Guide](./operations/DEBUGGING_GUIDE.md)
 
 ---
 
-## Development & Debugging
+## Current Capability State
 
-* [Debugging Guide](./DEBUGGING_GUIDE.md)
-  Common failure points and troubleshooting steps
+### Implemented
+
+- canonical intake normalization and validation;
+- deterministic Phase 1 direction selection and rendering;
+- source-bound Phase 1 AI polish;
+- Phase 1 validation and client PDF delivery;
+- Phase 2 handoff construction;
+- Campaign Concept input, prompt, schema, evaluation, and validation;
+- source-bound Phase 2 manual AI round trip;
+- Phase 2 client PDF delivery;
+- canonical submission and export folder architecture;
+- categorized scripts, tests, shared utilities, and exporters;
+- static developer wiki generation.
+
+### Not Yet Implemented
+
+- formal runtime Identity Selection Record schema;
+- structured system recommendation;
+- automatic email delivery;
+- automatic Formspree execution;
+- final selected-concept refinement stage;
+- full lifecycle orchestration across every workflow command.
 
 ---
 
-## How to Use This Documentation
+## Runtime Naming Note
 
-* Start with **Pipeline Overview** if you are learning the system
-* Use **Data Expansion Guidelines** before modifying data
-* Use **Entry Decision Log** to avoid redundant additions
-* Use **Debugging Guide** when something breaks
+Some Phase 1 source APIs retain earlier names such as:
 
----
+- `generateCampaignPitch`;
+- `clientPitch`;
+- `auditPitch`;
+- `campaignPitch`.
 
-## Notes
-
-* This documentation is developer-facing and may evolve over time
-* Root README remains the primary user-facing entry point
-
+These are compatibility names. Conceptually, the current deterministic output is a **Phase 1 Identity Pitch**, not a completed Campaign Concept.
 
 ---
 
-## v0.8 System Intent Update
+## Documentation Authority
 
-As of v0.8, the renderer is no longer responsible for producing final client-facing prose.
+- Source code and runtime schemas are authoritative for current behavior.
+- Developer Markdown explains intended architecture and operating doctrine.
+- The generated wiki is a reader, not a separate source of truth.
+- Sanitized examples illustrate contracts but do not define them.
 
-Instead, it produces:
-> structured, clean, AI-expandable narrative scaffolding
+---
 
-Key implications:
-- Slight repetition is acceptable (used as signal reinforcement)
-- Output clarity is prioritized over stylistic perfection
-- Avoid over-polishing phrasing at this layer
+## Developer Wiki
 
-Future work should focus on:
-- improving structure and clarity
-- maintaining consistency
-- supporting AI expansion workflows
+Open:
+
+```text
+dev/wiki/index.html
+```
+
+The wiki is generated from the Markdown files by:
+
+```powershell
+node scripts/docs/buildDevWiki.js
+```
+
+No web server or external dependency is required.

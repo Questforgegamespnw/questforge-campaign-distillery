@@ -6,7 +6,7 @@
 
 ## Overview
 
-The QuestForge Campaign Distillery converts structured input into polished, client-facing campaign concepts.
+The QuestForge Campaign Distillery currently converts structured intake into three Phase 1 Identity Pitches. After client selection, the planned Phase 2 pipeline will convert the chosen identity into concrete, playable Campaign Concept Pitches.
 
 The pipeline is designed to be:
 
@@ -20,7 +20,14 @@ The pipeline is designed to be:
 ## High-Level Flow
 
 ```text
-Intake → Mapping → Selection → Resolution → Rendering → (AI Layer)
+Phase 1: Intake → Mapping → Normalization → Canonical Validation → Signal Translation
+         → Adjudication → Direction Selection → Frame Resolution
+         → Deterministic Identity Pitch Rendering → AI Identity Pitch Polish
+         → Validation → Client Selection
+
+Phase 2: Identity Selection Record → Campaign Concept Expansion
+         → Concept Validation → System Recommendation
+         → PDF Export → Client Delivery
 ```
 
 Each stage has a **single responsibility** and should not leak logic into other stages.
@@ -68,7 +75,7 @@ Translate normalized input into structured system signals.
 ### 3. Selection
 
 **Purpose:**
-Choose the most relevant campaign building blocks.
+Choose the most relevant building blocks for each Phase 1 identity direction.
 
 **Responsibilities:**
 
@@ -95,14 +102,14 @@ Convert selected IDs into full data objects.
 
 **Output:**
 
-* fully resolved campaign components
+* fully resolved Identity Pitch components
 
 ---
 
 ### 5. Rendering
 
 **Purpose:**
-Generate structured, human-readable campaign output.
+Generate structured, human-readable Phase 1 Identity Pitch output.
 
 **Responsibilities:**
 
@@ -125,14 +132,14 @@ Generate structured, human-readable campaign output.
 
 **Output:**
 
-* complete campaign direction (JSON structure)
+* complete identity direction (JSON structure)
 
 ---
 
 ### 6. AI Layer (v0.9+)
 
 **Purpose:**
-Enhance output while preserving structure and intent.
+Polish the Identity Pitch while preserving its structure and intent.
 
 **Responsibilities:**
 
@@ -147,7 +154,7 @@ Enhance output while preserving structure and intent.
 
 **Output:**
 
-* enhanced campaign direction
+* polished Identity Pitch direction
 
 ---
 
@@ -186,7 +193,7 @@ Avoid hardcoding narrative logic in the renderer.
 
 ### Composability
 
-Campaigns are built from reusable components:
+Identity directions are composed from reusable components:
 
 * core = meaning
 * system = behavior
@@ -245,9 +252,16 @@ Always debug **upstream first**.
 
 * integrate AI layer safely
 
+### v0.9.x
+
+* formalize the Phase 1 Identity Pitch contract
+* define the client selection handoff
+* define and validate the Phase 2 Campaign Concept contract
+* add system recommendation and client export stages
+
 ### v1.0
 
-* finalize structure and documentation
+* finalize the integrated two-phase workflow and documentation
 
 ---
 
@@ -260,3 +274,8 @@ The pipeline works because:
 * output is composed, not invented
 
 Maintain these principles to keep the system stable and scalable.
+
+
+## Phase Boundary
+
+Phase 1 must not invent a named setting, concrete crisis, factions, starting situation, fixed antagonist, or recurring campaign structure. Phase 2 may invent those elements within the selected identity and recorded client constraints, but must not invent a complete plot, fixed ending, railroaded quest chain, mandatory protagonist history, or contradictory genre and tone.
