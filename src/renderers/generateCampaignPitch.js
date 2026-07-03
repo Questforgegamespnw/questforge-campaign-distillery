@@ -2,6 +2,7 @@ const {
   sentenceCase,
   cleanClientFacingText
 } = require("./pitchCleanup");
+const { applyYouthVoiceLayer } = require("../voice/youthVoiceLayer");
 const {
   getAdjudication,
   getSafetyProfile,
@@ -97,21 +98,34 @@ function generateCampaignPitch(selections = {}) {
     selections
   });
 
-  const cleanClientField = (value) => cleanClientFacingText(
-    applyToneFilters(
-      value,
-      ctx.toneName,
-      ctx.excludeNotes,
-      selections
+  const cleanClientField = (value, fieldName = "body") => cleanClientFacingText(
+    applyYouthVoiceLayer(
+      applyToneFilters(
+        value,
+        ctx.toneName,
+        ctx.excludeNotes,
+        selections
+      ),
+      {
+        experienceProfile: ctx.experienceProfile,
+        fieldName,
+        selections
+      }
     )
   );
 
   return {
-    title: cleanClientFacingText(title),
-    pitch: cleanClientField(appendAudienceGuidance(pitch, selections)),
-    about: cleanClientField(about),
-    playersDo: cleanClientField(playersDo),
-    distinctHook: cleanClientField(distinctHook),
+    title: cleanClientFacingText(
+      applyYouthVoiceLayer(title, {
+        experienceProfile: ctx.experienceProfile,
+        fieldName: "title",
+        selections
+      })
+    ),
+    pitch: cleanClientField(appendAudienceGuidance(pitch, selections), "pitch"),
+    about: cleanClientField(about, "about"),
+    playersDo: cleanClientField(playersDo, "playersDo"),
+    distinctHook: cleanClientField(distinctHook, "distinctHook"),
     aiBrief,
     adjudicationSummary: {
       experienceProfile: ctx.experienceProfile,

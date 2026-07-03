@@ -11,11 +11,13 @@ const tests = [
 
   "scripts/tests/phase1/testAiExpansion.js",
   "scripts/tests/phase1/testIdentityPolishRoundTrip.js",
+  "scripts/tests/phase1/testIdentitySelectionRecord.js",
   "scripts/tests/phase2/testPhase2CampaignConcept.js",
   "scripts/tests/phase2/testCampaignConceptRoundTrip.js",
   "scripts/tests/pipeline/testSystemLeadNormalization.js",
   "scripts/tests/pipeline/testClientFacingPhraseBoundaries.js",
   "scripts/tests/pipeline/testCoreFrameAudiencePolicy.js",
+  "scripts/tests/pipeline/testYouthVoiceLayer.js",
 ];
 
 if (includeFixtureTests) {
