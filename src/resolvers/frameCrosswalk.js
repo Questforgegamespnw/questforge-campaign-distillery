@@ -1,6 +1,7 @@
 /**
- * Crosswalk mappings for adapting frame intent into allowed equivalents.
- * This first pass focuses on youth-safe remapping.
+ * Crosswalk mappings for adapting adult Core Frame intent into kids-safe
+ * equivalents. The youth profile intentionally preserves adult Core Frames
+ * until the explicit preserve/soften/substitute/suppress policy is completed.
  */
 
 const youthCoreFrameCrosswalk = {
@@ -70,6 +71,9 @@ const youthCoreFrameCrosswalk = {
     ]
 };
 
+// Compatibility alias while the older export name remains in use.
+const kidsCoreFrameCrosswalk = youthCoreFrameCrosswalk;
+
 /**
  * Adds weighted entries into a map.
  * @param {Map<string, number>} bucket
@@ -83,40 +87,22 @@ function addWeightedEntries(bucket, entries = []) {
 }
 
 /**
- * Applies youth-safe crosswalk mappings to core frame candidates.
- * Original candidates are preserved and youth-safe equivalents are added.
+ * Converts adult Core Frame candidates into kids-safe equivalents.
  * @param {Array<{id: string, weight: number}>} coreFrameCandidates
  * @returns {Array<{id: string, weight: number}>}
  */
-function applyYouthCoreFrameCrosswalk(coreFrameCandidates = []) {
+function applyKidsCoreFrameCrosswalk(coreFrameCandidates = []) {
     const bucket = new Map();
 
     for (const candidate of coreFrameCandidates) {
-        const mapped = youthCoreFrameCrosswalk[candidate.id];
-        if (mapped) {
-            const scaled = mapped.map((entry) => ({
-                id: entry.id,
-                weight: entry.weight * candidate.weight
-            }));
-            addWeightedEntries(bucket, scaled);
-        }
-    }
+        const mapped = kidsCoreFrameCrosswalk[candidate.id];
+        if (!mapped) continue;
 
-    return Array.from(bucket.entries())
-        .map(([id, weight]) => ({ id, weight }))
-        .sort((a, b) => b.weight - a.weight);
-} function applyYouthCoreFrameCrosswalk(coreFrameCandidates = []) {
-    const bucket = new Map();
-
-    for (const candidate of coreFrameCandidates) {
-        const mapped = youthCoreFrameCrosswalk[candidate.id];
-        if (mapped) {
-            const scaled = mapped.map((entry) => ({
-                id: entry.id,
-                weight: entry.weight * candidate.weight
-            }));
-            addWeightedEntries(bucket, scaled);
-        }
+        const scaled = mapped.map((entry) => ({
+            id: entry.id,
+            weight: entry.weight * candidate.weight
+        }));
+        addWeightedEntries(bucket, scaled);
     }
 
     return Array.from(bucket.entries())
@@ -124,26 +110,37 @@ function applyYouthCoreFrameCrosswalk(coreFrameCandidates = []) {
         .sort((a, b) => b.weight - a.weight);
 }
 
+// Compatibility wrapper for callers using the old function name.
+function applyYouthCoreFrameCrosswalk(coreFrameCandidates = []) {
+    return applyKidsCoreFrameCrosswalk(coreFrameCandidates);
+}
+
 /**
  * Applies profile-aware frame crosswalk rules.
+ * Standard and youth preserve their current candidate buckets.
+ * Kids uses the full-safe substitution crosswalk.
  * @param {object} options
- * @param {"standard" | "youth"} options.experienceProfile
+ * @param {"standard" | "youth" | "kids"} options.experienceProfile
  * @param {object} options.candidateBuckets
  * @returns {object}
  */
 function applyFrameCrosswalk({ experienceProfile, candidateBuckets }) {
-    if (experienceProfile !== "youth") {
+    if (experienceProfile !== "kids") {
         return candidateBuckets;
     }
 
     return {
         ...candidateBuckets,
-        coreFrames: applyYouthCoreFrameCrosswalk(candidateBuckets.coreFrames || [])
+        coreFrames: applyKidsCoreFrameCrosswalk(
+            candidateBuckets.coreFrames || []
+        )
     };
 }
 
 module.exports = {
     youthCoreFrameCrosswalk,
+    kidsCoreFrameCrosswalk,
+    applyKidsCoreFrameCrosswalk,
     applyYouthCoreFrameCrosswalk,
     applyFrameCrosswalk
 };

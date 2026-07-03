@@ -6,48 +6,105 @@ const genreSkins = require("../data/genreSkins");
 const environmentSkins = require("../data/environmentSkins");
 const { applyFrameCrosswalk } = require("./frameCrosswalk");
 
+const EXPERIENCE_PROFILES = Object.freeze([
+    "standard",
+    "youth",
+    "kids"
+]);
+
+function normalizeText(value) {
+    return String(value || "").trim().toLowerCase();
+}
+
+function normalizeExperienceProfile(value) {
+    const normalized = normalizeText(value);
+    return EXPERIENCE_PROFILES.includes(normalized) ? normalized : "";
+}
+
+function toArray(value) {
+    if (Array.isArray(value)) return value.filter(Boolean);
+    if (value === undefined || value === null || value === "") return [];
+    return [value];
+}
+
+/**
+ * Legacy fallback for records that predate canonical experienceProfile output.
+ * New pipeline records should already contain standard, youth, or kids.
+ * @param {object} rawAnswers
+ * @returns {"standard" | "youth" | "kids"}
+ */
+function inferLegacyExperienceProfile(rawAnswers = {}) {
+    const audience = normalizeText(rawAnswers.audience);
+    const ageBand = normalizeText(rawAnswers.age_band || rawAnswers.ageBand);
+    const system = normalizeText(rawAnswers.system);
+    const youthModeValues = toArray(
+        rawAnswers.youth_mode ?? rawAnswers.youthMode
+    ).map(normalizeText);
+
+    const explicitKidsMode =
+        youthModeValues.includes("yes") ||
+        youthModeValues.includes("kids") ||
+        youthModeValues.includes("kid-safe") ||
+        rawAnswers.youthMode === true;
+
+    const kidsProfile =
+        explicitKidsMode ||
+        system === "hero_kids" ||
+        [
+            "kids (under 13)",
+            "family-friendly / kid-safe experience"
+        ].includes(audience) ||
+        [
+            "kids_11_13",
+            "kids_8_10",
+            "kids_5_7"
+        ].includes(ageBand);
+
+    if (kidsProfile) return "kids";
+
+    const youthProfile =
+        ["teens (13–17)", "mixed ages"].includes(audience) ||
+        ["teens_14_17", "mixed_age"].includes(ageBand) ||
+        youthModeValues.includes("youth") ||
+        youthModeValues.includes("teen");
+
+    return youthProfile ? "youth" : "standard";
+}
+
 /**
  * Resolves the final experience profile from available signals.
- * Intake/form signals should override looser inference when present.
+ * Canonical intake takes precedence over translated and legacy raw values.
  * @param {object} options
  * @param {object} [options.normalizedIntake]
  * @param {object} [options.translatedForm]
  * @param {object} [options.rawAnswers]
- * @returns {"standard" | "youth"}
+ * @returns {"standard" | "youth" | "kids"}
  */
 function finalizeExperienceProfile({
     normalizedIntake = {},
     translatedForm = {},
     rawAnswers = {}
 }) {
-    const explicitYouth =
-        rawAnswers?.youth_mode ||
-        rawAnswers?.youthMode === true ||
-        (rawAnswers?.age_band && rawAnswers.age_band !== "adult") ||
-        (rawAnswers?.ageBand && rawAnswers.ageBand !== "adult") ||
-        rawAnswers?.system === "hero_kids" ||
-        rawAnswers?.audience === "Kids (under 13)" ||
-        rawAnswers?.audience === "Family-friendly / kid-safe experience";
+    const canonicalProfile = normalizeExperienceProfile(
+        normalizedIntake?.experienceProfile
+    );
+    if (canonicalProfile) return canonicalProfile;
 
-    if (explicitYouth) {
-        return "youth";
-    }
+    const translatedProfile = normalizeExperienceProfile(
+        translatedForm?.experienceProfile
+    );
+    if (translatedProfile) return translatedProfile;
 
-    if (normalizedIntake?.experienceProfile === "youth") {
-        return "youth";
-    }
-
-    if (translatedForm?.experienceProfile === "youth") {
-        return "youth";
-    }
-
-    return "standard";
+    return inferLegacyExperienceProfile(rawAnswers);
 }
 
 /**
  * Returns profile-based rules for filtering candidate pools.
- * @param {"standard" | "youth"} experienceProfile
+ * Youth currently preserves standard frame pools while later tickets define
+ * explicit soften/downweight policy. Kids retains the former full-safe route.
+ * @param {"standard" | "youth" | "kids"} experienceProfile
  * @returns {{
+ *   profile: "standard" | "youth" | "kids",
  *   coreFramePool: Array<object>,
  *   excludedCoreFrameIds: string[],
  *   excludedSystemFrameIds: string[],
@@ -55,8 +112,11 @@ function finalizeExperienceProfile({
  * }}
  */
 function getProfileRules(experienceProfile) {
-    if (experienceProfile === "youth") {
+    const profile = normalizeExperienceProfile(experienceProfile) || "standard";
+
+    if (profile === "kids") {
         return {
+            profile,
             coreFramePool: youthCoreFrames,
             excludedCoreFrameIds: [
                 "entropy_decay",
@@ -81,7 +141,10 @@ function getProfileRules(experienceProfile) {
         };
     }
 
+    // The interim youth bridge preserves the standard candidate pools.
+    // Ticket #74 will define explicit preserve/soften/substitute/suppress rules.
     return {
+        profile,
         coreFramePool: coreFrames,
         excludedCoreFrameIds: [],
         excludedSystemFrameIds: [],
@@ -117,7 +180,7 @@ function applyProfileRulesToBuckets(buckets, rules) {
  * @param {object} [options.translatedForm]
  * @param {object} [options.rawAnswers]
  * @returns {{
- *   experienceProfile: "standard" | "youth",
+ *   experienceProfile: "standard" | "youth" | "kids",
  *   availablePools: {
  *     coreFrames: Array<object>,
  *     systemFrames: Array<object>,
@@ -174,6 +237,9 @@ function resolveCampaignContext({
 }
 
 module.exports = {
+    EXPERIENCE_PROFILES,
+    normalizeExperienceProfile,
+    inferLegacyExperienceProfile,
     finalizeExperienceProfile,
     getProfileRules,
     applyProfileRulesToBuckets,

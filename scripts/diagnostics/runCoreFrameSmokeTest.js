@@ -1,7 +1,7 @@
-const { loadNormalizedIntake } = require("../src/parsers/loadNormalizedIntake");
-const { scoreCandidates } = require("../src/selectors/scoreCandidates");
-const { selectTopThree } = require("../src/selectors/selectTopThree");
-const coreFrames = require("../src/data/coreFrames");
+const { loadNormalizedIntake } = require("../../src/parsers/loadNormalizedIntake");
+const { scoreCandidates } = require("../../src/selectors/scoreCandidates");
+const { selectTopThree } = require("../../src/selectors/selectTopThree");
+const coreFrames = require("../../src/data/coreFrames");
 
 function main() {
   try {

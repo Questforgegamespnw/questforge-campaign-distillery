@@ -226,12 +226,14 @@ function cleanCoreLead(text = "") {
         .replace(/^trying to\s+/i, "")
         .replace(/^getting caught in\s+/i, "")
         .replace(/^finding\s+/i, "")
-        .replace(/^learning that\s+/i, "");
+        .replace(/^learning that\s+/i, "")
+        .replace(/^discovering that\s+/i, "")
+        .replace(/^realizing that\s+/i, "");
 
     cleaned = cleaned
         .replace(/^survive\s+/i, "surviving ")
         .replace(/^piece together\s+/i, "piecing together ")
-        .replace(/^matter\s+/i, "mattering ")
+        .replace(/^matter\s+/i, "making a difference in ")
         .replace(/^change\s+/i, "changing ")
         .replace(/^hold on\s+/i, "holding on ");
 
@@ -349,6 +351,90 @@ function dedupePhrases(text = "") {
     return unique.join(", ");
 }
 
+
+function interpretIncludeNoteForPitch(text = "") {
+    const raw = cleanName(text).trim();
+    const lower = raw.toLowerCase();
+
+    if (!raw) {
+        return { category: "none", phrase: "" };
+    }
+
+    if (
+        /pretty flexible|whatever happens|don['’]?t know.*looking for|open to (?:anything|whatever)/i.test(raw)
+    ) {
+        return { category: "non_directive", phrase: "" };
+    }
+
+    if (
+        /classic (?:dungeons?\s*&?\s*dragons?|d&d)|traditional fantasy|fantasy,? adventure,? magic/i.test(lower)
+    ) {
+        return {
+            category: "genre_anchor",
+            phrase: "traditional fantasy adventure, magic, monsters, and exploration"
+        };
+    }
+
+    if (/teamwork|positive outcomes|shared success|cooperation/i.test(lower)) {
+        return {
+            category: "teamwork_priority",
+            phrase: "teamwork, shared victories, and constructive outcomes"
+        };
+    }
+
+    if (/lighthearted|adventurous|hopeful|heroic|grim|mythic|psychological/i.test(lower)) {
+        return {
+            category: "tone_priority",
+            phrase: cleanIncludeText(raw).toLowerCase()
+        };
+    }
+
+    return {
+        category: "general_priority",
+        phrase: cleanIncludeText(raw).toLowerCase()
+    };
+}
+
+function buildIncludeNoteSentence(note = {}, context = "pitch") {
+    const category = note?.category || "none";
+    const phrase = cleanName(note?.phrase || "").trim();
+
+    if (!phrase || category === "none" || category === "non_directive") {
+        return "";
+    }
+
+    const pools = {
+        genre_anchor: context === "about"
+            ? [
+                `The direction stays rooted in ${phrase}.`,
+                `It remains firmly grounded in ${phrase}.`
+            ]
+            : [
+                `The direction stays rooted in ${phrase}.`,
+                `It remains firmly grounded in ${phrase} rather than drifting into another genre.`
+            ],
+        teamwork_priority: context === "about"
+            ? [
+                `Teamwork, shared victories, and constructive outcomes remain central throughout.`,
+                `The campaign keeps cooperation and hard-won positive outcomes at its center.`
+            ]
+            : [
+                `The campaign keeps teamwork, shared victories, and constructive outcomes at the center.`,
+                `Cooperation and hard-won positive outcomes remain central throughout.`
+            ],
+        tone_priority: [
+            `The tone stays ${phrase}.`,
+            `Its overall mood remains ${phrase}.`
+        ],
+        general_priority: [
+            `The campaign keeps ${phrase} as a clear priority.`,
+            `That direction keeps ${phrase} at the center.`
+        ]
+    };
+
+    return pickOne(pools[category] || pools.general_priority, "", true);
+}
+
 function chooseByLabel(label, options = {}) {
     if (options[label] && Array.isArray(options[label]) && options[label].length) {
         return options[label][Math.floor(Math.random() * options[label].length)];
@@ -424,10 +510,10 @@ function cleanOutputText(text = "") {
         .replace(/divided and incomplete,\s*and/gi, "divided and incomplete. ")
         .replace(
             /\bwhere ([^.,]+?) (keeps|starts|begins|continues)\b/gi,
-            "where $1, $2"
+            "where $1 $2"
         )
         .replace(
-            /\b(shaped by|centered on|built around) ([^.,]+?) is\b/gi,
+            /\b(shaped by|centered on|built around) (?!the fact that)([^.,]+?) is\b/gi,
             "$1 the fact that $2 is"
         );
 }
@@ -461,6 +547,8 @@ module.exports = {
     toSentence,
     formatToneLabel,
     dedupePhrases,
+    interpretIncludeNoteForPitch,
+    buildIncludeNoteSentence,
     chooseByLabel,
     pickOne,
     cleanOutputText,

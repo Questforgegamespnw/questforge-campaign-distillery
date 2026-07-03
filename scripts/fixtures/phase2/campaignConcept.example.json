@@ -1,0 +1,192 @@
+{
+  "schemaVersion": "0.9.0",
+  "submissionId": "example_submission_001",
+  "selectedIdentityDirection": "primary",
+  "generationMode": "three_variants",
+  "identitySummary": {
+    "identityTitle": "Power Awakened Within",
+    "identityPitch": "A campaign about inner power, disciplined growth, and the responsibility of deciding what that power should become.",
+    "corePromise": "Power begins within the characters, but its meaning is defined by how they choose to shape and use it.",
+    "playEmphasis": [
+      "tactical positioning",
+      "team coordination",
+      "character growth"
+    ],
+    "tone": [
+      "heroic",
+      "hopeful"
+    ],
+    "genre": [
+      "fantasy"
+    ],
+    "environment": [
+      "underground ruins"
+    ],
+    "mustPreserve": [
+      "inner awakening",
+      "teamwork",
+      "meaningful control of power"
+    ],
+    "mustAvoid": [
+      "grimdark inevitability",
+      "mandatory corruption"
+    ]
+  },
+  "systemContext": {
+    "status": "open",
+    "preferredSystem": "",
+    "systemsToAvoid": []
+  },
+  "settingContext": {
+    "status": "open",
+    "preferredSetting": "",
+    "settingConstraints": []
+  },
+  "concepts": [
+    {
+      "variantType": "core_interpretation",
+      "conceptTitle": "The Wells Beneath",
+      "oneSentencePremise": "When ancient power wells begin awakening beneath isolated settlements, the characters become their first living vessels and must decide who can be trusted to guide what they are becoming.",
+      "campaignPitch": "Power long believed to be myth is returning through the people closest to the newly opened wells. The characters begin as the first group to survive an awakening together, making them protectors, evidence, and targets all at once. Each expedition reveals another site, another community under pressure, and another faction with a different answer for what awakened power should become. The campaign grows through exploration, tactical defense, training, negotiation, and choices that determine whether the new power becomes public good, controlled weapon, or something no institution can own.",
+      "startingSituation": "A mining settlement breaks into a sealed chamber, triggering an awakening that spreads through the characters while hostile forces move to seize the site.",
+      "centralConflict": "Communities need the awakened power to survive, while rival institutions seek to regulate, weaponize, or suppress it.",
+      "playersDo": "The group explores newly opened sites, protects communities, trains unstable abilities, and decides which factions gain access to awakened power.",
+      "recurringCampaignEngine": "Each arc centers on a newly active well, the local crisis it creates, and the competing groups trying to shape its outcome.",
+      "whyNow": "The first network of wells has reactivated after centuries of dormancy, and the awakening is spreading faster than existing powers can contain.",
+      "factionsOrForces": [
+        {
+          "name": "The Concordance",
+          "role": "A disciplined order that studies and regulates awakened power.",
+          "wants": "Controlled access and mandatory training.",
+          "pressureOnPlayers": "Offers safety and expertise in exchange for obedience."
+        },
+        {
+          "name": "The Free Wells",
+          "role": "A coalition of communities that rejects centralized control.",
+          "wants": "Local ownership of every awakened site.",
+          "pressureOnPlayers": "Demands that the group defend independence even when local leaders misuse power."
+        },
+        {
+          "name": "The Hollow Host",
+          "role": "A force drawn to unstable awakenings.",
+          "wants": "To consume or distort newly active wells.",
+          "pressureOnPlayers": "Turns delay and uncontrolled use into escalating physical danger."
+        }
+      ],
+      "escalation": "Each uncontrolled awakening expands the network, strengthens the Hollow Host, and forces factions into more aggressive attempts to claim the characters.",
+      "distinctiveElement": "The characters' abilities resonate when they fight and act together, making cooperation both their greatest strength and the key to stabilizing new wells.",
+      "meaningfulChoices": [
+        {
+          "choice": "Place a well under centralized protection or local control.",
+          "whatItChanges": "Determines which faction gains influence and how safely the surrounding community develops."
+        },
+        {
+          "choice": "Share awakening techniques or keep them restricted.",
+          "whatItChanges": "Changes how quickly power spreads and who becomes capable of using it."
+        }
+      ],
+      "hook": "The power is waking up inside you first. Who gets to decide what it becomes?",
+      "systemImplementationNotes": "",
+      "settingImplementationNotes": ""
+    },
+    {
+      "variantType": "alternate_situation",
+      "conceptTitle": "The Last Ember Schools",
+      "oneSentencePremise": "The characters are newly awakened defenders traveling between failing schools of power, deciding which traditions deserve to survive and which must be transformed.",
+      "campaignPitch": "Across a fractured region, old schools that once taught inner mastery are failing one by one. The characters awaken outside the accepted traditions, forcing every surviving school to decide whether they are proof of renewal or a threat to established authority. Each arc brings the group to a new school, local crisis, or contested teaching, where they must learn, protect, negotiate, and sometimes reject what previous generations preserved. The campaign centers on building a new shared discipline from traditions that do not fully agree.",
+      "startingSituation": "A renowned training school collapses during a failed awakening ceremony, leaving the characters as the only students whose power stabilizes.",
+      "centralConflict": "The old schools must either cooperate, reform, or destroy one another as a new form of awakening spreads beyond their control.",
+      "playersDo": "The group travels between rival schools, learns distinct disciplines, resolves local crises, and decides which teachings become part of a new shared tradition.",
+      "recurringCampaignEngine": "Each major arc focuses on one school, its threatened community, its philosophy of power, and the choice to preserve, reform, merge, or abandon its methods.",
+      "whyNow": "The old awakening methods are suddenly failing while untrained people begin manifesting power on their own.",
+      "factionsOrForces": [
+        {
+          "name": "The Iron Doctrine",
+          "role": "A school built on restraint and strict hierarchy.",
+          "wants": "Exclusive authority over awakening practice.",
+          "pressureOnPlayers": "Provides discipline while rejecting improvisation and local autonomy."
+        },
+        {
+          "name": "The Open Hand",
+          "role": "A loose network of community teachers.",
+          "wants": "Widely shared training and accessible power.",
+          "pressureOnPlayers": "Spreads techniques quickly, including before every learner is ready."
+        },
+        {
+          "name": "The Ashen Masters",
+          "role": "Former teachers convinced awakening must end.",
+          "wants": "To extinguish every school and seal the practice.",
+          "pressureOnPlayers": "Targets teachers, students, and sites before the new tradition can stabilize."
+        }
+      ],
+      "escalation": "Every failed school creates displaced students, lost knowledge, and opportunities for extremists to seize control of abandoned techniques.",
+      "distinctiveElement": "The party gradually authors a shared discipline by choosing which techniques and beliefs to carry forward from each school.",
+      "meaningfulChoices": [
+        {
+          "choice": "Preserve a school's tradition or reform it.",
+          "whatItChanges": "Shapes the techniques, values, and allies available to the emerging shared discipline."
+        },
+        {
+          "choice": "Teach awakened power broadly or restrict access.",
+          "whatItChanges": "Changes the pace of growth, public trust, and the risk of unstable awakenings."
+        }
+      ],
+      "hook": "Every school claims it knows what power should become. You are the proof that none of them has the whole answer.",
+      "systemImplementationNotes": "",
+      "settingImplementationNotes": ""
+    },
+    {
+      "variantType": "distinctive_interpretation",
+      "conceptTitle": "The Moving Heart",
+      "oneSentencePremise": "The characters carry a living source of awakened power through a hostile underground world, and every community they help changes what the source\u2014and the party\u2014can become.",
+      "campaignPitch": "The campaign begins with the group bonded to a mobile living heart that generates power through collective purpose. It cannot remain in one place for long, drawing threats and changing the environments it passes through. The party travels between isolated underground communities, choosing where to bring the heart, who may draw from it, and what promises they are willing to make in exchange for shelter or aid. Each decision permanently changes the heart's abilities, appearance, and relationship to the people relying on it.",
+      "startingSituation": "A sealed refuge fails, and the characters escape carrying the living heart that once powered the entire settlement.",
+      "centralConflict": "The heart can revive failing communities, but every group that depends on it has a different vision for how it should be used and where it should remain.",
+      "playersDo": "The group escorts the heart, secures routes, defends temporary sanctuaries, negotiates access, and chooses which communities it will transform.",
+      "recurringCampaignEngine": "Each arc follows the journey to a new refuge, the crisis found there, and the decision to invest power, move on, or alter the route entirely.",
+      "whyNow": "The original refuge has collapsed, forcing the heart into motion for the first time in generations.",
+      "factionsOrForces": [
+        {
+          "name": "The Lantern Caravans",
+          "role": "Traveling communities that survive between isolated refuges.",
+          "wants": "A shared route system powered by the heart.",
+          "pressureOnPlayers": "Offers movement and intelligence but asks the party to prioritize the road over permanent settlements."
+        },
+        {
+          "name": "The Rooted Cities",
+          "role": "Large settlements built around fixed power sources.",
+          "wants": "To bind the heart permanently to one city.",
+          "pressureOnPlayers": "Offers lasting safety in exchange for ending the journey."
+        },
+        {
+          "name": "The Deep Quiet",
+          "role": "An underground force disturbed by the heart's movement.",
+          "wants": "Stillness and the return of darkness.",
+          "pressureOnPlayers": "Makes every prolonged stop more dangerous."
+        }
+      ],
+      "escalation": "The longer the heart travels, the more communities depend on its route and the more violently fixed powers attempt to control or stop it.",
+      "distinctiveElement": "The campaign's home base is a living, mobile source of power whose development reflects the party's collective decisions.",
+      "meaningfulChoices": [
+        {
+          "choice": "Invest the heart's power in a settlement or preserve it for the road.",
+          "whatItChanges": "Determines which communities thrive and how capable the party remains during future journeys."
+        },
+        {
+          "choice": "Accept a permanent sanctuary or continue moving.",
+          "whatItChanges": "Changes the campaign map, alliances, and whether the heart remains free."
+        }
+      ],
+      "hook": "Every place you save asks you to stay. The heart keeps telling you to move.",
+      "systemImplementationNotes": "",
+      "settingImplementationNotes": ""
+    }
+  ],
+  "validationSummary": {
+    "schemaValid": true,
+    "identityAligned": true,
+    "inventionBoundariesRespected": true,
+    "playablePremisePresent": true,
+    "warnings": []
+  }
+}

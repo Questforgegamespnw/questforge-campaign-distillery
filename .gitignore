@@ -3,3 +3,15 @@ node_modules/
 .DS_Store
 dist/
 build/
+
+
+# Real intake submissions and generated client data
+submissions/
+results/
+text submission forms/
+ai-round-trips/
+exports/
+# Optional: local regression exports
+*.result.json
+*.submission.json
+

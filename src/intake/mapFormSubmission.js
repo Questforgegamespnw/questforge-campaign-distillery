@@ -47,11 +47,55 @@ function normalizeEnvironment(value) {
     return ENVIRONMENT_ALIASES[normalized] || normalized;
 }
 
+function normalizeRespondentType(value) {
+    const normalized = normalizeLabelText(value)
+        .replace(/^just_/, "")
+        .replace(/_+/g, "_");
+
+    const aliases = {
+        individual: "individual",
+        i_am_looking_for_a_group: "individual",
+        myself_i_am_looking_for_a_group: "individual",
+        partial_group: "partial_group",
+        myself_and_one_or_more_other_players: "partial_group",
+        we_are_looking_to_join_or_form_a_larger_group: "partial_group",
+        existing_group: "existing_group",
+        an_existing_group_we_already_have_the_players_together: "existing_group",
+        group_organizer: "group_organizer",
+        i_am_organizing_on_behalf_of_a_group: "group_organizer"
+    };
+
+    return aliases[normalized] || normalized || "";
+}
+
+function buildLegacyGroupSize({ legacyGroupSize = "", currentGroupSize = "", desiredGroupSize = "" }) {
+    const legacy = toString(legacyGroupSize);
+    if (legacy) return legacy;
+
+    const current = toString(currentGroupSize);
+    const desired = toString(desiredGroupSize);
+
+    if (current && desired) return `Current: ${current} | Desired: ${desired}`;
+    if (current) return `Current: ${current}`;
+    if (desired) return `Desired: ${desired}`;
+
+    return "";
+}
+
 function unique(values) {
     return [...new Set(values)];
 }
 
 function mapFormSubmission(raw = {}) {
+    const respondentType = normalizeRespondentType(raw.respondent_type);
+    const currentGroupSize = toString(raw.current_group_size);
+    const desiredGroupSize = toString(raw.desired_group_size);
+    const groupSize = buildLegacyGroupSize({
+        legacyGroupSize: raw.group_size,
+        currentGroupSize,
+        desiredGroupSize
+    });
+
     const mapped = {
         source: {
             type: "website_form",
@@ -62,7 +106,10 @@ function mapFormSubmission(raw = {}) {
         groupInfo: {
             name: toString(raw.name),
             email: toString(raw.email),
-            groupSize: toString(raw.group_size),
+            respondentType,
+            groupSize,
+            currentGroupSize,
+            desiredGroupSize,
             systemPreference: toString(raw.system),
             audience: toString(raw.audience),
             ageBand: toString(raw.age_band)
@@ -108,6 +155,7 @@ function mapFormSubmission(raw = {}) {
     const safetySignals = inferSafetySignals({
         audience: mapped.groupInfo.audience,
         age_band: mapped.groupInfo.ageBand,
+        system: mapped.groupInfo.systemPreference,
         youth_mode: mapped.rawSignals.youthMode,
         content_boundaries: mapped.boundaries.contentBoundaries,
         must_haves: mapped.freeText.mustHaves,
@@ -118,7 +166,13 @@ function mapFormSubmission(raw = {}) {
         ...mapped,
         safetySignals,
         resolvedFlags: {
-            youthSafeMode: safetySignals.youthSafeMode
+            experienceProfile: safetySignals.experienceProfile,
+            contentSafetyMode: safetySignals.contentSafetyMode,
+            inferredYouthSafe: safetySignals.inferredYouthSafe,
+            youthSafeMode: safetySignals.youthSafeMode,
+            softerThemesMode: safetySignals.softerThemesMode,
+            fullSafeMode: safetySignals.fullSafeMode,
+            heroKidsMode: safetySignals.heroKidsMode
         },
         diagnostics: {
             hasMinimumViableSignal:
@@ -127,11 +181,14 @@ function mapFormSubmission(raw = {}) {
                 mapped.selections.genres.length > 0 ||
                 mapped.selections.environments.length > 0 ||
                 mapped.selections.gameplayInterests.length > 0 ||
-                mapped.selections.playerFantasy.length > 0
+                mapped.selections.playerFantasy.length > 0,
+            contradictionNotes: safetySignals.contradictionNotes || []
         }
     };
 }
 
 module.exports = {
-    mapFormSubmission
+    mapFormSubmission,
+    normalizeRespondentType,
+    buildLegacyGroupSize
 };

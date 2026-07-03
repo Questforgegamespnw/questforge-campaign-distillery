@@ -11,7 +11,7 @@ The goal is to preserve a **clean, composable, and scalable system of narrative 
 ## Core Principle
 
 > This system is not a content library.
-> It is a **grammar for building campaigns**.
+> It is a **grammar for building campaign identities that can later support many concrete Phase 2 concepts**.
 
 Each entry must function as a **reusable, combinable unit** that contributes meaningfully to output.
 
@@ -188,10 +188,10 @@ If it contains multiple ideas → split or discard
 
 ---
 
-### v0.9
+### v0.9.x
 
-* **no data expansion**
-* data layer is frozen while AI layer is built
+* **no broad data expansion**
+* data layer remains frozen while the Phase 1 Identity Pitch contract, Phase 2 Campaign Concept contract, client handoff, system recommendation, and export workflow are defined
 
 ---
 

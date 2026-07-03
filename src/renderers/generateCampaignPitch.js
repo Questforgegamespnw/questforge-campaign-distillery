@@ -46,7 +46,8 @@ function generateCampaignPitch(selections = {}) {
       ctx.systemA,
       ctx.systemB,
       ctx.experienceProfile,
-      ctx.label
+      ctx.label,
+      ctx.toneName
     )
   );
 

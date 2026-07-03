@@ -12,7 +12,7 @@ const coreVoiceMap = {
       "What looks settled from the outside starts coming apart the moment the group looks closely.",
       "The world is holding something back, and the pressure starts to build as soon as the group notices the gaps.",
       "What matters most has been hidden in plain sight.",
-      "The mystery is not whether something is wrong. It is how long that wrongness has been allowed to stand."
+      "The mystery is not whether the surface story holds. It is how long the deeper distortion has been allowed to stand."
     ],
     burden: [
       "The deeper the group digs, the harder it becomes to remain untouched by what they find.",
@@ -1362,7 +1362,7 @@ const toneVoiceMap = {
       "fun-first unpredictability",
       "energetic momentum",
       "chaotic opportunity",
-      "light pressure without heavy despair"
+      "dangerous momentum without oppressive despair"
     ],
     endingFlavor: [
       "end on momentum or possibility",
@@ -1458,6 +1458,164 @@ const toneVoiceMap = {
     ]
   },
 };
+
+const toneRenderMap = {
+  heroic: {
+    support: [
+      "At the table, the group finds a concrete way to push back through {system}.",
+      "Play keeps moving forward through {system}.",
+      "The group turns pressure into purposeful action through {system}."
+    ],
+    escalation: {
+      primary: ["Each success gives the group another way to shape what follows", "Pressure keeps rising, but so does the group's ability to answer it"],
+      adjacent: ["The altered emphasis gives the group new ground to claim", "Each step forward creates another meaningful chance to act"],
+      wildcard: ["Even the bolder premise leaves room for decisive action", "The stranger direction keeps opening difficult chances to make a difference"]
+    },
+    hook: {
+      primary: [
+        "The danger is real, but every choice gives the group another chance to shape what follows.",
+        "The first hard choice establishes that courage can still change the direction of the campaign.",
+        "What happens next depends on whether the group turns pressure into purposeful action."
+      ],
+      adjacent: [
+        "The shift creates a new front where determined action can still matter.",
+        "The alternate route gives the group another meaningful way to push back.",
+        "This emphasis makes the next decision feel like a chance to reclaim momentum."
+      ],
+      wildcard: [
+        "The bolder threat demands more from the group, but it also gives them something worth answering.",
+        "The stranger version raises the scale of the challenge without making resistance meaningless.",
+        "The wildcard asks for a decisive answer equal to its larger stakes."
+      ]
+    }
+  },
+  grimdark: {
+    support: [
+      "At the table, the campaign keeps exacting a price through {system}.",
+      "Play returns to {system}, and little comes through it cleanly.",
+      "The group's margin for error keeps shrinking through {system}."
+    ],
+    escalation: {
+      primary: ["Every gain leaves damage behind", "The group can keep moving, but never without losing something along the way"],
+      adjacent: ["The altered approach only changes where the cost lands", "Each step forward strips away another clean option"],
+      wildcard: ["The harsher premise makes every success feel temporary", "The stranger direction leaves scars even when the group wins"]
+    },
+    hook: {
+      primary: [
+        "Whatever the group preserves will be measured against what the effort strips away.",
+        "The first success will matter, but so will the damage required to reach it.",
+        "Every route forward leaves something behind that cannot be recovered cleanly."
+      ],
+      adjacent: [
+        "The change in emphasis does not reduce the cost; it only moves the wound.",
+        "The alternate route changes who pays first, not whether payment is required.",
+        "The pressure shifts, but the campaign remains defined by what cannot be saved."
+      ],
+      wildcard: [
+        "The bolder version offers no clean victory, only the question of what survives it.",
+        "The stranger version begins after the possibility of an undamaged outcome has already vanished.",
+        "The wildcard pushes the group toward a victory that may be indistinguishable from another kind of loss."
+      ]
+    }
+  },
+  psychological: {
+    support: [
+      "At the table, the group keeps reinterpreting the situation through {system}.",
+      "Play returns to {system}, with certainty growing harder to hold.",
+      "The pressure stays close to the characters through {system}."
+    ],
+    escalation: {
+      primary: ["Each success changes how the group understands what is happening", "The pressure keeps moving inward as certainty slips"],
+      adjacent: ["The altered emphasis makes familiar choices feel less stable", "Each step forward changes what the group thinks it can trust"],
+      wildcard: ["The stranger premise blurs the line between discovery and destabilization", "The deeper this direction goes, the less reliable the old answers feel"]
+    },
+    hook: {
+      primary: [
+        "Each step forward changes not only what the group knows, but what they can still trust.",
+        "The first answer matters because it changes the meaning of everything the group noticed before it.",
+        "Understanding the problem begins to alter the people trying to understand it."
+      ],
+      adjacent: [
+        "The shift turns external pressure into a more intimate uncertainty.",
+        "The altered emphasis makes familiar evidence feel newly personal and unstable.",
+        "What changes first is not the situation, but how the characters interpret it."
+      ],
+      wildcard: [
+        "The bolder version leaves the group unsure whether the problem changed, or they did.",
+        "The stranger version makes every interpretation feel provisional.",
+        "The wildcard closes the distance between discovery and destabilization."
+      ]
+    }
+  },
+  mythic: {
+    support: [
+      "At the table, the larger struggle takes concrete shape through {system}.",
+      "Play carries that significance forward through {system}.",
+      "Each decision becomes part of something larger through {system}."
+    ],
+    escalation: {
+      primary: ["Each choice gathers meaning beyond its immediate result", "The group's actions begin to echo through a larger pattern"],
+      adjacent: ["The altered emphasis reveals another face of the same larger struggle", "Each step forward carries consequences beyond the present moment"],
+      wildcard: ["The bolder premise pushes the group into a role larger than they first understood", "What begins as action soon becomes symbol, legacy, and consequence"]
+    },
+    hook: {
+      primary: [
+        "Each decision becomes part of a larger pattern whose meaning reaches beyond the immediate struggle.",
+        "The opening choice carries the weight of something older than the people making it.",
+        "What begins as immediate action quickly gathers the force of symbol and legacy."
+      ],
+      adjacent: [
+        "The shift reveals a different symbol inside the same world-shaping conflict.",
+        "The alternate direction exposes another face of the pattern already moving through the world.",
+        "This route gives the larger struggle a new form without reducing its significance."
+      ],
+      wildcard: [
+        "The bolder version turns the group's choices into signs of what the world may become.",
+        "The stranger version makes the group part of a pattern future generations may inherit.",
+        "The wildcard turns the next decision into omen, legacy, and consequence at once."
+      ]
+    }
+  },
+  lighthearted_chaotic: {
+    support: [
+      "At the table, the adventure keeps moving through {system}.",
+      "Play stays lively through {system}, even when the danger is real.",
+      "The campaign keeps creating new problems, openings, and momentum through {system}."
+    ],
+    escalation: {
+      primary: ["Every complication creates another opening to improvise", "The danger stays real, but the campaign keeps moving before anyone can settle in"],
+      adjacent: ["The shift sends the group toward new trouble with more routes through it", "Each step forward creates another problem worth chasing"],
+      wildcard: ["The stranger premise turns every setback into a messier route onward", "The trouble keeps multiplying, and so do the ways the group can answer it"]
+    },
+    hook: {
+      primary: [
+        "Every complication opens another route forward, usually messier and more dangerous than the last.",
+        "The first problem creates enough momentum to carry the group straight into the next one.",
+        "Danger stays real, but it arrives with options worth chasing."
+      ],
+      adjacent: [
+        "The altered emphasis creates a faster, stranger route into the next problem.",
+        "The new direction turns one complication into several lively possibilities.",
+        "This shift gives the group more trouble to improvise through and more ways to do it."
+      ],
+      wildcard: [
+        "The bolder version keeps the danger sharp and the possibilities moving even faster.",
+        "The stranger version turns setbacks into increasingly unlikely opportunities.",
+        "The wildcard keeps multiplying both the trouble and the routes through it."
+      ]
+    }
+  }
+};
+
+function resolvePitchToneProfile(toneName = "") {
+  const tone = String(toneName || "").toLowerCase();
+  if (tone.includes("grim")) return "grimdark";
+  if (tone.includes("psychological")) return "psychological";
+  if (tone.includes("mythic")) return "mythic";
+  if (tone.includes("lighthearted") || tone.includes("chaotic")) return "lighthearted_chaotic";
+  if (tone.includes("heroic")) return "heroic";
+  return "neutral";
+}
 
 const genreVoiceMap = {
   western_frontier: {
@@ -1672,6 +1830,8 @@ module.exports = {
   systemVoiceMap,
   environmentVoiceMap,
   toneVoiceMap,
+  toneRenderMap,
+  resolvePitchToneProfile,
   genreVoiceMap,
   getVoiceEntry,
   collectVoiceLines,

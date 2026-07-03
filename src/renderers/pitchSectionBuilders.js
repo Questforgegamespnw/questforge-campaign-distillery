@@ -13,8 +13,16 @@ const {
     pickOne,
     cleanOutputText,
     formatToneLabel,
-    getSystemPitchText
+    getSystemPitchText,
 } = require("./pitchCleanup");
+
+
+const {
+    environmentVoiceMap,
+    genreVoiceMap,
+    toneRenderMap,
+    resolvePitchToneProfile
+} = require("../voice/voiceMap");
 
 const {
     isYouthProfile,
@@ -80,7 +88,7 @@ function detectHookCategory({ coreIds = [], toneName = "", genreName = "", label
     return "disruption";
 }
 
-function buildHookLineByCategory(category, label = "primary") {
+function buildHookLineByCategory(category, label = "primary", toneProfile = "neutral") {
     const hookPools = {
         disruption: [
             "It starts small—easy to dismiss—until it stops staying small.",
@@ -175,6 +183,134 @@ function buildHookLineByCategory(category, label = "primary") {
         ]
     };
 
+    const toneHookLeads = {
+        heroic: {
+            primary: [
+                "The first real test arrives with a chance to matter.",
+                "Danger is already moving, but so is the opportunity to answer it.",
+                "The group enters at the moment determined action can still change the outcome.",
+                "The opening crisis gives the group a clear chance to stand for something.",
+                "The first obstacle arrives with a meaningful choice still within reach.",
+                "The campaign opens on danger the group can meet with purpose rather than resignation."
+            ],
+            adjacent: [
+                "A new front opens where the group can still make a meaningful difference.",
+                "The altered direction reveals another place where courage can change what follows.",
+                "The new emphasis gives the group another concrete way to protect what matters.",
+                "A different challenge brings another chance for deliberate action.",
+                "The shift opens a fresh route for the group to leave a meaningful mark."
+            ],
+            wildcard: [
+                "The bolder threat demands a larger answer from the group.",
+                "The stranger version raises the stakes without taking agency off the table.",
+                "The boldest route asks more of the group while making their choices matter more.",
+                "The wildcard opens with a difficult chance to change the direction of events.",
+                "The largest threat arrives with an equally large reason to act."
+            ]
+        },
+        grimdark: {
+            primary: [
+                "The damage has already started before anyone understands its full shape.",
+                "By the time the group arrives, the clean options are already disappearing.",
+                "The first decision comes after something important has begun to fail.",
+                "The campaign opens after the damage has already outrun the easy remedies.",
+                "Before the group can act, the situation has already taken something away.",
+                "The first clear choice appears only after the cost has begun to accumulate."
+            ],
+            adjacent: [
+                "The altered pressure reveals its cost sooner than expected.",
+                "Another route opens, but it is no cleaner than the first.",
+                "The changed emphasis exposes a different wound in the same failing situation.",
+                "A second path appears only after the cost of the first becomes visible.",
+                "The alternate route offers movement, but no relief from what it demands."
+            ],
+            wildcard: [
+                "The bolder version begins where compromise has already failed.",
+                "The stranger direction makes the existing damage harder to contain.",
+                "The wildcard begins after the last reasonable compromise has already narrowed.",
+                "The boldest route turns existing loss into the price of every next decision.",
+                "The stranger version exposes how little remains untouched by the damage."
+            ]
+        },
+        psychological: {
+            primary: [
+                "The first contradiction changes how the group reads everything that follows.",
+                "What unsettles the group first is not the danger, but how familiar it feels.",
+                "The opening discovery makes certainty feel personal and unstable.",
+                "The first clue unsettles the group's understanding of something they thought they knew.",
+                "The campaign opens with a detail that changes meaning every time it is reconsidered.",
+                "The earliest discovery makes the characters question their own reading of events."
+            ],
+            adjacent: [
+                "The altered emphasis turns a familiar clue into a more intimate uncertainty.",
+                "The shift becomes visible when the characters stop trusting the same details.",
+                "A familiar answer starts feeling different once the new emphasis takes hold.",
+                "The alternate route makes an external mystery feel uncomfortably personal.",
+                "The changed focus unsettles what the characters believed was reliable."
+            ],
+            wildcard: [
+                "The bolder version begins by making interpretation itself unreliable.",
+                "The stranger direction closes the distance between the mystery and the people studying it.",
+                "The wildcard opens by making the characters part of the contradiction they are tracing.",
+                "The boldest route turns uncertainty into something the group carries with them.",
+                "The stranger version begins where observation and involvement can no longer be separated."
+            ]
+        },
+        mythic: {
+            primary: [
+                "The first sign feels older and more consequential than the present crisis.",
+                "The group steps into a moment already carrying the weight of a larger pattern.",
+                "What begins here immediately points beyond the people standing inside it.",
+                "The opening event feels like one chapter in a story older than anyone present.",
+                "The first choice carries echoes of a pattern the world has seen before.",
+                "The campaign begins with a moment already gathering the weight of legend."
+            ],
+            adjacent: [
+                "The altered direction reveals another symbol inside the same larger struggle.",
+                "A different path opens onto consequences larger than the immediate moment.",
+                "The new emphasis reveals a second thread in the same enduring pattern.",
+                "Another route gives the present struggle a wider symbolic meaning.",
+                "The altered direction connects the group's next choice to an older legacy."
+            ],
+            wildcard: [
+                "The bolder version arrives like an omen the world can no longer ignore.",
+                "The stranger direction turns the first decision into part of a larger legacy.",
+                "The wildcard begins with a choice that feels destined to outlive the people making it.",
+                "The boldest route opens on a sign whose meaning reaches far beyond the present crisis.",
+                "The stranger version makes the group's first move echo through a much larger pattern."
+            ]
+        },
+        lighthearted_chaotic: {
+            primary: [
+                "The first complication arrives with too much momentum to ignore.",
+                "Trouble appears early, loudly, and with several tempting ways to chase it.",
+                "The adventure begins when one manageable problem becomes three interesting ones.",
+                "The campaign opens with a promising idea immediately attracting lively complications.",
+                "The first opportunity arrives carrying more trouble than anyone planned for.",
+                "The group gets moving when a simple job suddenly develops several tempting directions."
+            ],
+            adjacent: [
+                "The altered direction finds a faster route into trouble and opportunity.",
+                "A new complication sends the group moving before anyone can overplan it.",
+                "The changed emphasis turns the next problem into a lively opportunity to improvise.",
+                "Another route appears just as the plan becomes interestingly obsolete.",
+                "The alternate direction gives the group fresh trouble and several ways to chase it."
+            ],
+            wildcard: [
+                "The bolder version starts with the most dangerous opportunity on the table.",
+                "The stranger direction turns the first setback into several lively routes forward.",
+                "The wildcard begins with an opportunity too strange and useful to leave alone.",
+                "The boldest route turns immediate trouble into a fast-moving chain of possibilities.",
+                "The stranger version starts by giving the group too many exciting problems at once."
+            ]
+        }
+    };
+
+    const toneCandidates = toneHookLeads[toneProfile]?.[label] || [];
+    if (toneCandidates.length) {
+        return pickOne(toneCandidates, "", true);
+    }
+
     if (label === "adjacent") {
         return pickOne(adjacentTweaks[category], pickOne(hookPools[category], ""));
     }
@@ -186,20 +322,133 @@ function buildHookLineByCategory(category, label = "primary") {
     return pickOne(hookPools[category], "");
 }
 
+
+function getSettingHookMaterial({ genre = {}, environments = [] }) {
+    const genreId = cleanName(genre?.id || "").toLowerCase();
+    const genreVoice = genreVoiceMap[genreId] || {};
+
+    const environmentEntries = uniqueByName(environments)
+        .map((entry) => cleanName(entry?.id || "").toLowerCase())
+        .filter(Boolean);
+
+    const environmentImagery = environmentEntries.flatMap((id) =>
+        environmentVoiceMap[id]?.imagery || []
+    );
+
+    const environmentGameplay = environmentEntries.flatMap((id) =>
+        environmentVoiceMap[id]?.gameplay || []
+    );
+
+    return {
+        environmentImagery,
+        environmentGameplay,
+        genreImagery: genreVoice.imagery || [],
+        genreFraming: genreVoice.framing || []
+    };
+}
+
+function buildSettingHookFollowup({ genre = {}, environments = [], label = "primary" }) {
+    const material = getSettingHookMaterial({ genre, environments });
+    const environmentImagery = pickOne(material.environmentImagery, "");
+    const environmentGameplay = pickOne(material.environmentGameplay, "");
+    const genreImagery = pickOne(material.genreImagery, "");
+    const genreFraming = pickOne(material.genreFraming, "");
+
+    const environmentPools = {
+        primary: [
+            environmentImagery ? `The first clues emerge through ${environmentImagery}.` : "",
+            environmentGameplay || ""
+        ],
+        adjacent: [
+            environmentGameplay || "",
+            environmentImagery ? `That shift becomes visible through ${environmentImagery}.` : ""
+        ],
+        wildcard: [
+            environmentImagery ? `The stranger edge shows itself through ${environmentImagery}.` : "",
+            environmentGameplay || ""
+        ]
+    };
+
+    const genreFallbackPools = {
+        primary: [
+            genreImagery ? `The campaign grounds that tension in ${genreImagery}.` : "",
+            genreFraming ? `The campaign grounds that tension in ${genreFraming}.` : ""
+        ],
+        adjacent: [
+            genreImagery ? `The altered emphasis brings ${genreImagery} closer to the foreground.` : "",
+            genreFraming ? `That change also draws on ${genreFraming}.` : ""
+        ],
+        wildcard: [
+            genreImagery ? `The bolder interpretation leans into ${genreImagery}.` : "",
+            genreFraming ? `The bolder interpretation leans into ${genreFraming}.` : ""
+        ]
+    };
+
+    const environmentCandidates = (environmentPools[label] || environmentPools.primary).filter(Boolean);
+    if (environmentCandidates.length) {
+        return pickOne(environmentCandidates, "", true);
+    }
+
+    return pickOne((genreFallbackPools[label] || genreFallbackPools.primary).filter(Boolean), "", true);
+}
+
 ///Main functions below///
 
 function buildTitle({ genreName, coreAName, systemAName, label }) {
-    const corePart = coreAName || "Hidden Truth";
-    const genrePart = genreName || "Campaign";
-    const systemPart = systemAName || "Intrigue";
+    const coreId = cleanName(coreAName).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+    const systemId = cleanName(systemAName).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 
-    const titlesByLabel = {
-        primary: `${corePart} in ${genrePart}`,
-        adjacent: `${systemPart} Beneath the Surface`,
-        wildcard: `The Cost of Knowing`
+    const coreTitles = {
+        survival_against_overwhelming_force: "Against Impossible Odds",
+        power_comes_from_within: "The Power Awakening",
+        entropy_decay: "While the World Fails",
+        the_endless_siege: "The Last Line Holds",
+        hidden_truth: "The Hidden Pattern",
+        lost_knowledge: "What the Ruins Remember",
+        investigators_burden: "The Weight of the Truth",
+        creation_vs_destruction: "What Must End",
+        war_of_ideologies: "The War for What Comes Next",
+        power_vacuum: "The Empty Throne",
+        fragmented_self: "The Fractured Self",
+        becoming_something_else: "What We Are Becoming",
+        what_is_humanity: "The Human Question",
+        power_has_a_cost: "The Price of Power",
+        cycle_recurrence: "The Turning Wheel",
+        the_world_is_alive: "The Living World"
     };
 
-    return titlesByLabel[label] || `${corePart} and ${systemPart}`;
+    const systemTitles = {
+        tactical_positioning_zone_control: "Lines of Battle",
+        resource_scarcity: "What Remains",
+        asymmetrical_boss_design: "The Unfair Fight",
+        clue_web: "A Web of Clues",
+        exploration_discovery_loop: "Beyond the Known Road",
+        influence_social_leverage: "Leverage and Allegiance",
+        hidden_information: "Behind Closed Doors",
+        alliance_vs_betrayal: "The Price of Allegiance",
+        faction_reputation: "Names Carry Weight",
+        living_world_reaction: "A World That Answers",
+        upgrade_through_risk: "Power Worth the Risk",
+        corruption_transformation_track: "The Shape of Change",
+        modular_build_system: "Built by Choice"
+    };
+
+    const fallbackCore = humanizeName(coreAName || genreName || "Campaign");
+    const fallbackSystem = humanizeName(systemAName || coreAName || "Campaign");
+
+    if (label === "primary") {
+        return coreTitles[coreId] || fallbackCore;
+    }
+
+    if (label === "adjacent") {
+        return systemTitles[systemId] || fallbackSystem;
+    }
+
+    if (label === "wildcard") {
+        return coreTitles[coreId] || fallbackCore;
+    }
+
+    return coreTitles[coreId] || systemTitles[systemId] || fallbackCore;
 }
 
 function buildOpening({ label, genreName, toneName, envNames, coreIds = [], experienceProfile }) {
@@ -303,23 +552,14 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/^understanding what is really happening comes with consequences/i, "understanding the truth carries consequences")
         .trim();
 
-    const includeCleanRaw = cleanIncludeText(includeNotes);
-    const includeClean = dedupePhrases(includeCleanRaw);
-
-    const tonePhrase = includeClean
-        .toLowerCase()
-        .replace(/keep it\s*/g, "")
-        .replace(/\/\s*kid-safe/g, "")
-        .trim();
-
     const followupTransitions = [
         "Alongside that,",
         "At the same time,",
         "Running underneath it all,",
         "What makes it harder is that",
         "What gives it extra weight is that",
-        "What follows is that",
-        
+        "Beneath that,",
+        "Complicating matters,"
     ];
 
     const transition = pickOne(followupTransitions, "At the same time,");
@@ -331,10 +571,6 @@ function buildAbout(coreA, coreB, includeNotes, experienceProfile) {
         .replace(/\.\s*/g, ". ")
         .replace(/(^|\.\s)([a-z])/g, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`)
         .trim();
-
-    if (tonePhrase) {
-        text += ` The overall feel stays ${tonePhrase}.`;
-    }
 
     text = softenIdentityPhrase(text, experienceProfile);
     text = cleanOutputText(text);
@@ -401,7 +637,7 @@ function softenRepeatedConcept(action = "") {
     return action;
 }
 ///End of buildPlayersDo Helpers///
-function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") {
+function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary", toneName = "") {
     const systemALead = getSystemPitchText(systemA);
     const systemBLead = getSystemPitchText(systemB);
 
@@ -409,7 +645,7 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
         primary: [
             "You’ll spend most of your time",
             "Most of play is about",
-            "A lot of play comes from",
+            "Play frequently returns to",
             "Play usually revolves around",
             "Most sessions center on",
             "The group spends most of its time",
@@ -419,30 +655,32 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
             "The campaign leans heavily on",
             "A typical session focuses on",
             "The core of play is",
-            "Much of the gameplay centers on"
+            "The gameplay repeatedly centers on"
         ],
 
         adjacent: [
             "Play here tends to revolve around",
-            "Most sessions start focusing on",
+            "Most sessions focus on",
             "The experience shifts toward",
-            "This version puts more weight on",
             "You’ll find the group spending more time",
-            "This version leans more into",
             "The campaign starts focusing more on",
-            "There’s a stronger emphasis on"
+            "There’s a stronger emphasis on",
+            "The alternate direction makes more room for",
+            "At the table, the change is most visible in",
+            "This take repeatedly returns to"
         ],
 
         wildcard: [
-            "Here, a lot of the tension comes from",
-            "The campaign really comes alive through",
+            "Here, the tension comes from",
+            "The campaign comes alive through",
             "Most of the pressure shows up through",
             "What defines play here is",
-            "This version gets its edge from",
             "Sessions tend to focus on",
-            "This pushes play toward",
+            "The wildcard pushes play toward",
             "The campaign leans hardest into",
-            "What really drives this version is"
+            "What really drives this direction is",
+            "Its boldest table-facing choice is",
+            "The stranger version keeps returning to"
         ],
 
         default: [
@@ -451,26 +689,37 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
         ]
     };
 
-    const connectiveLines = [
-        "That pressure shows up quickly once play is underway",
-        "The rhythm stays active, but the situation keeps getting harder to read",
-        "What starts as manageable play gets more unstable over time",
-        "The group gets room to act, but never without consequences pushing back",
-        "What looks straightforward early on gets messier the longer play continues",
-        "The play stays active and tangible, even as the bigger picture starts shifting",
-        "The table experience keeps tightening as the group pushes further in",
-        "Each step forward opens up more to deal with, not less",
-        "The moment-to-moment play stays concrete, but the wider situation keeps changing",
-        "The campaign keeps turning simple actions into larger complications",
-        "The situation keeps evolving faster than the group can fully stabilize it",
-        "Even small decisions start to carry larger consequences",
-        "The campaign keeps raising the stakes around what the group is already doing",
-        "What feels manageable at first becomes harder to control",
-        "The pressure builds in ways that are hard to predict",
-        "The more the group commits, the more complicated things become",
-        "Each success changes what comes next",
-        "The system pushes back harder the further the group goes"
-    ];
+    const connectiveLinesByLabel = {
+        primary: [
+            "That pressure shows up quickly once play is underway",
+            "What starts as manageable play gets more unstable over time",
+            "The group gets room to act, but never without consequences pushing back",
+            "The table experience keeps tightening as the group pushes further in",
+            "Even small decisions start to carry larger consequences",
+            "Each success changes what comes next"
+        ],
+        adjacent: [
+            "The wider situation keeps changing around otherwise concrete actions",
+            "Each step forward opens up more to deal with, not less",
+            "The alternate approach makes familiar problems harder to control",
+            "What looks straightforward early on grows more complicated in play",
+            "The shift becomes clearer as the group commits to it",
+            "The campaign keeps raising the stakes around the new emphasis"
+        ],
+        wildcard: [
+            "The pressure builds in ways the group cannot fully predict",
+            "The stranger premise keeps turning simple actions into larger complications",
+            "The situation evolves faster than the group can completely stabilize it",
+            "The more the group commits, the less familiar the consequences become",
+            "The system pushes back harder the further this direction goes",
+            "What feels manageable at first becomes increasingly difficult to contain"
+        ],
+        default: [
+            "The situation keeps changing as the group pushes further",
+            "Each decision alters what comes next"
+        ]
+    };
+
 
     const secondaryOpeners = [
         "You’ll also spend time",
@@ -502,19 +751,17 @@ function buildPlayersDo(systemA, systemB, experienceProfile, label = "primary") 
     const secondAction = systemBLead && systemBLead !== systemALead
         ? makeActionPhraseCompatible(systemBLead)
         : "";
-    const escalation = pickOne(connectiveLines, "");
+    const toneProfile = resolvePitchToneProfile(toneName);
+    const toneEscalationPool = toneRenderMap[toneProfile]?.escalation?.[label] || [];
+    const escalation = toneEscalationPool.length
+        ? pickOne(toneEscalationPool, "")
+        : pickOne(connectiveLinesByLabel[label] || connectiveLinesByLabel.default, "");
     const { text: secondText, hasSubject: secondHasSubject } = normalizeActionText(secondAction);
 
     const joiners = [
         " while also ",
-        " and ",
-        " as well as ",
         ", alongside ",
-        ", often involving ",
-        " but ",
-        " even as ",
-        " especially when "
-        
+        ", with an additional focus on "
     ];
     const joiner = pickOne(joiners, " while also ", true);
 
@@ -625,37 +872,67 @@ function buildDistinctHook({
         label
     });
 
-    const hookLead = buildHookLineByCategory(hookCategory, label);
+    const toneProfile = resolvePitchToneProfile(toneName);
+    const hookLead = buildHookLineByCategory(hookCategory, label, toneProfile);
 
     const followupPools = {
         disruption: [
-            "From there, the campaign starts widening around the first break instead of settling back down.",
-            "From there, every attempt to steady the situation reveals something else already slipping.",
-            "From there, the first fracture turns into a larger pattern the group cannot ignore."
+            "The first break widens instead of settling back down.",
+            "Every attempt to steady the situation reveals something else already slipping.",
+            "What looks like a single fracture soon becomes a larger pattern the group cannot ignore.",
+            "Stability proves temporary, and each repair exposes a deeper fault."
         ],
         pressure: [
-            "From there, every delay, compromise, or hard choice carries a heavier price than the last one.",
-            "From there, the situation keeps tightening faster than anyone can solve it cleanly.",
-            "From there, the campaign keeps asking what can still be protected before the cost climbs again."
+            "Every delay, compromise, or hard choice carries a heavier price than the last one.",
+            "The situation tightens faster than anyone can solve it cleanly.",
+            "The central question becomes what can still be protected before the cost climbs again.",
+            "Even successful choices leave the group with less room than before."
         ],
         mystery: [
-            "From there, every answer risks opening a larger contradiction instead of closing the question.",
-            "From there, the truth keeps arriving in pieces that are useful, incomplete, and hard to trust all at once.",
-            "From there, the group is left sorting through answers that only make the larger pattern stranger."
+            "Every answer risks opening a larger contradiction instead of closing the question.",
+            "The truth arrives in pieces that are useful, incomplete, and difficult to trust all at once.",
+            "The group is left sorting through answers that only make the larger pattern stranger.",
+            "Each discovery clarifies one detail while destabilizing the larger picture."
         ],
         world_state: [
-            "From there, every choice lands inside a world that is already shifting around them.",
-            "From there, the group is dealing with a setting already changing under real strain.",
-            "From there, the story keeps pushing into a larger instability no one can fully step outside of."
+            "Every choice lands inside a world already shifting around the group.",
+            "The setting is changing under real strain, whether the group is ready or not.",
+            "The story keeps pressing into an instability no one can fully step outside of.",
+            "What happens next depends as much on the changing world as on the group’s intentions."
         ],
         character: [
-            "From there, the conflict starts shaping the people caught inside it as much as the world around them.",
-            "From there, what is happening outside the group stops staying separate from what it is doing to them.",
-            "From there, the story keeps pressing on identity, change, and what the characters are becoming under strain."
+            "The conflict shapes the people caught inside it as much as the world around them.",
+            "External pressure stops staying separate from what it is doing to the characters.",
+            "Identity, change, and what the characters are becoming remain under constant strain.",
+            "The longer the campaign runs, the harder it becomes to separate survival from transformation."
         ]
     };
+    const followupIndexesByLabel = {
+        primary: [0, 1],
+        adjacent: [2],
+        wildcard: [3],
+        default: [0, 1, 2, 3]
+    };
+    const followupCandidates = (followupPools[hookCategory] || []).filter((_, index) =>
+        (followupIndexesByLabel[label] || followupIndexesByLabel.default).includes(index)
+    );
+    const thematicFollowup = pickOne(followupCandidates, "");
+    const settingFollowup = buildSettingHookFollowup({
+        genre,
+        environments,
+        label
+    });
+    const toneFollowup = pickOne(
+        toneRenderMap[toneProfile]?.hook?.[label] || [],
+        "",
+        true
+    );
 
-    const followup = pickOne(followupPools[hookCategory], "");
+    const followup = pickOne(
+        [toneFollowup, thematicFollowup, settingFollowup].filter(Boolean),
+        toneFollowup || thematicFollowup || settingFollowup || "",
+        true
+    );
 
     let text = [hookLead, followup]
         .filter(Boolean)

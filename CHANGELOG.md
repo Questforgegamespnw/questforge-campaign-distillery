@@ -2,6 +2,379 @@
 
 All notable changes to this project will be documented in this file.
 
+---
+
+## v0.9.1 — Two-Phase Client Delivery Workflow
+
+### Summary
+
+Implemented the first complete manual production workflow for both phases of QuestForge Campaign Distillery.
+
+The system can now process a client submission, generate and validate three Phase 1 Identity Pitches, export a polished client-facing PDF, develop three Phase 2 Campaign Concepts from a selected identity, validate those concepts, and export a full Campaign Concept packet.
+
+The workflow remains intentionally human-in-the-loop. AI interaction is performed manually through ChatGPT Plus, while prompt construction, response packaging, source binding, validation, status tracking, and client-document generation are automated locally.
+
+---
+
+### Phase 1 Manual AI Round Trip
+
+- Added a combined Identity Pitch polish workflow for Primary, Adjacent, and Wildcard.
+- Replaced the previous three-prompt, three-chat, multi-file response process with:
+  - one generated Markdown prompt;
+  - one ChatGPT conversation;
+  - one combined JSON response;
+  - one local validation command.
+- Added a dedicated round-trip workspace for each submission.
+- Added round-trip status tracking with a clearly recorded next action.
+- Preserved independent validation for all three Identity Pitch directions.
+- Preserved deterministic fallback content when AI output fails validation.
+- Added source-bound SHA-256 fingerprints to prevent responses from being accepted against the wrong campaign input.
+- Added tolerance for accidental Markdown fences and wrapper text around AI JSON responses.
+
+---
+
+### Phase 1 Client PDF Export
+
+- Added a dedicated Identity Pitch PDF exporter using JavaScript, HTML, CSS, and Puppeteer.
+- Added a browser-previewable HTML version alongside each PDF.
+- Added a five-page client packet containing:
+  - cover and campaign-stage explanation;
+  - Primary Identity Pitch;
+  - Adjacent Identity Pitch;
+  - Wildcard Identity Pitch;
+  - selection and feedback guidance.
+- Derived the document theme from the existing QuestForge website styling:
+  - charcoal-purple surfaces;
+  - warm cream interiors;
+  - muted gold accents;
+  - Georgia-style serif typography.
+- Added optional client-name and submission-reference metadata.
+- Added a dedicated client-delivery folder separate from internal prompts and validation files.
+
+---
+
+### Phase 2 Campaign Concept Development
+
+- Implemented the Phase 2 Campaign Concept source layer under `src/ai/phase2`.
+- Added canonical Phase 2 input construction.
+- Added Phase 2 input validation.
+- Added structured AI prompt generation.
+- Added raw-response parsing and JSON extraction.
+- Added structural and semantic Campaign Concept validation.
+- Added response evaluation with accepted, rejected, warning, and fallback states.
+- Added formal Campaign Concept schema constants and JSON Schema.
+- Added support for:
+  - `core_interpretation`;
+  - `alternate_situation`;
+  - `distinctive_interpretation`;
+  - optional single-concept generation mode.
+- Added required support for:
+  - starting situation;
+  - central conflict;
+  - recurring campaign engine;
+  - active factions or forces;
+  - visible escalation;
+  - distinctive campaign element;
+  - meaningful player choices;
+  - system and setting implementation notes.
+- Added safeguards against:
+  - fixed campaign endings;
+  - mandatory adventure sequences;
+  - predetermined solutions;
+  - assigned player decisions;
+  - excessive lore;
+  - unsupported identity, genre, or tone drift.
+
+---
+
+### Phase 2 Manual AI Round Trip
+
+- Added a source-bound Phase 2 handoff file.
+- Added support for recording:
+  - selected Identity Pitch;
+  - liked elements;
+  - elements to avoid;
+  - requested changes;
+  - system preferences;
+  - setting preferences;
+  - campaign-length and player-count context;
+  - safety and audience constraints;
+  - operator notes.
+- Added one-prompt and one-response manual ChatGPT workflow for all three Campaign Concept variants.
+- Added handoff fingerprinting to detect changes made after prompt generation.
+- Added validation that the Phase 2 handoff still matches the approved Phase 1 Identity Pitch.
+- Added dedicated Phase 2 validation, summary, and final-output files.
+- Added per-direction Phase 2 folders so Primary, Adjacent, and Wildcard may be explored independently without collisions.
+
+---
+
+### Phase 2 Client PDF Export
+
+- Added a dedicated Campaign Concept PDF exporter.
+- Added a browser-previewable HTML version alongside each PDF.
+- Added a twelve-page client packet containing:
+  - cover;
+  - reading guide and selected campaign identity;
+  - three pages for each Campaign Concept;
+  - final comparison and selection guidance.
+- Each concept packet includes:
+  - one-sentence premise;
+  - campaign pitch;
+  - starting situation;
+  - central conflict;
+  - recurring player activity;
+  - campaign engine;
+  - reason the crisis is happening now;
+  - factions and forces;
+  - escalation;
+  - distinctive element;
+  - meaningful choices;
+  - system and setting implementation notes;
+  - opening hook.
+- Reused the Phase 1 QuestForge visual language while allowing greater information density.
+
+---
+
+### Email and Client Communication Templates
+
+- Added professional email templates for:
+  - initial form receipt;
+  - Phase 1 Identity Pitch delivery;
+  - Phase 2 Campaign Concept delivery.
+- Clarified the action requested from clients at each stage.
+- Added language explaining that Campaign Concept packets are best reviewed before a guided follow-up meeting.
+
+---
+
+### Production Folder Architecture
+
+- Established a permanent submission-first storage model.
+
+Authoritative intake and deterministic records now belong under:
+
+```text
+submissions/<submission-slug>/
+  00_RAW_SUBMISSION.json
+  01_NORMALIZED_SUBMISSION.json
+  02_PIPELINE_RESULT.json
+  submission-status.json
+```
+
+Generated and client-facing artifacts now belong under:
+
+```text
+exports/submissions/<submission-slug>/
+  phase-1/
+    round-trip/
+    client-delivery/
+
+  phase-2/
+    <selected-direction>/
+      round-trip/
+      client-delivery/
+```
+- Removed active client work from the conceptual responsibility of misc.
+- Kept internal AI prompts, pasted responses, validation reports, and final client deliverables clearly separated.
+- Standardized one stable submission slug across every stage.
+- Added support for alternate export roots during tests and migrations.
+
+---
+
+### Script Architecture Cleanup
+
+Reorganized scripts into functional folders:
+
+```text
+scripts/
+  diagnostics/
+  docs/
+  fixtures/
+  phase1/
+  phase2/
+  shared/
+  tests/
+  workflows/
+```
+- Separated operator workflows from tests and diagnostics.
+- Added shared project-root path resolution.
+- Added canonical submission and export path helpers.
+- Consolidated repeated JSON and text file utilities.
+- Consolidated stable serialization and SHA-256 fingerprint generation.
+- Consolidated AI-response JSON extraction.
+- Consolidated command-line argument parsing.
+- Consolidated round-trip artifact paths and status updates.
+- Replaced fragile relative-path climbing with project-root-based resolution.
+
+---
+
+### Submission Workflow Improvements
+- Updated single-submission and batch-submission processing.
+- Added permanent raw-submission capture.
+- Added normalized-submission export.
+- Added deterministic pipeline-result export.
+- Added submission-level status tracking.
+- Updated printed next-step commands to use the reorganized script locations and canonical folders.
+
+---
+
+### Test Suite Restructure
+
+- Reorganized tests into:
+  pipeline tests;
+  Phase 1 tests;
+  Phase 2 tests;
+  exporter tests;
+  shared utility tests.
+- Added a shared test runner.
+- Added direct regression tests for both manual AI round trips.
+- Added tests for:
+  fingerprint stability;
+  source mismatch rejection;
+  response-envelope validation;
+  fenced JSON extraction;
+  Phase 2 handoff drift;
+  Phase 2 input validity;
+  exporter normalization;
+  HTML document construction.
+- Rewrote batch pipeline testing to use the public runCampaignPipelineFromForm entry point.
+- Retired the obsolete three-response AI import test.
+- Stopped routine tests from writing diagnostic output files into misc.
+
+---
+
+### PDF Exporter Modularization
+
+- Moved reusable document-generation logic into:
+
+```text
+src/exporters/
+  shared/
+  phase1/
+  phase2/
+```
+
+- Split input normalization from HTML construction.
+- Split HTML construction from Puppeteer PDF rendering.
+- Reduced PDF workflow scripts to thin command-line entry points.
+- Kept visual styles under the root templates directory.
+- Added shared HTML escaping, date formatting, file-writing, and browser-rendering utilities.
+- Added exporter tests that do not require launching Chromium.
+
+---
+
+### Documentation and Architecture
+- Added professional email-template documentation.
+- Added the Phase 2 schema and AI-generation contract package.
+- Added a detailed Mermaid program and file-architecture map.
+- Documented the manual-transport, automated-processing AI model.
+- Clarified that the current business workflow does not require direct API integration.
+- Added migration checklists for each script-cleanup pass.
+
+---
+
+### Future Work Identified
+- Formalize the Identity Selection Record as a validated schema.
+- Add a structured system-recommendation stage.
+- Add a concise Phase 2 meeting/comparison worksheet.
+- Add lifecycle status updates across Phase 1 and Phase 2 delivery.
+- Add a matchmaking and compatibility-pool pathway for individual players seeking groups.
+- Consider automated notifications when new compatible player profiles enter the matchmaking pool.
+- Add Formspree or intake-platform automation when business scale justifies it.
+
+---
+
+## v0.9.0 — Identity Discovery Architecture
+
+### Architectural Clarification
+
+- Reclassified the existing three-direction output as **Phase 1 Identity Pitches**.
+- Defined Primary, Adjacent, and Wildcard as identity directions rather than finished campaign concepts.
+- Clarified that Phase 1 identifies thematic promise, emotional direction, and style of play while remaining system-agnostic and setting-agnostic.
+- Defined **Phase 2 Campaign Concept Development** as the downstream stage that adds a concrete setting situation, conflict, starting position, factions or forces, campaign engine, escalation, and player-facing choices.
+- Established the working principle:
+
+  > Phase 1 discovers what the campaign wants to be.  
+  > Phase 2 decides what is actually happening and what the players can change.
+
+### Documentation
+
+- Updated root and developer documentation to use the two-phase model.
+- Added explicit phase boundaries for deterministic rendering and AI behavior.
+- Reserved **Campaign Concept Pitch** terminology for Phase 2 outputs.
+- Documented that current runtime filenames and exported function names remain unchanged during v0.9.x.
+
+### Behavior
+
+- No intentional runtime renaming or output behavior change in this documentation pass.
+- Existing `campaignPitch`-style identifiers remain compatibility names for the Phase 1 implementation.
+
+---
+
+## v0.8.2 — Voice Variation + Assembly Audit
+
+### 🎯 Summary
+This patch improves first-impression quality while tightening the pitch assembly layer around explicit phrase types and safer sentence shapes.
+
+### ✅ Improved
+- Expanded structural and tonal variation across Pitch, Players Do, and Hook output
+- Strengthened genre and environment routing so setting details reinforce the selected campaign direction
+- Reduced repeated opener patterns and generic “something is wrong” phrasing
+- Differentiated Primary, Adjacent, and Wildcard rhythm through sentence structure:
+  - Primary is more definitive and marketable
+  - Adjacent communicates a clear shift in gameplay emphasis
+  - Wildcard uses bolder or stranger framing
+
+### 🧠 Assembly Audit
+- Classified pitch concepts before assembly as:
+  - campaign identity phrases
+  - activity / process phrases
+  - abstract pressure / theme phrases
+  - proposition / clause phrases
+- Replaced templates that depended on dangling articles or prepositions
+- Removed routine reliance on the generic `campaign defined by` fallback
+- Added separate bare-clause and nominalized-clause routing for proposition concepts
+- Rebalanced pitch construction so campaign identity leads and system behavior supports it
+- Reduced cleanup responsibility to surface corrections rather than grammar repair
+
+### 🧪 Validation
+- Full batch test suite: **24/24 passing**
+- Verified against three live campaign submissions
+- No regressions found in youth-safe routing, tone handling, or prior variation work
+
+### 🚀 Result
+v0.8.2 moves the renderer from broadly stable phrasing to controlled, phrase-aware assembly with stronger direction identity and less dependence on post-hoc cleanup.
+
+---
+
+## v0.8.1 — Pipeline Integrity + Youth System Activation
+
+### 🎯 Summary
+This patch finalizes the core pipeline wiring and activates the youth experience layer, resolving several critical gaps discovered during end-to-end AI expansion testing.
+
+### ✅ Added / Fixed
+- Integrated `resolveCampaignContext` into main pipeline flow
+  - Ensures experience profile (standard vs youth) is respected before selection
+- Activated frame crosswalk system for youth experiences
+  - Youth-safe core frames now correctly supplement and reshape candidate pools
+- Fixed core frame resolution to use profile-aware pools
+  - Prevents missing data when resolving youth-specific frames
+- Added `pitchText` support to youth core frames
+  - Enables proper narrative language generation for youth outputs
+
+### 🧪 Validation Improvements
+- Full pipeline smoke tests now validate:
+  - experience profile detection
+  - crosswalk activation
+  - correct data pool resolution
+  - AI prompt input quality
+
+### ⚠️ Known Gaps (Next Iteration)
+- Youth voice still inherits adult phrasing patterns
+- Description text occasionally bleeds into player-facing output
+- Cleanup layer is not yet age-aware
+
+### 🧠 Impact
+The system now maintains consistent signal flow from intake → AI expansion across both standard and youth experiences. This marks the transition from structural stability to voice and output quality refinement.
 
 ---
 

@@ -1,0 +1,145 @@
+# QuestForge Campaign Distillery — Program Architecture
+
+← [Back to Developer Documentation](../README.md)
+
+## Scope
+
+This document describes the implemented v0.9.1 architecture.
+
+Solid workflow stages are implemented. Dashed downstream stages remain planned.
+
+## Architecture Diagram
+
+```mermaid
+flowchart TD
+classDef implemented fill:#edf9ef,stroke:#3d7a46,color:#17361d
+classDef human fill:#fff0f6,stroke:#a24f77,color:#4f1830
+classDef artifact fill:#e8f8f8,stroke:#2f7d7d,color:#143d3d
+classDef validation fill:#ffecec,stroke:#a54343,color:#4d1717
+classDef planned fill:#f0f0f0,stroke:#777,stroke-dasharray:6 4,color:#333
+classDef data fill:#eef6ff,stroke:#3b6ea5,color:#0f2740
+classDef process fill:#f7f7f7,stroke:#555,color:#111
+
+FORM["Client Form / JSON"]:::data
+RAW["submissions/&lt;slug&gt;/00_RAW_SUBMISSION.json"]:::artifact
+NORMAL["01_NORMALIZED_SUBMISSION.json"]:::artifact
+PIPE["02_PIPELINE_RESULT.json"]:::artifact
+
+FORM --> RAW --> NORMAL --> PIPE
+
+subgraph P1["Phase 1 — Identity Discovery"]
+  SELECT["Signal adjudication and direction selection"]:::process
+  RENDER["Deterministic Identity Pitch renderer"]:::process
+  P1PROMPT["Combined source-bound AI prompt"]:::artifact
+  P1AI["Manual ChatGPT polish"]:::human
+  P1VALID["Envelope, fingerprint, and direction validation"]:::validation
+  P1JSON["04_VALIDATED_IDENTITY_PITCHES.json"]:::artifact
+  P1PDF["Phase 1 HTML + PDF"]:::artifact
+end
+
+PIPE --> SELECT --> RENDER --> P1PROMPT --> P1AI --> P1VALID --> P1JSON --> P1PDF
+
+CLIENT["Client reviews Primary / Adjacent / Wildcard"]:::human
+HANDOFF["00_PHASE2_HANDOFF.json"]:::artifact
+P1PDF --> CLIENT --> HANDOFF
+
+subgraph P2["Phase 2 — Campaign Concept Development"]
+  INPUT["Campaign Concept input builder"]:::process
+  INPUTVALID["Input and handoff validation"]:::validation
+  P2PROMPT["Combined source-bound Campaign Concept prompt"]:::artifact
+  P2AI["Manual ChatGPT generation"]:::human
+  P2VALID["Schema, identity, invention, and playability validation"]:::validation
+  P2JSON["04_VALIDATED_CAMPAIGN_CONCEPTS.json"]:::artifact
+  P2PDF["Phase 2 HTML + PDF"]:::artifact
+end
+
+HANDOFF --> INPUT --> INPUTVALID --> P2PROMPT --> P2AI --> P2VALID --> P2JSON --> P2PDF
+
+SYSREC["Structured system recommendation"]:::planned
+FINAL["Selected-concept refinement"]:::planned
+P2PDF --> SYSREC
+P2PDF --> FINAL
+
+subgraph SUPPORT["Shared Runtime and Operations"]
+  PATHS["projectPaths / submissionPathUtils"]:::process
+  JSONUTIL["JSON, CLI, fingerprints, response parsing"]:::process
+  EXPORTERS["src/exporters/shared + phase1 + phase2"]:::process
+  TESTS["pipeline / phase1 / phase2 / exporter tests"]:::validation
+  TEMPLATES["root templates/*.css"]:::artifact
+end
+
+PATHS -.supports.-> RAW
+PATHS -.supports.-> P1PROMPT
+PATHS -.supports.-> P2PROMPT
+JSONUTIL -.supports.-> P1VALID
+JSONUTIL -.supports.-> P2VALID
+EXPORTERS -.builds.-> P1PDF
+EXPORTERS -.builds.-> P2PDF
+TEMPLATES -.styles.-> P1PDF
+TEMPLATES -.styles.-> P2PDF
+TESTS -.verifies.-> SELECT
+TESTS -.verifies.-> P1VALID
+TESTS -.verifies.-> P2VALID
+TESTS -.verifies.-> EXPORTERS
+```
+
+## Major Architectural Boundaries
+
+### Authoritative records versus generated artifacts
+
+```text
+submissions/
+→ durable intake and deterministic records
+
+exports/
+→ prompts, responses, validation reports, previews, and PDFs
+```
+
+### Phase boundary
+
+```text
+validated Identity Pitches
+→ human selection
+→ Phase 2 handoff
+→ Campaign Concept generation
+```
+
+### Runtime versus presentation
+
+```text
+src/ai
+→ generation and validation contracts
+
+src/exporters
+→ normalization and document generation
+
+templates
+→ visual presentation
+
+scripts
+→ operator commands
+```
+
+## Implemented Components
+
+- deterministic Phase 1 pipeline;
+- combined Phase 1 AI round trip;
+- Identity Pitch validation;
+- Phase 1 HTML/PDF export;
+- Phase 2 handoff;
+- Campaign Concept contract and schema;
+- combined Phase 2 AI round trip;
+- Campaign Concept validation;
+- Phase 2 HTML/PDF export;
+- canonical submission/export paths;
+- shared script infrastructure;
+- categorized tests;
+- generated developer wiki.
+
+## Planned Components
+
+- formal Identity Selection Record schema;
+- system recommendation;
+- selected-concept finalization;
+- automated form and email transport;
+- full workflow lifecycle orchestration.

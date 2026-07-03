@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { runCampaignPipelineFromForm } = require("../src");
+const { runCampaignPipelineFromForm } = require("../../src");
 
 function loadFormAnswers() {
   const filePath = path.resolve(

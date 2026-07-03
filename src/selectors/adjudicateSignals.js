@@ -38,19 +38,35 @@ function buildSafetyProfile(translated = {}, canonicalIntake = {}) {
     const group = canonicalIntake.group || {};
     const excludeNotes = translated.excludeNotes || "";
 
+    const experienceProfile =
+        safety.experienceProfile || translated.experienceProfile || "standard";
+
+    const softerThemesMode =
+        safety.softerThemesMode === true || experienceProfile === "youth";
+
+    const fullSafeMode =
+        safety.fullSafeMode === true || experienceProfile === "kids";
+
     const horrorRestricted =
         /no horror|avoid horror|too scary/i.test(excludeNotes) ||
-        safety.familyFriendlyBoundary === true ||
-        safety.youthSafeMode === true;
+        safety.horrorRestricted === true;
 
     return {
-        audienceMode: safety.youthSafeMode === true ? "youth_safe" : "standard",
-        youthSafeMode: translated.experienceProfile === "youth" || safety.youthSafeMode === true,
+        experienceProfile,
+        audienceMode: experienceProfile,
+        softerThemesMode,
+        fullSafeMode,
+        heroKidsMode: safety.heroKidsMode === true || fullSafeMode,
+        // Legacy field: preserve the old full-safe switch for compatibility.
+        youthSafeMode: fullSafeMode,
         familyFriendly:
             safety.familyFriendlyBoundary === true ||
+            safety.audienceSuggestsKids === true ||
             safety.audienceSuggestsYouth === true ||
             group.ageBand !== "adult",
-        horrorRestricted
+        horrorRestricted,
+        graphicContentRestricted: safety.graphicContentRestricted === true,
+        oppressiveToneRestricted: safety.oppressiveToneRestricted === true
     };
 }
 
@@ -67,7 +83,7 @@ function buildConstraints(translated = {}, canonicalIntake = {}) {
         });
     }
 
-    if (safetyProfile.youthSafeMode) {
+    if (safetyProfile.softerThemesMode || safetyProfile.fullSafeMode) {
         softBlocks.push({
             type: "content",
             id: "intense_existential_distress",
@@ -87,7 +103,7 @@ function buildConstraints(translated = {}, canonicalIntake = {}) {
 function applyStarterSuppression(adjudicated) {
     const { safetyProfile } = adjudicated.constraints;
 
-    if (!safetyProfile?.youthSafeMode) {
+    if (!safetyProfile?.softerThemesMode && !safetyProfile?.fullSafeMode) {
         return adjudicated;
     }
 
@@ -151,10 +167,17 @@ function buildHandoffGuidance(adjudicated = {}) {
         avoid.push(constraints.excludeNotes);
     }
 
-    if (safetyProfile.youthSafeMode) {
-        mustInclude.push("Keep the campaign kid-safe and approachable.");
-        toneGuardrails.push("Favor wonder, curiosity, and adventure over fear.");
-        audienceGuardrails.push("Keep themes appropriate for a youth-safe audience.");
+    if (safetyProfile.softerThemesMode) {
+        toneGuardrails.push("Keep meaningful danger and emotional weight manageable rather than oppressive.");
+        audienceGuardrails.push("Write for teens or mixed ages without making the language childish.");
+        audienceGuardrails.push("Favor agency, resilience, teamwork, and recoverable stakes.");
+    }
+
+    if (safetyProfile.fullSafeMode) {
+        mustInclude.push("Keep the campaign fully kid-safe and approachable.");
+        toneGuardrails.push("Favor wonder, curiosity, teamwork, and adventure over fear.");
+        audienceGuardrails.push("Use clear, energetic language appropriate for younger players.");
+        audienceGuardrails.push("Frame challenges as exciting problems to solve and let success feel frequent and rewarding.");
     }
 
     if (safetyProfile.horrorRestricted) {
@@ -210,7 +233,7 @@ function buildConfidence(adjudicated = {}) {
 
 function adjudicateSignals(translated = {}, canonicalIntake = {}) {
     const adjudicated = {
-        experienceProfile: translated.experienceProfile || "standard",
+        experienceProfile: canonicalIntake.safety?.experienceProfile || translated.experienceProfile || "standard",
         signals: {
             coreFrames: normalizeSignalBucket(translated.coreFrames, "coreFrames"),
             systemFrames: normalizeSignalBucket(translated.systemFrames, "systemFrames"),
