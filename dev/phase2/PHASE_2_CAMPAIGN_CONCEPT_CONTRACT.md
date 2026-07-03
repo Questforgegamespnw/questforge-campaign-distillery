@@ -18,7 +18,7 @@ Phase 2 does not rediscover the campaign identity. It preserves one approved Pha
 
 ## Required Input
 
-The normalized input contains:
+The normalized input is built from the Identity Selection Record and Phase 2 handoff. It contains:
 
 - submission ID;
 - selected identity direction;
@@ -33,11 +33,19 @@ The normalized input contains:
 - must-preserve elements;
 - must-avoid elements.
 
-The current operator-facing source is:
+The preferred operator-facing source is the Phase 1 Identity Selection Record:
+
+```text
+exports/submissions/<slug>/phase-1/identity-selection-record.json
+```
+
+Phase 2 preparation converts that record into the reviewable handoff:
 
 ```text
 00_PHASE2_HANDOFF.json
 ```
+
+Legacy mode may still prepare Phase 2 from validated Identity Pitches plus an explicit `--direction` flag.
 
 ---
 

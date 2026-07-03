@@ -6,6 +6,8 @@
 
 The project separates authoritative records from regenerated artifacts.
 
+---
+
 ## Authoritative Submission Records
 
 ```text
@@ -20,14 +22,18 @@ submissions/<submission-slug>/
 
 - Preserve the raw submission unchanged.
 - Treat normalized and pipeline records as deterministic outputs tied to that raw source.
-- Do not store AI prompts, pasted responses, or PDFs here.
+- Treat `submission-status.json` as the shared lifecycle status contract.
+- Do not store AI prompts, pasted responses, Identity Selection Records, or PDFs here.
 - Use one stable slug through every phase.
+
+---
 
 ## Generated Exports
 
 ```text
 exports/submissions/<submission-slug>/
   phase-1/
+    identity-selection-record.json
     round-trip/
     client-delivery/
 
@@ -36,6 +42,10 @@ exports/submissions/<submission-slug>/
       round-trip/
       client-delivery/
 ```
+
+### Phase 1 root contains
+
+- `identity-selection-record.json`, the validated selected-identity artifact.
 
 ### Round-trip folders contain
 
@@ -51,6 +61,29 @@ exports/submissions/<submission-slug>/
 - HTML previews;
 - PDFs;
 - future client-facing worksheets.
+
+---
+
+## `submission-status.json`
+
+The lifecycle status file tracks:
+
+- deterministic processing;
+- Phase 1 round-trip preparation;
+- Phase 1 validation;
+- Phase 1 PDF export;
+- Identity Selection Record creation;
+- Phase 2 handoff/preparation;
+- Phase 2 validation;
+- Phase 2 PDF export;
+- current stage;
+- next action;
+- artifacts;
+- history.
+
+Commands should merge updates rather than replacing previously completed state.
+
+---
 
 ## `misc`
 

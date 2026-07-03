@@ -4,7 +4,7 @@
 
 ## Scope
 
-This document describes the implemented v0.9.1 architecture.
+This document describes the implemented v0.10.0 architecture.
 
 Solid workflow stages are implemented. Dashed downstream stages remain planned.
 
@@ -21,27 +21,33 @@ classDef data fill:#eef6ff,stroke:#3b6ea5,color:#0f2740
 classDef process fill:#f7f7f7,stroke:#555,color:#111
 
 FORM["Client Form / JSON"]:::data
-RAW["submissions/&lt;slug&gt;/00_RAW_SUBMISSION.json"]:::artifact
+RAW["submissions/<slug>/00_RAW_SUBMISSION.json"]:::artifact
 NORMAL["01_NORMALIZED_SUBMISSION.json"]:::artifact
 PIPE["02_PIPELINE_RESULT.json"]:::artifact
+STATUS["submission-status.json"]:::artifact
 
 FORM --> RAW --> NORMAL --> PIPE
+RAW -.updates.-> STATUS
+PIPE -.updates.-> STATUS
 
 subgraph P1["Phase 1 — Identity Discovery"]
-  SELECT["Signal adjudication and direction selection"]:::process
+  SELECT["Signal adjudication, audience policy, and direction selection"]:::process
   RENDER["Deterministic Identity Pitch renderer"]:::process
+  VOICE["youth/kids voice layer + client-facing boundary cleanup"]:::process
   P1PROMPT["Combined source-bound AI prompt"]:::artifact
   P1AI["Manual ChatGPT polish"]:::human
   P1VALID["Envelope, fingerprint, and direction validation"]:::validation
   P1JSON["04_VALIDATED_IDENTITY_PITCHES.json"]:::artifact
   P1PDF["Phase 1 HTML + PDF"]:::artifact
+  ISR["identity-selection-record.json"]:::artifact
 end
 
-PIPE --> SELECT --> RENDER --> P1PROMPT --> P1AI --> P1VALID --> P1JSON --> P1PDF
+PIPE --> SELECT --> RENDER --> VOICE --> P1PROMPT --> P1AI --> P1VALID --> P1JSON --> P1PDF
+P1PDF --> ISR
 
 CLIENT["Client reviews Primary / Adjacent / Wildcard"]:::human
 HANDOFF["00_PHASE2_HANDOFF.json"]:::artifact
-P1PDF --> CLIENT --> HANDOFF
+P1PDF --> CLIENT --> ISR --> HANDOFF
 
 subgraph P2["Phase 2 — Campaign Concept Development"]
   INPUT["Campaign Concept input builder"]:::process
@@ -57,12 +63,17 @@ HANDOFF --> INPUT --> INPUTVALID --> P2PROMPT --> P2AI --> P2VALID --> P2JSON --
 
 SYSREC["Structured system recommendation"]:::planned
 FINAL["Selected-concept refinement"]:::planned
+MATCH["Individual matchmaking / compatibility pool"]:::planned
 P2PDF --> SYSREC
 P2PDF --> FINAL
+ISR -.future pool input.-> MATCH
 
 subgraph SUPPORT["Shared Runtime and Operations"]
   PATHS["projectPaths / submissionPathUtils"]:::process
+  STATUSUTIL["submissionStatusUtils"]:::process
   JSONUTIL["JSON, CLI, fingerprints, response parsing"]:::process
+  BUILDERS["src/builders"]:::process
+  VALIDATORS["src/validators"]:::validation
   EXPORTERS["src/exporters/shared + phase1 + phase2"]:::process
   TESTS["pipeline / phase1 / phase2 / exporter tests"]:::validation
   TEMPLATES["root templates/*.css"]:::artifact
@@ -71,16 +82,20 @@ end
 PATHS -.supports.-> RAW
 PATHS -.supports.-> P1PROMPT
 PATHS -.supports.-> P2PROMPT
+STATUSUTIL -.updates.-> STATUS
 JSONUTIL -.supports.-> P1VALID
 JSONUTIL -.supports.-> P2VALID
+BUILDERS -.builds.-> ISR
+VALIDATORS -.validates.-> ISR
 EXPORTERS -.builds.-> P1PDF
 EXPORTERS -.builds.-> P2PDF
 TEMPLATES -.styles.-> P1PDF
 TEMPLATES -.styles.-> P2PDF
 TESTS -.verifies.-> SELECT
 TESTS -.verifies.-> P1VALID
+TESTS -.verifies.-> ISR
 TESTS -.verifies.-> P2VALID
-TESTS -.verifies.-> EXPORTERS
+TESTS -.verifies.-> STATUSUTIL
 ```
 
 ## Major Architectural Boundaries
@@ -89,10 +104,10 @@ TESTS -.verifies.-> EXPORTERS
 
 ```text
 submissions/
-→ durable intake and deterministic records
+→ durable intake, deterministic records, and lifecycle status
 
 exports/
-→ prompts, responses, validation reports, previews, and PDFs
+→ prompts, responses, validation reports, selected identity records, previews, and PDFs
 ```
 
 ### Phase boundary
@@ -100,6 +115,7 @@ exports/
 ```text
 validated Identity Pitches
 → human selection
+→ Identity Selection Record
 → Phase 2 handoff
 → Campaign Concept generation
 ```
@@ -109,6 +125,9 @@ validated Identity Pitches
 ```text
 src/ai
 → generation and validation contracts
+
+src/builders and src/validators
+→ reusable structured artifact construction and validation
 
 src/exporters
 → normalization and document generation
@@ -123,23 +142,27 @@ scripts
 ## Implemented Components
 
 - deterministic Phase 1 pipeline;
+- Core Frame audience policy;
+- youth/kids voice layer;
+- client-facing phrase boundary cleanup;
 - combined Phase 1 AI round trip;
 - Identity Pitch validation;
 - Phase 1 HTML/PDF export;
-- Phase 2 handoff;
+- Identity Selection Record builder and validator;
+- Phase 2 handoff from Identity Selection Record;
 - Campaign Concept contract and schema;
 - combined Phase 2 AI round trip;
 - Campaign Concept validation;
 - Phase 2 HTML/PDF export;
 - canonical submission/export paths;
+- shared submission lifecycle status;
 - shared script infrastructure;
 - categorized tests;
 - generated developer wiki.
 
 ## Planned Components
 
-- formal Identity Selection Record schema;
 - system recommendation;
 - selected-concept finalization;
 - automated form and email transport;
-- full workflow lifecycle orchestration.
+- individual-player matchmaking and compatibility pools.

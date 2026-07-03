@@ -11,13 +11,15 @@ The current system implements a complete human-in-the-loop, two-phase campaign-d
    - Primary, Adjacent, and Wildcard Identity Pitches;
    - combined AI polish round trip;
    - source-bound validation;
-   - client-facing HTML and PDF export.
+   - client-facing HTML and PDF export;
+   - validated Identity Selection Record creation.
 
 2. **Phase 2 — Campaign Concept Development**
+   - direct input from an Identity Selection Record;
    - selected-identity handoff;
    - bounded Campaign Concept generation;
    - three playable concept variants;
-   - structural, semantic, and source validation;
+   - structural, semantic, source, and identity validation;
    - client-facing HTML and PDF export.
 
 The guiding principle remains:
@@ -25,7 +27,7 @@ The guiding principle remains:
 > **Phase 1 discovers what the campaign wants to be.**  
 > **Phase 2 decides what is actually happening and what the players can change.**
 
-The system-recommendation stage and formal Identity Selection Record schema remain future work.
+v0.10.0 hardens the production handoff between those phases.
 
 ---
 
@@ -50,14 +52,6 @@ The system-recommendation stage and formal Identity Selection Record schema rema
 - [Phase 2 Manual Round Trip](./phase2/PHASE_2_MANUAL_ROUND_TRIP.md)
 - [Phase 2 PDF Export](./phase2/PHASE_2_PDF_EXPORT.md)
 
-### Data
-
-- [Data Model Overview](./data/DATA_MODEL_OVERVIEW.md)
-- [Campaign Frame Library](./data/CAMPAIGN_FRAME_LIBRARY.md)
-- [Data Expansion Guidelines](./data/DATA_EXPANSION_GUIDELINES.md)
-- [New Entry Review](./data/NEW_ENTRY_REVIEW.md)
-- [Entry Decisions Log](./data/ENTRY_DECISIONS_LOG.md)
-
 ### Operations
 
 - [Submission and Export Storage](./operations/SUBMISSION_AND_EXPORT_STORAGE.md)
@@ -73,24 +67,29 @@ The system-recommendation stage and formal Identity Selection Record schema rema
 
 - canonical intake normalization and validation;
 - deterministic Phase 1 direction selection and rendering;
+- `standard` / `youth` / `kids` audience profile propagation;
+- Core Frame audience policy for preserve, soften, downweight, substitute, and suppress behavior;
+- youth/kids voice layer;
+- client-facing output boundary cleanup;
 - source-bound Phase 1 AI polish;
 - Phase 1 validation and client PDF delivery;
-- Phase 2 handoff construction;
+- Identity Selection Record builder, validator, and creation script;
+- Phase 2 preparation from Identity Selection Records;
 - Campaign Concept input, prompt, schema, evaluation, and validation;
 - source-bound Phase 2 manual AI round trip;
 - Phase 2 client PDF delivery;
 - canonical submission and export folder architecture;
+- shared submission lifecycle status synchronization;
 - categorized scripts, tests, shared utilities, and exporters;
 - static developer wiki generation.
 
 ### Not Yet Implemented
 
-- formal runtime Identity Selection Record schema;
 - structured system recommendation;
 - automatic email delivery;
 - automatic Formspree execution;
 - final selected-concept refinement stage;
-- full lifecycle orchestration across every workflow command.
+- individual-player matchmaking and compatibility pools.
 
 ---
 

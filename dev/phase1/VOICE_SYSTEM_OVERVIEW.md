@@ -1,364 +1,217 @@
 # Voice System Overview
 
-← Back to Developer Documentation (`/dev/README.md`)
-
----
+← [Back to Developer Documentation](../README.md)
 
 ## Overview
 
-The voice system is responsible for turning structured frame data into **clear, engaging Phase 1 Identity Pitch text**.
+The voice system turns structured frame data into clear, engaging Phase 1 Identity Pitch text.
 
-It sits in the **Rendering stage** of the pipeline and defines:
+It sits in the rendering stage of the pipeline and defines:
 
-* how ideas are expressed
-* how sections are structured
-* how tone and genre influence phrasing
+- how ideas are expressed;
+- how sections are structured;
+- how tone and genre influence phrasing;
+- how audience profile affects final wording.
 
 ---
 
 ## Core Principle
 
-> The voice system composes output from structured data.
-> It does not invent meaning.
+> The voice system composes output from structured data. It does not invent meaning.
 
 All output should be derived from:
 
-* coreFrames (meaning)
-* systemFrames (play experience)
-* tone / genre / environment layers
+- Core Frames for meaning;
+- System Frames for play experience;
+- tone, genre, and environment layers for presentation;
+- audience and safety profile for intensity and phrasing boundaries.
+
+---
+
+## Audience Profiles
+
+The current profile model is:
+
+```text
+standard
+youth
+kids
+```
+
+### `standard`
+
+The default profile. It does not mean adult-only; it means no special youth/kids rewrite is required.
+
+### `youth`
+
+Preserves meaningful stakes and challenge while reducing hopeless, crushing, or destabilizing phrasing. Youth output should not become childish.
+
+### `kids`
+
+Uses warmer, clearer, more approachable phrasing. It favors curiosity, teamwork, repair, helping, and exciting problems to solve.
+
+---
+
+## Theme Routing vs Voice Shaping
+
+Do not confuse these layers:
+
+```text
+Core Frame audience policy
+→ decides whether themes are preserved, softened, downweighted, substituted, or suppressed
+
+youthVoiceLayer
+→ decides how final text should sound for youth/kids audiences
+```
+
+The voice layer should not perform Core Frame substitution.
 
 ---
 
 ## Output Structure
 
-Each identity direction produces four client-facing sections:
+Each identity direction produces client-facing sections:
 
-```text id="6lq9ns"
+```text
 Hook → Pitch → About → Players Do
 ```
 
-Each section has a **specific role**.
-
----
-
-## Section Breakdown
+Each section has a specific role.
 
 ---
 
 ## 1. Hook
 
-**Purpose:**
-Capture attention and establish tension immediately.
+**Purpose:** Capture attention and establish tension immediately.
 
----
+Characteristics:
 
-### Characteristics
+- short;
+- evocative;
+- tone-setting;
+- introduces uncertainty, tension, or intrigue.
 
-* short (1–2 lines)
-* evocative
-* sets tone and direction
-* introduces uncertainty, tension, or intrigue
-
----
-
-### Example Patterns
-
-* something is off or changing
-* a situation that raises questions
-* a shift in expectations
-
----
-
-### What Hook is NOT
-
-* exposition
-* explanation of systems
-* long-form description
+Hook is not exposition, mechanical explanation, or long-form description.
 
 ---
 
 ## 2. Pitch
 
-**Purpose:**
-Summarize the proposed campaign identity and table experience in a concise, client-ready way.
+**Purpose:** Summarize the proposed campaign identity and table experience in a concise, client-ready way.
 
----
+Responsibilities:
 
-### Structure
+- communicate what the campaign feels like;
+- stay readable and concise;
+- avoid overloading multiple ideas;
+- use one clear system expression.
 
-* Sentence 1: Core + tone + genre framing
-* Sentence 2: Primary system-driven play experience
-* Optional Sentence 3: tone reinforcement or flavor
-
----
-
-### Responsibilities
-
-* communicate what the campaign *feels like*
-* stay readable and concise
-* avoid overloading with multiple ideas
-
----
-
-### Key Rules
-
-* use **only one system expression** in Pitch
-* avoid stacking multiple core ideas
-* prefer clarity over density
-
----
-
-### What Pitch is NOT
-
-* a full description
-* a list of mechanics
-* overly abstract
+Pitch is not a full description or mechanics list.
 
 ---
 
 ## 3. About
 
-**Purpose:**
-Expand the campaign identity and deepen its thematic meaning.
+**Purpose:** Expand the campaign identity and deepen its thematic meaning.
 
----
+Responsibilities:
 
-### Characteristics
+- elaborate on core concepts;
+- introduce nuance and consequence;
+- support emotional tone;
+- remain broad enough to support multiple settings and systems.
 
-* 1–2 paragraphs
-* explores core tensions more fully
-* connects theme to world and narrative
-
----
-
-### Responsibilities
-
-* elaborate on core concepts
-* introduce nuance and consequence
-* support emotional tone
-* remain broad enough to support multiple settings and systems
-
----
-
-### What About is NOT
-
-* a repeat of Pitch
-* purely mechanical explanation
+About is not a repeat of Pitch or a Phase 2 concrete premise.
 
 ---
 
 ## 4. Players Do
 
-**Purpose:**
-Describe what players actually do at the table.
+**Purpose:** Describe what players actually do at the table.
 
----
+Responsibilities:
 
-### Characteristics
+- explain moment-to-moment play;
+- reflect system frame behavior;
+- stay practical and understandable.
 
-* concrete and action-oriented
-* based on systemFrames
-* grounded in player behavior
-
----
-
-### Responsibilities
-
-* explain moment-to-moment play
-* reflect system mechanics
-* stay practical and understandable
-
----
-
-### Example Language
-
-* “following scattered clues…”
-* “making hard calls when resources are limited…”
-* “negotiating and leveraging relationships…”
-
----
-
-### What Players Do is NOT
-
-* narrative summary
-* thematic description
-* abstract phrasing
+Players Do is not narrative summary or abstract theme description.
 
 ---
 
 ## Composition Logic
 
-The voice system combines:
-
-```text id="7u0q8t"
-Core (meaning) + System (behavior) + Tone (delivery)
+```text
+Core meaning + System behavior + Tone delivery + Audience profile
 ```
 
 Each section uses these differently:
 
-* Hook → tone + tension
-* Pitch → core + system
-* About → core depth
-* Players Do → system behavior
+- Hook → tone + tension;
+- Pitch → core + system;
+- About → core depth;
+- Players Do → system behavior;
+- youthVoiceLayer → final profile-aware wording.
 
 ---
 
 ## Voice Design Principles
 
----
-
 ### Clarity Over Complexity
 
-Prefer:
-
-* short, readable sentences
-* direct phrasing
-
-Avoid:
-
-* overly long clauses
-* stacked concepts
-
----
+Prefer readable sentences and direct phrasing. Avoid long clause stacks.
 
 ### One Idea Per Sentence
 
-Each sentence should carry a single primary idea.
-
-This prevents:
-
-* confusion
-* loss of impact
-
----
+Each sentence should carry one primary idea.
 
 ### Variation Without Chaos
 
-Use variation in:
-
-* sentence openings
-* phrasing patterns
-* rhythm
-
-But maintain:
-
-* consistent structure
-* recognizable flow
-
----
+Vary openings, rhythm, and phrasing while maintaining recognizable structure.
 
 ### Tone Alignment
 
-Tone should influence:
-
-* word choice
-* sentence rhythm
-* emotional intensity
-
-But not:
-
-* structure
-* meaning
-
----
+Tone should influence word choice and intensity, not invent new meaning.
 
 ### Data First
 
-Voice is driven by:
-
-* `pitchText`
-* structured data
-
-Avoid:
-
-* ad hoc phrasing
-* hardcoded narrative logic
+Use `pitchText` and structured data. Avoid ad hoc narrative logic.
 
 ---
 
-## Common Issues
+## Client-Facing Boundary
+
+Final text should not expose:
+
+- frame IDs;
+- renderer language;
+- adjudication labels;
+- candidate bucket language;
+- confidence scores;
+- internal debug notes.
+
+Internal fields may retain detailed audit information. Client-facing fields should not.
 
 ---
 
-### Repetition
-
-Cause:
-
-* limited variation pools
-
-Fix:
-
-* expand voiceMap options
-
----
-
-### Overloaded Sentences
-
-Cause:
-
-* stacking multiple systems or ideas
-
-Fix:
-
-* simplify sentence structure
-
----
-
-### Awkward Phrasing
-
-Cause:
-
-* inserting data into poorly matched templates
-
-Fix:
-
-* adjust templates or helper functions (e.g. `cleanCoreLead`)
-
----
-
-### Tone Drift
-
-Cause:
-
-* inconsistent phrasing or AI output
-
-Fix:
-
-* tighten tone guidance and templates
-
----
-
-## Interaction with AI Layer (v0.9+)
+## Interaction with AI Layer
 
 The Phase 1 AI polish layer should:
 
-* polish and expand existing identity content
-* improve flow and richness
-* preserve system- and setting-agnostic scope
+- polish and expand existing identity content;
+- improve flow and richness;
+- preserve system- and setting-agnostic scope;
+- preserve audience and safety boundaries.
 
-The AI layer should NOT:
+The AI layer should not:
 
-* change structure
-* introduce concrete settings, factions, crises, mechanics, or other Phase 2 concepts
-* override system intent
+- change structure;
+- introduce concrete settings, factions, crises, mechanics, or other Phase 2 concepts;
+- override system intent;
+- intensify restricted material.
 
 ---
 
-## Summary
-
-The voice system works because:
-
-* structure is consistent
-* data drives expression
-* each section has a clear role
-
-Maintaining these principles ensures:
-
-* readable output
-* consistent tone
-* scalable variation
-
-
 ## Relationship to Phase 2
 
-The Phase 1 voice system answers what the campaign should feel like and what kinds of play it should emphasize. Phase 2 uses the selected identity as a constraint when inventing a concrete setting situation, conflict, campaign engine, factions, escalation, and hook.
+The Phase 1 voice system answers what the campaign should feel like and what kinds of play it should emphasize. Phase 2 uses the selected identity as a constraint when inventing a concrete situation, conflict, campaign engine, factions, escalation, and hook.

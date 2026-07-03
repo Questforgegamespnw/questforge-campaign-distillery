@@ -43,3 +43,7 @@ exports/submissions/<slug>/phase-1/client-delivery/
 ## Boundary
 
 The exporter presents validated data. It does not perform selection, generation, or semantic correction.
+
+## Status
+
+A successful export marks Phase 1 client delivery in `submission-status.json` and records the generated HTML/PDF artifact paths.

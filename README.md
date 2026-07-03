@@ -1,300 +1,174 @@
 # QuestForge Campaign Distillery
 
-## What This Is (Non-Technical)
+## What This Is
 
-The QuestForge Campaign Distillery turns rough campaign ideas and client intake into a disciplined, repeatable campaign-development process.
+The QuestForge Campaign Distillery turns rough campaign ideas and client intake into a disciplined, repeatable campaign-development workflow for tabletop RPG services.
 
-Its current implemented output is a set of three **Phase 1 Identity Pitches**:
+The implemented workflow has two phases:
 
-- **Primary** — the strongest overall interpretation of the group’s preferences;
-- **Adjacent** — a closely related direction with a shifted emphasis;
-- **Wildcard** — a credible but more adventurous interpretation.
+1. **Phase 1 — Identity Discovery**
+   - produces three broad **Identity Pitches**: Primary, Adjacent, and Wildcard;
+   - identifies the campaign's thematic promise, emotional direction, style of play, genre/tone/environment signals, and audience constraints;
+   - remains intentionally broad, system-agnostic, and setting-agnostic.
 
-These pitches identify what the campaign is fundamentally about, what kind of play it emphasizes, and what emotional or thematic promise best fits the group. They are intentionally broad, generally system-agnostic, and setting-agnostic.
-
-They are not yet complete campaign concepts. After the client selects an Identity Pitch, **Phase 2 Campaign Concept Development** turns that direction into a concrete, playable premise with a starting situation, central conflict, factions or forces in tension, recurring campaign engine, escalation, meaningful choices, and a clear hook.
+2. **Phase 2 — Campaign Concept Development**
+   - begins after the client selects one Identity Pitch;
+   - turns the approved identity into concrete playable Campaign Concepts;
+   - adds starting situation, central conflict, factions or forces, recurring campaign engine, escalation, meaningful choices, and a hook.
 
 The guiding principle is:
 
 > **Phase 1 discovers what the campaign wants to be.**  
 > **Phase 2 decides what is actually happening and what the players can change.**
 
-The goal is not to produce one-off AI text. It is to create a consistent, testable, safety-aware workflow that can support professional campaign development at scale.
+The goal is not one-off AI text. The goal is a consistent, testable, safety-aware workflow that can support professional campaign development at scale.
+
+---
 
 ## Why Not Just Use GPT?
 
-You can absolutely paste notes into GPT and get a campaign pitch. 
-**But that approach is:**
-  - inconsistent
-  - hard to control
-  - difficult to repeat at scale
-  - prone to ignoring tone, safety, or audience constraints
-  
-The Distillery is built to understand the intake first, make disciplined decisions about it, and only then produce a controlled campaign direction. 
-This disciplined process is what makes the output more consistent, safer, easier to tune, and more scalable for a professional GM service.
+Raw prompting can produce a useful pitch, but it is inconsistent, difficult to repeat, and prone to drifting away from safety, tone, or client constraints.
 
-In other words, GPT alone gives you a response. The Distillery provides a consistent, dependable, and repeatable process that can be tested and refined across many submissions. 
+The Distillery interprets first, then generates within defined boundaries. It handles:
 
-### The Campaign Distillery is designed to do the parts that raw prompting handles unreliably:
-  - normalize messy client input into structured intent
-  - apply deterministic selection logic instead of freeform guesswork
-  - enforce audience and safety constraints consistently
-  - preserve ambiguity instead of inventing false certainty
-  - generate repeatable outputs that can be tested, tuned, and improved over time
+- messy intake normalization;
+- deterministic signal selection;
+- audience and safety enforcement;
+- repeatable Primary / Adjacent / Wildcard direction construction;
+- source-bound AI collaboration;
+- validation;
+- client-delivery exports;
+- durable lifecycle tracking.
 
-### That process matters when you want:
-  - reliable client-facing quality
-  - scalable onboarding
-  - safety-aware outputs
-  - consistency across many submissions
-  - a refinable system over time without starting over
-
-In short, GPT improvises. This system interprets first, then generates within defined boundaries.
+GPT improvises. The Distillery creates a controlled process that can be reviewed, tested, tuned, and repeated.
 
 ---
 
----
+## Current Runtime: v0.10.0
 
-## 🧠 How This Fits With AI
+v0.10.0 completes the core Phase 1 → Phase 2 handoff spine.
 
-This system is not meant to replace AI writing—it is meant to constrain and improve it.
+Implemented capabilities include:
 
-The Distillery handles:
-
-- intake normalization;
-- structured interpretation;
-- direction selection;
-- tone and audience consistency;
-- safety constraints;
-- deterministic narrative scaffolding;
-- validation and audit data.
-
-AI handles:
-
-- expression;
-- flow;
-- stylistic polish;
-- narrative richness;
-- bounded invention during later campaign-concept development.
-
-The AI role changes by phase:
-
-### Phase 1 — Identity Pitch Polish
-
-AI may improve readability, cadence, and presentation while preserving the selected identity. It should not invent a setting crisis, factions, plot structure, or mechanics.
-
-### Phase 2 — Campaign Concept Development
-
-AI may invent bounded fiction such as locations, factions, a starting crisis, threats, campaign pressures, and recurring structures. It must preserve the approved identity and may not impose a fixed ending, mandatory protagonist history, railroaded quest chain, or contradictory genre and tone.
-
-This separation creates more consistent outputs, clearer human review points, and stronger control over what the AI is permitted to add.
-
-## Example Outputs
-
-These examples reflect the stabilized renderer and phrase-aware assembly system through v0.8.2. They demonstrate **Phase 1 Identity Pitch language**: broad campaign direction, thematic promise, and table experience rather than a fully specified campaign premise.
+- canonical intake normalization and validation;
+- deterministic Phase 1 Identity Pitch generation;
+- combined manual AI polish for all three Phase 1 directions;
+- source-bound Phase 1 validation;
+- Phase 1 HTML/PDF client delivery;
+- validated Identity Selection Record creation;
+- direct Phase 2 preparation from an Identity Selection Record;
+- Phase 2 Campaign Concept input, prompt, schema, evaluation, and validation;
+- Phase 2 HTML/PDF client delivery;
+- shared submission lifecycle status through `submission-status.json`;
+- profile-aware `standard` / `youth` / `kids` handling;
+- Core Frame audience policy;
+- youth/kids voice shaping;
+- client-facing phrase-boundary cleanup.
 
 ---
 
-### Mystery / Investigation (Urban Gothic, Psychological)
+## Human-in-the-Loop AI Model
 
-**Input Focus**
-- Hidden truth + investigator burden  
-- Clue web + hidden information  
-- Dense urban environment  
-- Psychological tone  
+AI transport is manual by design. The local system builds prompts, response skeletons, fingerprints, validation reports, and export files. The operator copies prompts into ChatGPT and pastes the returned JSON into the local workspace.
 
-**Output**
-Something is already starting to slip out of place.
+### Phase 1 AI Role
 
-The city is dense with overlapping lives, quiet tensions, and things that don’t quite add up. Beneath the surface, something important has been covered over—and the more closely you look, the harder it is to ignore.
+AI may polish readability, cadence, and client-facing presentation. It must preserve the selected deterministic identity and must not invent a concrete setting crisis, factions, plot structure, mechanics, or campaign engine.
 
-At the table, play revolves around following scattered clues and slowly piecing together the bigger picture. Information is incomplete, sometimes misleading, and often raises more questions than it answers.
+### Phase 2 AI Role
 
-The deeper you dig, the harder it becomes to walk away from what you’ve uncovered.
-
-The real question is: what happens when you finally understand what the city has been hiding—and it refuses to stay buried?
-
----
-
-### Survival Frontier (Grimdark Western, High Pressure)
-
-**Input Focus**
-- Survival against overwhelming force + endless pressure  
-- Resource scarcity + attrition combat  
-- Harsh frontier / wasteland  
-- Grimdark tone  
-
-**Output**
-At its best, this feels like a grimdark western frontier campaign that keeps circling back to surviving a world far harsher and stronger than the characters are.
-
-The world doesn’t bend to you. Every step forward costs something, and even small victories feel temporary against the weight of everything pushing back.
-
-At the table, play revolves around making hard calls when time, safety, and supplies are always running short. Every decision trades one problem for another—and sometimes you don’t get a good option at all.
-
-The pressure never fully lets up. Survival isn’t about winning—it’s about lasting long enough to matter.
-
-The real question is: how much can you lose before you stop being able to keep going?
-
----
-
-### Cosmic Discovery (Eldritch, Psychological)
-
-**Input Focus**
-- Lost knowledge + hidden truth  
-- Exploration + clue web  
-- Abstract / underground environments  
-- Psychological tone  
-
-**Output**
-The first signs are easy to dismiss—until they stop being dismissible.
-
-The world doesn’t behave the way it should. Spaces shift, logic bends, and places seem to exist more as ideas than locations. Somewhere inside it, something important has been rearranged rather than removed.
-
-At the table, play moves through exploration and interpretation—figuring out what places mean as much as what they are. Clues don’t just point forward; they reshape how everything behind you is understood.
-
-The deeper you go, the harder it becomes to separate the world from what it’s doing to you.
-
-What matters is not just what you discover—but who you are by the time it finally makes sense.
+AI may invent bounded fiction such as locations, factions, starting crises, threats, pressures, and recurring campaign structures. It must preserve the approved Identity Selection Record and may not impose fixed endings, mandatory protagonist history, railroaded quest chains, or contradictory genre/tone/safety choices.
 
 ---
 
 ## Quick Start
 
-- Process a raw submission:
+### 1. Process a raw submission
 
 ```powershell
 node scripts/workflows/runSubmission.js "path/to/submission.json"
 ```
 
-- Prepare the Phase 1 manual AI round trip:
+### 2. Prepare Phase 1 Identity Pitch polish
 
+```powershell
 node scripts/phase1/prepareIdentityPolishRoundTrip.js "submissions/<submission-slug>/02_PIPELINE_RESULT.json"
-
-- After pasting the generated prompt into ChatGPT and saving the returned JSON:
-
-node scripts/phase1/completeIdentityPolishRoundTrip.js "exports/submissions/<submission-slug>/phase-1/round-trip"
-
-- Create the Phase 1 client packet:
-
-node scripts/phase1/exportIdentityPitchPdf.js "exports/submissions/<submission-slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json"
-
-
----
-
-## ⚙️ Technical Overview (For Developers)
-
-The sections below describe the high-level system architecture and pipeline behavior.
-
-If you are looking for internal implementation details, see the developer documentation in `/dev`.
-
----
-
-## System Overview
-
-The Campaign Distillery is a structured pipeline that transforms raw tabletop RPG client intake into controlled campaign-development outputs.
-
-The current implemented pipeline produces three **Phase 1 Identity Pitches**. Each direction is assembled from structured campaign frames, intake signals, audience constraints, and safety guidance.
-
-Phase 1 is designed to:
-
-- extract intent from messy human input;
-- normalize that input into a controlled schema;
-- infer audience, safety, and experience constraints;
-- translate preferences into weighted signals;
-- select three distinct but credible identity directions;
-- resolve those directions into canonical frame data;
-- render stable, human-readable Identity Pitch sections;
-- provide normalized client output and richer audit output;
-- support AI polish without allowing new campaign facts to drift into the result.
-
-The planned Phase 2 pipeline begins only after the client selects an Identity Pitch. It will add the concrete campaign situation, central conflict, factions or forces, starting position, recurring campaign engine, escalation, distinctive elements, and meaningful player choices.
-
-The Distillery therefore separates two different creative decisions:
-
-```text
-Identity discovery → concrete campaign development
 ```
 
-This prevents the system from inventing setting facts before the client has approved the campaign’s fundamental direction.
+### 3. Complete Phase 1 after pasting the ChatGPT response
 
-## Renderer Architecture (v0.8.2)
+```powershell
+node scripts/phase1/completeIdentityPolishRoundTrip.js "exports/submissions/<submission-slug>/phase-1/round-trip"
+```
 
-The rendering layer has been refactored into a modular pipeline to separate responsibilities and improve maintainability without altering output behavior.
+### 4. Export the Phase 1 client packet
 
-The renderer now operates as a composed system of focused modules:
+```powershell
+node scripts/phase1/exportIdentityPitchPdf.js "exports/submissions/<submission-slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --client "Client Name"
+```
 
-- **pitchCore** → extracts and normalizes context from selections  
-- **pitchSectionBuilders** → constructs narrative sections (Title, About, Players Do, Hook)  
-- **pitchAssembly** → composes sentences into a cohesive pitch  
-- **pitchCleanup** → shared normalization and formatting utilities  
-- **pitchSafetyFilters** → applies tone constraints and audience safety rules  
-- **generateCampaignPitch** → orchestrates the full pipeline  
+### 5. Record the client's selected identity
 
-This replaces the previous monolithic renderer and enables safer iteration, clearer debugging, and controlled language tuning.
+```powershell
+node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<submission-slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --direction primary
+```
 
-As of v0.8.2, `pitchAssembly` also classifies campaign identity, activity/process, abstract pressure/theme, and proposition/clause phrases before selecting sentence shapes. This keeps campaign identity in the lead, routes system behavior into support sentences, and limits cleanup to punctuation, duplication, and other surface corrections.
+This creates:
 
-### Runtime Naming Note
+```text
+exports/submissions/<submission-slug>/phase-1/identity-selection-record.json
+```
 
-Some current source files and exported functions still use earlier names such as `generateCampaignPitch`, `clientPitch`, and `auditPitch`. During v0.9.x documentation work, these identifiers remain unchanged to avoid unnecessary code churn.
+### 6. Prepare Phase 2 from the Identity Selection Record
 
-Conceptually, their current outputs should be understood as:
+```powershell
+node scripts/phase2/prepareCampaignConceptRoundTrip.js "exports/submissions/<submission-slug>/phase-1/identity-selection-record.json"
+```
 
-- `generateCampaignPitch` → deterministic Phase 1 Identity Pitch rendering;
-- `clientPitch` → client-facing Identity Pitch sections;
-- `auditPitch` → internal Identity Pitch reasoning and safety data.
+### 7. Complete Phase 2 after pasting the ChatGPT response
 
-Runtime naming can be migrated later as a controlled refactor.
+```powershell
+node scripts/phase2/completeCampaignConceptRoundTrip.js "exports/submissions/<submission-slug>/phase-2/primary/round-trip"
+```
+
+### 8. Export the Phase 2 client packet
+
+```powershell
+node scripts/phase2/exportCampaignConceptPdf.js "exports/submissions/<submission-slug>/phase-2/primary/round-trip/04_VALIDATED_CAMPAIGN_CONCEPTS.json" --client "Client Name"
+```
 
 ---
 
 ## Pipeline Overview
 
-### Implemented Phase 1 Flow
-
 ```text
 Raw Form Submission
-→ Form Mapping
+→ Raw Submission Capture
 → Intake Normalization
-→ Canonical Intake
-→ Canonical Validation
-→ Translator Input
-→ Signal Translation
-→ Adjudication and Safety Inference
-→ Identity Direction Selection
-→ Frame Resolution
-→ Deterministic Identity Pitch Rendering
-→ AI Identity Pitch Polish
-→ Validation
-→ Client Identity Pitch Delivery
-→ Client Direction Selection
+→ Deterministic Phase 1 Pipeline
+→ Three Identity Directions
+→ Phase 1 AI Polish Round Trip
+→ Validated Identity Pitches
+→ Phase 1 Client Delivery
+→ Identity Selection Record
+→ Phase 2 Handoff / Prompt
+→ Phase 2 AI Campaign Concept Round Trip
+→ Validated Campaign Concepts
+→ Phase 2 Client Delivery
 ```
 
-### Planned Phase 2 Flow
+The **Identity Selection Record** is the authoritative bridge between Phase 1 and Phase 2.
 
-```text
-Selected Identity Pitch
-+ Identity Selection Record
-+ Canonical Intake
-→ Campaign Concept Expansion
-→ Concept Validation
-→ System Recommendation
-→ Client PDF Export
-→ Campaign Concept Delivery
-```
-
-The client’s structured selection record forms the authoritative boundary between the two phases. Phase 2 should not rely on informal email summaries as its primary input.
+---
 
 ## Project Structure
 
-The project is organized by pipeline responsibility to maintain clear separation between stages.
-
 ```text
 /submissions
-  authoritative raw, normalized, and deterministic submission records
+  authoritative raw, normalized, deterministic, and lifecycle records
 
 /exports
-  production round trips, validation results, previews, and client PDFs
+  production round trips, validation reports, previews, PDFs, and client-specific artifacts
 
 /scripts
   /diagnostics
@@ -308,125 +182,121 @@ The project is organized by pipeline responsibility to maintain clear separation
 
 /src
   /ai
-    existing Phase 1 AI modules
     /phase2
+  /builders
+  /config
+  /data
   /exporters
     /shared
     /phase1
     /phase2
-  /config
-  /data
   /intake
   /parsers
   /renderers
   /resolvers
   /selectors
   /utils
+  /validators
   /voice
 
 /templates
   identity-pitch-pdf.css
   campaign-concept-pdf.css
 
-/examples
-  sanitized example inputs and generated deliverables
+/dev
+  developer documentation and generated wiki source Markdown
+```
 
-/misc
-  temporary, legacy, or unclassified development material
-  ```
+---
 
-For detailed file-level documentation, see:
+## Storage Model
 
-/dev/README.md
+Authoritative intake and deterministic records live under:
 
-  ---
+```text
+submissions/<submission-slug>/
+  00_RAW_SUBMISSION.json
+  01_NORMALIZED_SUBMISSION.json
+  02_PIPELINE_RESULT.json
+  submission-status.json
+```
 
-## Current State
+Generated artifacts and client-facing files live under:
 
-### Current Runtime: v0.9.1 — Two-Phase Client Delivery Workflow
+```text
+exports/submissions/<submission-slug>/
+  phase-1/
+    identity-selection-record.json
+    round-trip/
+    client-delivery/
 
-- Phase 1 deterministic Identity Pitch generation is stable.
-- Combined manual AI polish is operational.
-- Source-bound Identity Pitch validation is operational.
-- Phase 1 HTML and PDF client delivery is operational.
-- Phase 2 Campaign Concept generation contracts are implemented.
-- Phase 2 manual AI round trip is operational.
-- Phase 2 structural and semantic validation is operational.
-- Phase 2 HTML and PDF client delivery is operational.
-- Submission and export storage are separated.
-- Scripts, tests, shared utilities, and exporters are modularized.
+  phase-2/
+    <selected-direction>/
+      round-trip/
+      client-delivery/
+```
 
+---
+
+## Status Tracking
+
+`submission-status.json` is now the shared lifecycle status contract. Production workflow commands update it without erasing completed steps.
+
+It tracks:
+
+- deterministic processing;
+- Phase 1 round-trip preparation;
+- Phase 1 validation;
+- Phase 1 PDF export;
+- Identity Selection Record creation;
+- Phase 2 handoff/preparation;
+- Phase 2 validation;
+- Phase 2 PDF export;
+- current stage;
+- next action;
+- artifact paths;
+- append-only history.
+
+---
 
 ## Design Principles
 
-- Signal over noise — minimal, meaningful tagging  
-- Deterministic processing — no hidden assumptions  
-- Separation of concerns — each layer has a single role  
-- Composable output — all results built from structured data  
-- Explicit ambiguity handling — uncertainty is preserved, not guessed  
+- Signal over noise — minimal, meaningful tagging.
+- Deterministic before generative — decide what the campaign means before AI invents fiction.
+- Source-bound AI — responses must match the exact package that generated the prompt.
+- Human review between phases — Phase 2 starts only after one Phase 1 identity is selected.
+- One responsibility per layer — mapping, selection, rendering, validation, export, and operations stay separate.
+- Audience-aware output — `standard`, `youth`, and `kids` profiles are handled deliberately.
 
 ---
 
 ## Known Gaps
 
-- The Identity Selection Record is not yet implemented as a formal validated runtime schema.
-- Client feedback must still be entered manually into the Phase 2 handoff.
-- The system-recommendation stage is not yet implemented.
-- The final selected Campaign Concept does not yet have a dedicated refinement/finalization stage.
-- Submission lifecycle status is not yet automatically updated by every workflow command.
+- Structured system recommendation is not yet implemented.
+- Final selected-concept refinement/finalization is not yet implemented.
 - Email templates exist, but email delivery is not automated.
 - Formspree or other form-provider execution is not connected.
-- Real client records still require a completed migration from legacy `misc` folders.
-- Matchmaking and compatibility scoring for individual players remains a future pathway.
-- 
---- 
+- Matchmaking and compatibility scoring for individual players is deferred to v0.11.
+- Real client records may still require migration from legacy scratch folders.
+
+---
 
 ## Next Focus
 
-1. Formalize and validate the Identity Selection Record.
-2. Build the system-recommendation stage.
-3. Add selected-concept refinement and final campaign-foundation output.
-4. Add submission lifecycle/status orchestration.
-5. Complete legacy data and fixture migration.
-6. Build an operator-facing workflow guide.
-7. Design the individual-player matchmaking compatibility pathway.
+1. Tag and stabilize v0.10.0.
+2. Plan v0.11 around intake scaling and individual-player matchmaking.
+3. Build the system-recommendation stage.
+4. Add selected-concept finalization.
+5. Continue expanding sanitized fixtures and operator documentation.
 
-### Human Selection Handoff
-
-- Create a structured Identity Selection Record.
-- Preserve liked elements, exclusions, requested changes, system decisions, and setting decisions.
-- Make this record the authoritative Phase 2 input.
-
-### System Recommendation
-
-- Recommend one familiar system and one or two mechanically distinct alternatives.
-- Consider group experience, complexity tolerance, tactical versus narrative preference, campaign length, age profile, and required mechanics.
-- Explain implementation notes and tradeoffs.
-
-### Client Delivery
-
-- Export normalized Identity Pitch data into a polished combined PDF.
-- Support optional individual Primary, Adjacent, and Wildcard PDFs.
-- Reuse the export architecture later for Phase 2 Campaign Concept Pitches.
-- Create professional email templates for intake receipt, Identity Pitch delivery, and Campaign Concept delivery.
-
-### Integration
-
-- Connect form intake to the production pipeline.
-- Record client selections in a structured handoff.
-- Integrate Phase 2 generation, recommendation, validation, PDF export, and delivery.
-
-## Next Priorities
-
-For a full list of milestones and fixes:
-https://github.com/Questforgegamespnw/questforge-campaign-distillery/issues
+For the full roadmap, see the GitHub issue tracker.
 
 ---
 
 ## Author
 
 **QuestForge Games PNW**  
-Professional GM Services  
+Professional GM Services
 
 The Campaign Distillery is part of an ongoing effort to build scalable, high-quality tabletop RPG experiences with a focus on consistency, immersion, and player agency.
 
@@ -439,10 +309,7 @@ https://www.questforgegamespnw.com/
 
 This project is not currently released under a formal open-source license.
 
-It is shared for **demonstration and portfolio purposes only**.
+It is shared for demonstration and portfolio purposes only.
 
 All rights reserved.  
 For usage, adaptation, or collaboration inquiries, please contact the author.
-
-
-

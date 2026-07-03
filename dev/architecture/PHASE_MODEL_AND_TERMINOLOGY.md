@@ -9,7 +9,7 @@
 **Output:** Phase 1 Identity Pitches  
 **Directions:** Primary, Adjacent, Wildcard
 
-Phase 1 identifies the campaign’s thematic center, emotional promise, style of play, broad genre, tone, and environment signals. It remains intentionally system-agnostic and does not establish a concrete campaign situation.
+Phase 1 identifies the campaign's thematic center, emotional promise, style of play, broad genre, tone, and environment signals. It remains intentionally system-agnostic and does not establish a concrete campaign situation.
 
 Phase 1 is implemented as:
 
@@ -20,6 +20,7 @@ raw intake
 → combined AI polish
 → source-bound validation
 → client Identity Pitch PDF
+→ Identity Selection Record
 ```
 
 ### Phase 2 — Campaign Concept Development
@@ -55,13 +56,38 @@ Use **Identity Pitch** for Phase 1 outputs.
 
 Use **identity direction** for Primary, Adjacent, and Wildcard.
 
+Use **Identity Selection Record** for the validated client-selection artifact that bridges Phase 1 and Phase 2.
+
 Use **Campaign Concept Pitch** for Phase 2 outputs.
 
 Use **concept variant** for Core Interpretation, Alternate Situation, and Distinctive Interpretation.
 
-Use **Phase 2 handoff** for the current implemented `00_PHASE2_HANDOFF.json`.
+Use **Phase 2 handoff** for `00_PHASE2_HANDOFF.json`, the operator-reviewable file used to prepare Phase 2 generation.
 
-Reserve **Identity Selection Record** for the future formalized, validated client-selection schema. The current handoff performs much of that practical role, but it is not yet the finalized runtime contract.
+---
+
+## Identity Selection Record
+
+The Identity Selection Record is the authoritative Phase 1 → Phase 2 boundary artifact.
+
+It records:
+
+- selected direction;
+- selected Identity Pitch;
+- client liked elements;
+- concerns and requested adjustments;
+- preservation guidance;
+- intake summary;
+- safety profile;
+- system and setting context;
+- source metadata;
+- validation state.
+
+It lives at:
+
+```text
+exports/submissions/<slug>/phase-1/identity-selection-record.json
+```
 
 ---
 
@@ -105,29 +131,25 @@ All invention must support the approved identity and recorded client constraints
 - mandatory personal relationships;
 - decisions already assigned to players;
 - excessive unrelated lore;
-- contradictory genre, tone, or play emphasis.
+- contradictory genre, tone, safety, or play emphasis.
 
 ---
 
 ## Current Human Boundary
 
-The implemented boundary is:
-
 ```text
 validated Phase 1 Identity Pitches
 → client review
-→ operator records selection and feedback
+→ Identity Selection Record
 → Phase 2 handoff
 → Campaign Concept generation
 ```
-
-A future formal Identity Selection Record should replace ad hoc operator interpretation without changing this phase boundary.
 
 ---
 
 ## Legacy Runtime Names
 
-The following remain valid source identifiers during v0.9.x:
+The following remain valid source identifiers during v0.10.x:
 
 - `generateCampaignPitch`;
 - `buildExpansionInput`;

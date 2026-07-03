@@ -44,3 +44,7 @@ For three concepts, the current packet is twelve pages.
 ## Boundary
 
 The exporter assumes the source JSON already passed Phase 2 validation. It does not repair or reinterpret concepts.
+
+## Status
+
+A successful export marks Phase 2 client delivery in `submission-status.json` and records the generated HTML/PDF artifact paths.

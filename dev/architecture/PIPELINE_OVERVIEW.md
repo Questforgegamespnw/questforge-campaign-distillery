@@ -31,6 +31,7 @@ Raw Client Submission
 → Validated Identity Pitches
 → Phase 1 HTML/PDF Export
 → Client Direction Selection
+→ Identity Selection Record
 → Phase 2 Handoff
 → Campaign Concept Input Validation
 → Combined Phase 2 AI Prompt
@@ -57,13 +58,14 @@ submissions/<slug>/
   submission-status.json
 ```
 
-These files describe what was received and what the deterministic pipeline decided.
+These files describe what was received, what the deterministic pipeline decided, and where the production workflow currently stands.
 
 ### Generated artifacts
 
 ```text
 exports/submissions/<slug>/
   phase-1/
+    identity-selection-record.json
     round-trip/
     client-delivery/
 
@@ -73,7 +75,7 @@ exports/submissions/<slug>/
       client-delivery/
 ```
 
-Prompts, pasted responses, validation reports, HTML previews, and PDFs belong under `exports`, not `submissions`.
+Prompts, pasted responses, validation reports, Identity Selection Records, HTML previews, and PDFs belong under `exports`, not `submissions`.
 
 ---
 
@@ -91,7 +93,9 @@ Prompts, pasted responses, validation reports, HTML previews, and PDFs belong un
 **Outputs**
 
 - `00_RAW_SUBMISSION.json`;
-- `01_NORMALIZED_SUBMISSION.json`.
+- `01_NORMALIZED_SUBMISSION.json`;
+- `02_PIPELINE_RESULT.json`;
+- `submission-status.json`.
 
 ---
 
@@ -100,7 +104,8 @@ Prompts, pasted responses, validation reports, HTML previews, and PDFs belong un
 **Responsibilities**
 
 - translate human preferences into weighted internal signals;
-- infer audience and experience profile;
+- infer `standard`, `youth`, or `kids` experience profile;
+- apply Core Frame audience policy;
 - apply safety and exclusion constraints;
 - record suppression and confidence;
 - prepare direction-selection guidance.
@@ -125,6 +130,8 @@ Prompts, pasted responses, validation reports, HTML previews, and PDFs belong un
 - build stable Identity Pitch scaffolding;
 - communicate campaign meaning and style of play;
 - apply tone and safety filters;
+- apply youth/kids voice shaping when needed;
+- apply client-facing boundary cleanup;
 - produce client and audit views.
 
 **Primary modules**
@@ -133,8 +140,9 @@ Prompts, pasted responses, validation reports, HTML previews, and PDFs belong un
 pitchCore
 → pitchSectionBuilders
 → pitchAssembly
-→ pitchCleanup
 → pitchSafetyFilters
+→ youthVoiceLayer
+→ pitchCleanup / client-facing boundary cleanup
 → generateCampaignPitch
 ```
 
@@ -171,7 +179,8 @@ round-trip-status.json
 - normalize validated Identity Pitch data;
 - build client-facing HTML;
 - render a PDF through Puppeteer;
-- write deliverables separately from internal round-trip artifacts.
+- write deliverables separately from internal round-trip artifacts;
+- update submission lifecycle status.
 
 ---
 
@@ -179,17 +188,15 @@ round-trip-status.json
 
 The client reviews the three Identity Pitches and selects one direction.
 
-The operator records:
+The operator records the decision by creating an Identity Selection Record.
 
-- selected direction;
-- liked elements;
-- elements to avoid;
-- requested changes;
-- system preferences;
-- setting preferences;
-- additional constraints.
+**Artifact**
 
-The current implementation stores these in the Phase 2 handoff. A formal Identity Selection Record schema remains future work.
+```text
+exports/submissions/<slug>/phase-1/identity-selection-record.json
+```
+
+The record captures selected direction, selected pitch, client response notes, preservation guidance, intake summary, safety profile, and optional system/setting context.
 
 ---
 
@@ -199,6 +206,7 @@ The current implementation stores these in the Phase 2 handoff. A formal Identit
 
 **Responsibilities**
 
+- consume the Identity Selection Record directly;
 - preserve the exact selected Identity Pitch;
 - summarize the approved identity;
 - record selection feedback;
@@ -210,6 +218,8 @@ The current implementation stores these in the Phase 2 handoff. A formal Identit
 ```text
 00_PHASE2_HANDOFF.json
 ```
+
+Legacy mode still supports validated Identity Pitches plus `--direction`.
 
 ---
 
@@ -281,6 +291,23 @@ The HTML preview and PDF are written to the Phase 2 `client-delivery` directory.
 
 ---
 
+# Submission Lifecycle Status
+
+`submission-status.json` is the shared production status spine.
+
+It records:
+
+- current stage;
+- next action;
+- Phase 1 and Phase 2 completion flags;
+- failed-validation states;
+- generated artifact paths;
+- append-only history.
+
+Commands should merge status updates rather than replacing previously completed steps.
+
+---
+
 # Design Principles
 
 ## Deterministic Before Generative
@@ -293,7 +320,7 @@ A response must be evaluated against the exact source package that generated its
 
 ## Human Review Between Phases
 
-Phase 2 begins only after a human approves one Phase 1 direction.
+Phase 2 begins only after a human approves one Phase 1 direction and records it in an Identity Selection Record.
 
 ## Generated Artifacts Are Not Source Records
 
@@ -307,9 +334,8 @@ Mapping does not render. Rendering does not select. Exporters do not redefine co
 
 ## Future Pipeline Work
 
-- formal Identity Selection Record;
 - structured system recommendation;
 - selected-concept refinement;
-- automatic lifecycle status updates;
 - automatic email delivery;
-- form-provider integration.
+- form-provider integration;
+- individual-player matchmaking and compatibility pools.

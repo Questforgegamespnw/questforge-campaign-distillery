@@ -4,13 +4,31 @@
 
 ## Purpose
 
-The Phase 2 round trip converts one validated Identity Pitch into one or three source-bound Campaign Concepts.
+The Phase 2 round trip converts one validated Identity Selection Record into one or three source-bound Campaign Concepts.
 
-## Prepare
+The preferred v0.10 source is:
+
+```text
+exports/submissions/<slug>/phase-1/identity-selection-record.json
+```
+
+Legacy compatibility mode still supports validated Identity Pitches plus `--direction`.
+
+---
+
+## Prepare — preferred mode
+
+```powershell
+node scripts/phase2/prepareCampaignConceptRoundTrip.js "exports/submissions/<slug>/phase-1/identity-selection-record.json"
+```
+
+## Prepare — legacy mode
 
 ```powershell
 node scripts/phase2/prepareCampaignConceptRoundTrip.js "exports/submissions/<slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --direction primary
 ```
+
+---
 
 ## First Run Behavior
 
@@ -20,7 +38,11 @@ The preparation command creates:
 00_PHASE2_HANDOFF.json
 ```
 
-Review and update that handoff before generation when client feedback, system preferences, setting decisions, or safety constraints are available.
+When the source is an Identity Selection Record, client selection details and preservation guidance are imported automatically.
+
+Review and update the handoff before generation when system preferences, setting decisions, operator notes, or additional safety constraints are available.
+
+---
 
 ## Workspace
 
@@ -35,16 +57,21 @@ exports/submissions/<slug>/phase-2/<direction>/round-trip/
   round-trip-status.json
 ```
 
+---
+
 ## Source Checks
 
 The workflow verifies:
 
+- the Identity Selection Record is valid, when used;
 - the selected direction still exists;
-- the handoff still contains the exact validated Identity Pitch;
+- the handoff still contains the exact selected Identity Pitch;
 - the normalized Phase 2 input is valid;
 - the input fingerprint still matches the prompt source.
 
 Changing the handoff after prompt generation requires preparing the prompt again.
+
+---
 
 ## Complete
 
@@ -58,9 +85,12 @@ A successful run writes:
 04_VALIDATED_CAMPAIGN_CONCEPTS.json
 ```
 
+---
+
 ## Validation Layers
 
 - source fingerprint;
+- Identity Selection Record validation, when used;
 - handoff identity binding;
 - input contract;
 - JSON parsing;
@@ -70,3 +100,9 @@ A successful run writes:
 - playability;
 - agency;
 - variant differentiation.
+
+---
+
+## Status
+
+Prepare and complete commands update `submission-status.json` with current stage, next action, validation outcome, source type, and artifact paths.

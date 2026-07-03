@@ -17,8 +17,11 @@ source record
 → deterministic rendering
 → round-trip source binding
 → AI validation
+→ Identity Selection Record
+→ Phase 2 handoff
 → exporter normalization
 → HTML/PDF rendering
+→ submission lifecycle status
 ```
 
 ---
@@ -26,15 +29,17 @@ source record
 ## Quick Triage
 
 ```text
-Wrong raw values?                 → 00_RAW_SUBMISSION.json
-Wrong normalized values?          → 01_NORMALIZED_SUBMISSION.json
-Wrong selected direction data?    → 02_PIPELINE_RESULT.json
-Wrong Phase 1 prose backbone?      → renderer layers
-Wrong polished Identity Pitch?     → Phase 1 round-trip validation
-Wrong approved identity in P2?     → 00_PHASE2_HANDOFF.json
-Wrong concrete concept?            → Phase 2 prompt/evaluator/schema
-Wrong client layout?               → exporter HTML builder or CSS
-Missing files or wrong folder?     → projectPaths/submissionPathUtils
+Wrong raw values?                    → 00_RAW_SUBMISSION.json
+Wrong normalized values?             → 01_NORMALIZED_SUBMISSION.json
+Wrong selected direction data?       → 02_PIPELINE_RESULT.json
+Wrong Phase 1 prose backbone?         → renderer layers
+Wrong polished Identity Pitch?        → Phase 1 round-trip validation
+Wrong client selection?               → identity-selection-record.json
+Wrong approved identity in P2?        → identity-selection-record.json or 00_PHASE2_HANDOFF.json
+Wrong concrete concept?               → Phase 2 prompt/evaluator/schema
+Wrong client layout?                  → exporter HTML builder or CSS
+Missing files or wrong folder?        → projectPaths/submissionPathUtils
+Wrong workflow state or next action?  → submission-status.json
 ```
 
 ---
@@ -75,9 +80,10 @@ Check in order:
 1. normalized intake;
 2. translated signals;
 3. safety and audience inference;
-4. candidate weights;
-5. Primary/Adjacent/Wildcard selection;
-6. resolved objects.
+4. Core Frame audience policy;
+5. candidate weights;
+6. Primary/Adjacent/Wildcard selection;
+7. resolved objects.
 
 ## Poor sentence quality
 
@@ -87,15 +93,21 @@ Inspect:
 pitchCore
 → pitchSectionBuilders
 → pitchAssembly
-→ pitchCleanup
 → pitchSafetyFilters
+→ youthVoiceLayer
+→ pitchCleanup / client-facing boundary cleanup
 ```
 
 Do not fix grammar in mapping or selection.
 
-## Missing `pitchText`
+## Wrong youth or kids phrasing
 
-Correct the data entry or resolution path. Do not patch the final rendered sentence.
+Check:
+
+- `experienceProfile` propagation;
+- Core Frame audience policy for theme routing;
+- `youthVoiceLayer` for phrasing;
+- client-facing boundary cleanup for final field cleanup.
 
 ---
 
@@ -131,9 +143,29 @@ Inspect:
 
 Each direction is evaluated independently. Check missing keys, empty fields, extra keys, or forbidden drift.
 
-## JSON extraction failure
+---
 
-The parser tolerates a Markdown fence and surrounding text, but the response must contain one valid JSON object.
+# Identity Selection Record Failures
+
+## Selected direction invalid
+
+The selected direction must be:
+
+```text
+primary | adjacent | wildcard
+```
+
+## Selected pitch missing required fields
+
+Check the source `04_VALIDATED_IDENTITY_PITCHES.json`. Each selected pitch must include:
+
+```text
+title, pitch, about, playersDo, hook
+```
+
+## Phase 2 rejects the Identity Selection Record
+
+Run or inspect the Identity Selection Record validator. Do not bypass the record by manually copying pitch text into the handoff unless intentionally using legacy mode.
 
 ---
 
@@ -177,7 +209,7 @@ The handoff changed after the prompt was generated.
 Fix:
 
 ```powershell
-node scripts/phase2/prepareCampaignConceptRoundTrip.js ...
+node scripts/phase2/prepareCampaignConceptRoundTrip.js "exports/submissions/<slug>/phase-1/identity-selection-record.json"
 ```
 
 Then use the regenerated prompt and response skeleton.
@@ -229,19 +261,6 @@ npm.cmd install puppeteer
 
 Use `--html-only` to verify document construction without Chromium.
 
-## PDF clipping or page overflow
-
-Open the HTML preview first.
-
-Determine whether the issue belongs to:
-
-- normalized source length;
-- HTML structure;
-- CSS page sizing;
-- browser rendering.
-
-Do not shorten validated content inside the CLI script.
-
 ## Wrong client-delivery directory
 
 Inspect:
@@ -253,41 +272,11 @@ Inspect:
 
 ---
 
-# Path and Restructure Failures
+# Status Failures
 
-Avoid hardcoded `../../..` project traversal.
+If `submission-status.json` looks stale or incomplete, check that the command was run through the production script rather than by manually copying files.
 
-Use:
-
-```text
-scripts/shared/projectPaths.js
-scripts/shared/submissionPathUtils.js
-```
-
-VS Code import updates do not repair:
-
-- `__dirname` file paths;
-- string paths;
-- documentation commands;
-- fixture discovery;
-- output roots.
-
----
-
-# Logging Guidance
-
-Useful checkpoints include:
-
-```js
-console.log("NORMALIZED:", normalized);
-console.log("TRANSLATED:", translated);
-console.log("SELECTED:", selected);
-console.log("RESOLVED:", resolved);
-console.log("FINGERPRINT:", fingerprint);
-console.log("VALIDATION:", validation);
-```
-
-Remove noisy temporary logs after the cause is identified.
+The shared status utility should merge updates and preserve completed flags. Later commands should not erase earlier completed steps.
 
 ---
 
@@ -314,4 +303,4 @@ The most useful debugging questions are:
 2. Is the wrong value authoritative or generated?
 3. Did the source change after prompt generation?
 4. Did validation reject structure, meaning, or transport?
-5. Is the problem content, HTML, CSS, or Chromium?
+5. Is the problem content, HTML, CSS, Chromium, or lifecycle status?

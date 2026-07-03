@@ -63,6 +63,20 @@ node scripts/phase1/completeIdentityPolishRoundTrip.js "exports/submissions/<slu
 
 A complete run writes `04_VALIDATED_IDENTITY_PITCHES.json`.
 
+## Next Step
+
+After the client reviews the Identity Pitch PDF and selects one direction, create the Identity Selection Record:
+
+```powershell
+node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --direction primary
+```
+
+This writes:
+
+```text
+exports/submissions/<slug>/phase-1/identity-selection-record.json
+```
+
 ## Scope
 
 The AI may improve expression. It may not add:
@@ -74,3 +88,7 @@ The AI may improve expression. It may not add:
 - plot events;
 - game mechanics;
 - a different identity.
+
+## Status
+
+Prepare and complete commands update `submission-status.json` with current stage, next action, validation state, and artifact paths.

@@ -4,6 +4,152 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## v0.10.0 — Phase 1 → Phase 2 Handoff Hardening
+
+### Summary
+
+v0.10.0 completes the core production handoff between **Phase 1 Identity Discovery** and **Phase 2 Campaign Concept Development**.
+
+This release hardens the output pipeline around audience-aware interpretation, client-facing phrasing boundaries, validated identity selection, direct Phase 2 consumption of selected identities, and shared submission lifecycle status. It closes the v0.10 goal of making the human-in-the-loop production workflow stable, reviewable, and ready for repeated operator use.
+
+---
+
+### Audience and Safety Architecture
+
+- Added explicit three-way experience profile handling:
+  - `standard`;
+  - `youth`;
+  - `kids`.
+- Clarified that `standard` is the default profile and does not imply adult-only content.
+- Added Core Frame audience policy for younger groups.
+- Added explicit preserve, soften, downweight, substitute, and suppress behavior for Core Frames.
+- Added profile-aware handling so youth preserves meaningful stakes while kids routes adult-heavy themes into safer equivalents.
+- Added high-risk Core Frame combination downweighting.
+- Added regression coverage for complete Core Frame audience policy coverage.
+
+---
+
+### Youth Voice Layer
+
+- Added a dedicated youth voice layer under `src/voice`.
+- Preserved standard-profile output unchanged.
+- Added youth-profile phrasing that keeps danger and stakes meaningful while reducing hopeless, crushing, or destabilizing language.
+- Added kids-profile phrasing that favors curiosity, teamwork, repair, problem-solving, and approachable challenges.
+- Kept theme routing separate from voice shaping:
+  - Core Frame policy decides what themes are allowed or substituted;
+  - the voice layer decides how younger-audience text should sound.
+- Wired the layer into final client-facing Identity Pitch fields.
+
+---
+
+### Client-Facing Output Boundary
+
+- Added a dedicated client-facing phrase boundary cleanup layer.
+- Cleaned final pitch fields without altering internal handoff/audit data.
+- Reduced leakage of internal terms such as frame IDs, renderer language, adjudication phrasing, candidate buckets, suppressed signals, and confidence scoring.
+- Preserved `aiBrief` and adjudication data as explicit internal context.
+
+---
+
+### System Lead Normalization
+
+- Refactored system lead cleanup from chained string replacement into a named-rule pipeline.
+- Added reusable rule application helpers.
+- Exposed applied rule IDs for debugging and regression coverage.
+- Improved maintainability of system-derived player-facing phrasing.
+
+---
+
+### Identity Selection Record
+
+- Added a reusable Identity Selection Record builder.
+- Added a validator for selected Phase 1 identity handoff records.
+- Formalized the selected identity artifact between Phase 1 and Phase 2.
+- Captured:
+  - selected direction;
+  - selected Identity Pitch;
+  - client response notes;
+  - liked elements;
+  - concerns and requested adjustments;
+  - preservation guidance;
+  - intake summary;
+  - safety profile;
+  - system and setting context;
+  - source metadata and validation state.
+- Added a Phase 1 script to create the record from validated Identity Pitches.
+- Established the canonical output location:
+
+```text
+exports/submissions/<submission-slug>/phase-1/identity-selection-record.json
+```
+
+---
+
+### Phase 2 Identity Selection Bridge
+
+- Updated Phase 2 preparation to consume a validated Identity Selection Record directly.
+- Preserved legacy support for validated Identity Pitches plus `--direction`.
+- Imported client response and preservation guidance from the Identity Selection Record into the Phase 2 handoff.
+- Recorded source type in Phase 2 round-trip status.
+- Updated completion checks so Phase 2 can source-check either validated Identity Pitches or Identity Selection Records.
+
+Preferred Phase 2 preparation now uses:
+
+```powershell
+node scripts/phase2/prepareCampaignConceptRoundTrip.js "exports/submissions/<submission-slug>/phase-1/identity-selection-record.json"
+```
+
+---
+
+### Submission Lifecycle Status
+
+- Added shared submission status synchronization across production workflows.
+- Updated workflow commands to write through the same `submission-status.json` contract.
+- Preserved completed steps when later commands update status.
+- Added current stage, next action, artifact paths, failed-validation states, and append-only history entries.
+- Status now tracks:
+  - deterministic processing;
+  - Phase 1 round-trip preparation;
+  - Phase 1 validation;
+  - Phase 1 PDF export;
+  - Identity Selection Record creation;
+  - Phase 2 handoff/preparation;
+  - Phase 2 validation;
+  - Phase 2 PDF export.
+- Prepared the status contract for a future operator dashboard.
+
+---
+
+### Intake and Group Context
+
+- Added group-context fields to intake handling.
+- Preserved legacy group-size compatibility while adding current and desired group-size handling.
+- Distinguished individual, partial-group, existing-group, and organizer submissions.
+- Preserved the difference between family-friendly standard campaigns and full kids-profile routing.
+
+---
+
+### Tests
+
+- Added regression coverage for:
+  - system lead normalization;
+  - client-facing phrase boundaries;
+  - Core Frame audience policy;
+  - youth voice behavior;
+  - Identity Selection Record building and validation;
+  - Identity Selection Record → Phase 2 bridge;
+  - submission lifecycle status synchronization.
+- Full routine suite passes with 14 tests.
+
+---
+
+### Deferred to v0.11
+
+- Moved individual-player matchmaking and compatibility pools to v0.11.
+- Matchmaking is a new capability area and should receive its own data model, privacy boundaries, compatibility scoring rules, and operator workflow.
+
+---
+
 ## v0.9.1 — Two-Phase Client Delivery Workflow
 
 ### Summary
@@ -273,11 +419,9 @@ src/exporters/
 ---
 
 ### Future Work Identified
-- Formalize the Identity Selection Record as a validated schema.
 - Add a structured system-recommendation stage.
 - Add a concise Phase 2 meeting/comparison worksheet.
-- Add lifecycle status updates across Phase 1 and Phase 2 delivery.
-- Add a matchmaking and compatibility-pool pathway for individual players seeking groups.
+- Add a matchmaking and compatibility-pool pathway for individual players seeking groups in v0.11.
 - Consider automated notifications when new compatible player profiles enter the matchmaking pool.
 - Add Formspree or intake-platform automation when business scale justifies it.
 
