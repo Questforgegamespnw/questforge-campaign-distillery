@@ -5,6 +5,11 @@ const toneSkins = require("../data/toneSkins");
 const genreSkins = require("../data/genreSkins");
 const environmentSkins = require("../data/environmentSkins");
 const { applyFrameCrosswalk } = require("./frameCrosswalk");
+const {
+    getCoreFrameAudiencePolicy,
+    getMissingCoreFrameAudiencePolicies,
+    hasCompleteCoreFrameAudiencePolicy
+} = require("./coreFrameAudiencePolicy");
 
 const EXPERIENCE_PROFILES = Object.freeze([
     "standard",
@@ -118,14 +123,10 @@ function getProfileRules(experienceProfile) {
         return {
             profile,
             coreFramePool: youthCoreFrames,
-            excludedCoreFrameIds: [
-                "entropy_decay",
-                "power_has_a_cost",
-                "what_is_humanity",
-                "the_endless_siege",
-                "investigators_burden",
-                "fall_from_grace"
-            ],
+            // Core Frame suppression/substitution is handled by coreFrameAudiencePolicy.
+            // Do not pre-filter adult Core Frame candidates here, or kids-safe substitutes
+            // will never receive the original candidate weight.
+            excludedCoreFrameIds: [],
             excludedSystemFrameIds: [
                 "attrition_combat",
                 "resource_scarcity",
@@ -141,8 +142,6 @@ function getProfileRules(experienceProfile) {
         };
     }
 
-    // The interim youth bridge preserves the standard candidate pools.
-    // Ticket #74 will define explicit preserve/soften/substitute/suppress rules.
     return {
         profile,
         coreFramePool: coreFrames,
@@ -243,5 +242,8 @@ module.exports = {
     finalizeExperienceProfile,
     getProfileRules,
     applyProfileRulesToBuckets,
-    resolveCampaignContext
+    resolveCampaignContext,
+    getCoreFrameAudiencePolicy,
+    getMissingCoreFrameAudiencePolicies,
+    hasCompleteCoreFrameAudiencePolicy
 };

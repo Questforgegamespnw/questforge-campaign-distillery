@@ -1,4 +1,7 @@
-const { sentenceCase } = require("./pitchCleanup");
+const {
+  sentenceCase,
+  cleanClientFacingText
+} = require("./pitchCleanup");
 const {
   getAdjudication,
   getSafetyProfile,
@@ -94,32 +97,21 @@ function generateCampaignPitch(selections = {}) {
     selections
   });
 
+  const cleanClientField = (value) => cleanClientFacingText(
+    applyToneFilters(
+      value,
+      ctx.toneName,
+      ctx.excludeNotes,
+      selections
+    )
+  );
+
   return {
-    title,
-    pitch: applyToneFilters(
-      appendAudienceGuidance(pitch, selections),
-      ctx.toneName,
-      ctx.excludeNotes,
-      selections
-    ),
-    about: applyToneFilters(
-      about,
-      ctx.toneName,
-      ctx.excludeNotes,
-      selections
-    ),
-    playersDo: applyToneFilters(
-      playersDo,
-      ctx.toneName,
-      ctx.excludeNotes,
-      selections
-    ),
-    distinctHook: applyToneFilters(
-      distinctHook,
-      ctx.toneName,
-      ctx.excludeNotes,
-      selections
-    ),
+    title: cleanClientFacingText(title),
+    pitch: cleanClientField(appendAudienceGuidance(pitch, selections)),
+    about: cleanClientField(about),
+    playersDo: cleanClientField(playersDo),
+    distinctHook: cleanClientField(distinctHook),
     aiBrief,
     adjudicationSummary: {
       experienceProfile: ctx.experienceProfile,

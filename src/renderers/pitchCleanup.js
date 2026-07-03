@@ -61,93 +61,140 @@ function normalizeDescription(text, fallback = "") {
     return cleaned.endsWith(".") ? cleaned : `${cleaned}.`;
 }
 
+const SYSTEM_LEAD_RULES = Object.freeze([
+    {
+        id: "clue_web_linear_trail",
+        pattern: /^Players assemble scattered clues into a larger understanding rather than following a single linear trail$/i,
+        replacement: "following scattered clues and slowly piecing them together"
+    },
+    {
+        id: "hidden_information_uncertainty",
+        pattern: /^Players never have the full picture, and uncertainty becomes part of the tension$/i,
+        replacement: "working with incomplete information and mounting uncertainty"
+    },
+    {
+        id: "resource_scarcity_cost",
+        pattern: /^The players never have enough time, safety, light, healing, or supplies, so every decision costs something$/i,
+        replacement: "making hard calls when time, safety, and supplies are always running short"
+    },
+    {
+        id: "exploration_discovery_loop",
+        pattern: /^Progress comes from uncovering new places, secrets, paths, and environmental story buried in the world$/i,
+        replacement: "exploring strange places and uncovering what they mean"
+    },
+    {
+        id: "escalation_meter_consequences",
+        pattern: /^The longer events continue or the more certain actions are taken, the worse consequences become$/i,
+        replacement: "managing problems before they spiral"
+    },
+    {
+        id: "escalation_meter_outcomes",
+        pattern: /^The longer events continue or the more certain actions are taken, the worse outcomes become$/i,
+        replacement: "managing problems before they spiral"
+    },
+    {
+        id: "tactical_positioning",
+        pattern: /^Movement, territory, chokepoints, and positioning become central to how encounters are won or lost$/i,
+        replacement: "managing movement, territory, chokepoints, and positioning"
+    },
+    {
+        id: "social_leverage",
+        pattern: /^Words, alliances, leverage, and negotiation shape the campaign as much as combat does$/i,
+        replacement: "managing pressure, leverage, negotiation, and fragile alliances"
+    },
+    {
+        id: "asymmetrical_boss_design",
+        pattern: /^Enemies break normal expectations and create memorable multi-phase setpiece encounters$/i,
+        replacement: "facing enemies that force new tactics instead of routine fights"
+    },
+    {
+        id: "corruption_transformation",
+        pattern: /^Power changes the characters over time, creating tradeoffs between strength, identity, and consequence$/i,
+        replacement: "power changing the characters over time"
+    },
+    {
+        id: "environmental_combat",
+        pattern: /^The battlefield matters as much as the enemies, with hazards, terrain, and interaction shaping the fight$/i,
+        replacement: "surviving battlefields where hazards and terrain matter as much as the enemies"
+    },
+    {
+        id: "living_world_reaction",
+        pattern: /^The world responds to player action over time, with areas, threats, and NPC behavior changing in reaction$/i,
+        replacement: "a world reacting to what the players do"
+    },
+    {
+        id: "faction_reputation",
+        pattern: /^Player actions shift their standing with factions, unlocking opportunities or closing doors over time$/i,
+        replacement: "shifting faction standing as alliances form, break, and evolve"
+    },
+    {
+        id: "choice_response",
+        pattern: /^Their choices, alliances, and leverage shape how the world responds$/i,
+        replacement: "choices and alliances reshaping how the world responds"
+    },
+    {
+        id: "modular_build_identity",
+        pattern: /^Players build their identity through flexible components, allowing highly customized growth and expression$/i,
+        replacement: "shaping identity through modular growth and highly customized choices"
+    },
+    {
+        id: "alliance_tradeoffs",
+        pattern: /^No alliance is simple, and choosing sides carries long-term consequences, tension, and compromise$/i,
+        replacement: "navigating alliances where every choice comes with tradeoffs and long-term consequences"
+    },
+    {
+        id: "verb_chain_power_change",
+        pattern: /^dealing with power that changes the characters over time$/i,
+        replacement: "power changing the characters over time"
+    },
+    {
+        id: "verb_chain_world_reaction",
+        pattern: /^dealing with a world that keeps reacting to what the players do$/i,
+        replacement: "a world reacting to what the players do"
+    },
+    {
+        id: "verb_chain_choice_response",
+        pattern: /^watching choices and alliances reshape how the world responds$/i,
+        replacement: "choices and alliances reshaping how the world responds"
+    }
+]);
+
+function applyReplacementRules(text = "", rules = []) {
+    return rules.reduce(
+        (output, rule) => output.replace(rule.pattern, rule.replacement),
+        String(text || "")
+    );
+}
+
+function applySystemLeadRules(text = "") {
+    const input = String(text || "");
+    const appliedRuleIds = [];
+
+    const normalized = SYSTEM_LEAD_RULES.reduce((output, rule) => {
+        const next = output.replace(rule.pattern, rule.replacement);
+        if (next !== output) {
+            appliedRuleIds.push(rule.id);
+        }
+        return next;
+    }, input);
+
+    return {
+        text: normalized,
+        appliedRuleIds
+    };
+}
+
 function normalizeSystemLead(text = "") {
     const cleaned = stripTrailingPeriod(cleanName(text));
 
     if (!cleaned) return "";
 
-    return cleaned
-        .replace(
-            /^Players assemble scattered clues into a larger understanding rather than following a single linear trail$/i,
-            "following scattered clues and slowly piecing them together"
-        )
-        .replace(
-            /^Players never have the full picture, and uncertainty becomes part of the tension$/i,
-            "working with incomplete information and mounting uncertainty"
-        )
-        .replace(
-            /^The players never have enough time, safety, light, healing, or supplies, so every decision costs something$/i,
-            "making hard calls when time, safety, and supplies are always running short"
-        )
-        .replace(
-            /^Progress comes from uncovering new places, secrets, paths, and environmental story buried in the world$/i,
-            "exploring strange places and uncovering what they mean"
-        )
-        .replace(
-            /^The longer events continue or the more certain actions are taken, the worse consequences become$/i,
-            "managing problems before they spiral"
-        )
-        .replace(
-            /^The longer events continue or the more certain actions are taken, the worse outcomes become$/i,
-            "managing problems before they spiral"
-        )
-        .replace(
-            /^Movement, territory, chokepoints, and positioning become central to how encounters are won or lost$/i,
-            "managing movement, territory, chokepoints, and positioning"
-        )
-        .replace(
-            /^Words, alliances, leverage, and negotiation shape the campaign as much as combat does$/i,
-            "managing pressure, leverage, negotiation, and fragile alliances"
-        )
-        .replace(
-            /^Enemies break normal expectations and create memorable multi-phase setpiece encounters$/i,
-            "facing enemies that force new tactics instead of routine fights"
-        )
-        .replace(
-            /^Power changes the characters over time, creating tradeoffs between strength, identity, and consequence$/i,
-            "power changing the characters over time"
-        )
-        .replace(
-            /^The battlefield matters as much as the enemies, with hazards, terrain, and interaction shaping the fight$/i,
-            "surviving battlefields where hazards and terrain matter as much as the enemies"
-        )
-        .replace(
-            /^The world responds to player action over time, with areas, threats, and NPC behavior changing in reaction$/i,
-            "a world reacting to what the players do"
-        )
-        .replace(
-            /^Player actions shift their standing with factions, unlocking opportunities or closing doors over time$/i,
-            "shifting faction standing as alliances form, break, and evolve"
-        )
-        .replace(
-            /^Their choices, alliances, and leverage shape how the world responds$/i,
-            "choices and alliances reshaping how the world responds"
-        )
-        .replace(
-            /^Players build their identity through flexible components, allowing highly customized growth and expression$/i,
-            "shaping identity through modular growth and highly customized choices"
-        )
-        .replace(
-            /^No alliance is simple, and choosing sides carries long-term consequences, tension, and compromise$/i,
-            "navigating alliances where every choice comes with tradeoffs and long-term consequences"
-        )
-
-        .replace(
-            /^dealing with power that changes the characters over time$/i,
-            "power changing the characters over time"
-        )
-        .replace(
-            /^dealing with a world that keeps reacting to what the players do$/i,
-            "a world reacting to what the players do"
-        )
-        .replace(
-            /^watching choices and alliances reshape how the world responds$/i,
-            "choices and alliances reshaping how the world responds"
-        )
-
+    return applySystemLeadRules(cleaned)
+        .text
         .replace(/\s+/g, " ")
         .trim();
 }
+
 
 function getSystemPitchText(system = {}) {
     const direct = stripTrailingPeriod(cleanName(system?.pitchText || ""));
@@ -460,6 +507,109 @@ function pickOne(arr, fallback = "", avoidRepeat = false) {
     lastPick = choice;
     return choice;
 }
+
+
+/// CLIENT-FACING BOUNDARY RULES ///
+const CLIENT_FACING_BOUNDARY_RULES = Object.freeze([
+    {
+        id: "adjacent_direction_to_version",
+        pattern: /\bthe adjacent direction\b/gi,
+        replacement: "this version"
+    },
+    {
+        id: "this_direction_to_this_version",
+        pattern: /\bthis direction\b/gi,
+        replacement: "this version"
+    },
+    {
+        id: "new_direction_to_new_emphasis",
+        pattern: /\bthe new direction\b/gi,
+        replacement: "the new emphasis"
+    },
+    {
+        id: "direction_defining_break",
+        pattern: /\bthe direction's defining break\b/gi,
+        replacement: "the defining break"
+    },
+    {
+        id: "entire_direction_to_entire_campaign",
+        pattern: /\bthe entire direction\b/gi,
+        replacement: "the entire campaign"
+    },
+    {
+        id: "wildcard_as_label",
+        pattern: /\bthe wildcard\b/gi,
+        replacement: "the bolder version"
+    },
+    {
+        id: "frame_language_singular",
+        pattern: /\bthis frame\b/gi,
+        replacement: "this story"
+    },
+    {
+        id: "core_frame_language",
+        pattern: /\bcore frames?\b/gi,
+        replacement: "central themes"
+    },
+    {
+        id: "system_frame_language",
+        pattern: /\bsystem frames?\b/gi,
+        replacement: "play structures"
+    },
+    {
+        id: "renderer_language",
+        pattern: /\b(renderer|rendering|adjudication|candidate buckets?|suppressed signals?|confidence score|debug notes?)\b/gi,
+        replacement: ""
+    },
+    {
+        id: "this_output_language",
+        pattern: /\bthis output reflects\b/gi,
+        replacement: "this campaign emphasizes"
+    },
+    {
+        id: "primary_selection_language",
+        pattern: /\bthe primary selection combines\b/gi,
+        replacement: "the campaign combines"
+    },
+    {
+        id: "frame_id_snake_case_cleanup",
+        pattern: /\b([a-z]+(?:_[a-z0-9]+)+)\b/g,
+        replacement: (_, value) => humanizeName(value).toLowerCase()
+    }
+]);
+
+function applyClientFacingBoundaryRules(text = "") {
+    const input = String(text || "");
+    const appliedRuleIds = [];
+
+    const normalized = CLIENT_FACING_BOUNDARY_RULES.reduce((output, rule) => {
+        const next = output.replace(rule.pattern, rule.replacement);
+        if (next !== output) {
+            appliedRuleIds.push(rule.id);
+        }
+        return next;
+    }, input);
+
+    return {
+        text: normalized
+            .replace(/\s+/g, " ")
+            .replace(/\s+([.,!?;:])/g, "$1")
+            .replace(/\(\s*\)/g, "")
+            .replace(/\bthe bolder version follows the fact that\b/gi, "the bolder version follows the truth that")
+            .replace(/\bthis version changes the premise by making it clear that\b/gi, "this version begins from the realization that")
+            .trim(),
+        appliedRuleIds
+    };
+}
+
+function cleanClientFacingText(text = "") {
+    const cleaned = cleanOutputText(text);
+    return applyClientFacingBoundaryRules(cleaned)
+        .text
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
 /// PHRASE REWRITES ///
 const PHRASE_REWRITES = [
     {
@@ -473,10 +623,7 @@ const PHRASE_REWRITES = [
 ];
 
 function applyPhraseRewrites(text = "") {
-    return PHRASE_REWRITES.reduce(
-        (output, rule) => output.replace(rule.pattern, rule.replacement),
-        String(text || "")
-    );
+    return applyReplacementRules(text, PHRASE_REWRITES);
 }
 
 function cleanOutputText(text = "") {
@@ -531,7 +678,13 @@ module.exports = {
     stripLeadingWhile,
     stripTrailingPeriod,
     normalizeDescription,
+    SYSTEM_LEAD_RULES,
+    applyReplacementRules,
+    applySystemLeadRules,
     normalizeSystemLead,
+    CLIENT_FACING_BOUNDARY_RULES,
+    applyClientFacingBoundaryRules,
+    cleanClientFacingText,
     getSystemPitchText,
     abstractSystemPitchText,
     getCorePitchText,
