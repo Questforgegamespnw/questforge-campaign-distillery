@@ -15,6 +15,7 @@ function includesAny(text, phrases) {
 function inferSafetySignals(raw = {}) {
     const normalizedAudience = normalizeText(raw.audience);
     const normalizedAgeBand = normalizeText(raw.age_band);
+    const normalizedSystem = normalizeText(raw.system);
     const youthModeValues = toArray(raw.youth_mode);
     const contentBoundaries = toArray(raw.content_boundaries);
     const mustHaves = String(raw.must_haves || "").trim();
@@ -24,14 +25,15 @@ function inferSafetySignals(raw = {}) {
     const normalizedMustHaves = mustHaves.toLowerCase();
     const normalizedAvoid = avoid.toLowerCase();
 
-    // Legacy binary switch: "yes" historically meant the full kid-safe / Hero Kids route.
     const explicitYouthMode =
         youthModeValues.some((value) => normalizeText(value) === "yes");
 
     const audienceSuggestsKids = [
-        "kids (under 13)",
-        "family-friendly / kid-safe experience"
+        "kids (under 13)"
     ].includes(normalizedAudience);
+
+    const audienceRequestsFamilyFriendly =
+        normalizedAudience === "family-friendly / kid-safe experience";
 
     const audienceSuggestsYouth = [
         "teens (13–17)",
@@ -71,13 +73,14 @@ function inferSafetySignals(raw = {}) {
             "mixed-age"
         ]);
 
-    const familyFriendlyBoundary = includesAny(normalizedBoundaryText, [
-        "family-friendly",
-        "kid-safe",
-        "positive outcomes",
-        "non-lethal",
-        "low danger"
-    ]);
+    const familyFriendlyBoundary = audienceRequestsFamilyFriendly ||
+        includesAny(normalizedBoundaryText, [
+            "family-friendly",
+            "kid-safe",
+            "positive outcomes",
+            "non-lethal",
+            "low danger"
+        ]);
 
     const horrorRestricted =
         includesAny(normalizedBoundaryText, [
@@ -121,16 +124,41 @@ function inferSafetySignals(raw = {}) {
             "bleak"
         ]);
 
-    const experienceProfile =
-        explicitYouthMode || audienceSuggestsKids || ageBandSuggestsKids || textSuggestsKids
-            ? "kids"
-            : audienceSuggestsYouth || ageBandSuggestsYouth || textSuggestsYouth
-                ? "youth"
+    const kidsAudienceSignals =
+        audienceSuggestsKids ||
+        ageBandSuggestsKids ||
+        textSuggestsKids ||
+        normalizedSystem === "hero_kids";
+
+    const youthAudienceSignals =
+        audienceSuggestsYouth ||
+        ageBandSuggestsYouth ||
+        textSuggestsYouth;
+
+    const experienceProfile = kidsAudienceSignals
+        ? "kids"
+        : youthAudienceSignals
+            ? "youth"
+            : "standard";
+
+    const contentSafetyMode = experienceProfile === "kids"
+        ? "full_kid_safe"
+        : explicitYouthMode || familyFriendlyBoundary
+            ? "family_friendly"
+            : horrorRestricted || graphicContentRestricted || oppressiveToneRestricted
+                ? "restricted"
                 : "standard";
 
-    const inferredYouthSafe = experienceProfile !== "standard";
-    const softerThemesMode = experienceProfile === "youth";
-    const fullSafeMode = experienceProfile === "kids";
+    const inferredYouthSafe =
+        experienceProfile !== "standard" ||
+        explicitYouthMode ||
+        familyFriendlyBoundary;
+
+    const softerThemesMode =
+        experienceProfile === "youth" ||
+        contentSafetyMode === "family_friendly";
+
+    const fullSafeMode = contentSafetyMode === "full_kid_safe";
     const heroKidsMode = fullSafeMode;
 
     // Backward compatibility: the old safe-mode switch represented the full kid-safe path.
@@ -139,7 +167,9 @@ function inferSafetySignals(raw = {}) {
     const softYouthCueCount = [
         audienceSuggestsYouth,
         ageBandSuggestsYouth,
-        textSuggestsYouth
+        textSuggestsYouth,
+        explicitYouthMode,
+        familyFriendlyBoundary
     ].filter(Boolean).length;
 
     const contradictionNotes = [];
@@ -162,11 +192,22 @@ function inferSafetySignals(raw = {}) {
         );
     }
 
+    if (
+        normalizedAudience === "adults" &&
+        (explicitYouthMode || familyFriendlyBoundary)
+    ) {
+        contradictionNotes.push(
+            "Audience is marked as Adults, but family-friendly or youth-safe content constraints were also requested."
+        );
+    }
+
     return {
         experienceProfile,
+        contentSafetyMode,
         explicitYouthMode,
         audienceSuggestsYouth,
         audienceSuggestsKids,
+        audienceRequestsFamilyFriendly,
         ageBandSuggestsYouth,
         ageBandSuggestsKids,
         familyFriendlyBoundary,

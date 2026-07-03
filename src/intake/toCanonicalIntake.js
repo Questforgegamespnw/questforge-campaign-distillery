@@ -1,23 +1,3 @@
-function firstItem(array) {
-    return Array.isArray(array) && array.length > 0 ? array[0] : "";
-}
-
-function joinNotes(...parts) {
-    return parts
-        .map((value) => String(value || "").trim())
-        .filter(Boolean)
-        .join("; ");
-}
-
-function normalizeValue(value) {
-    return String(value || "")
-        .trim()
-        .toLowerCase()
-        .replace(/&/g, "and")
-        .replace(/[^a-z0-9]+/g, "_")
-        .replace(/^_+|_+$/g, "");
-}
-
 function toCanonicalIntake(normalized = {}) {
     const source = normalized.source || {};
     const groupInfo = normalized.groupInfo || {};
@@ -28,6 +8,21 @@ function toCanonicalIntake(normalized = {}) {
     const safetySignals = normalized.safetySignals || {};
     const resolvedFlags = normalized.resolvedFlags || {};
     const diagnostics = normalized.diagnostics || {};
+
+    const experienceProfile =
+        resolvedFlags.experienceProfile ||
+        safetySignals.experienceProfile ||
+        "standard";
+
+    const contentSafetyMode =
+        resolvedFlags.contentSafetyMode ||
+        safetySignals.contentSafetyMode ||
+        "standard";
+
+    const contradictionNotes =
+        diagnostics.contradictionNotes ||
+        safetySignals.contradictionNotes ||
+        [];
 
     return {
         schemaVersion: "1.0",
@@ -41,7 +36,10 @@ function toCanonicalIntake(normalized = {}) {
         group: {
             name: groupInfo.name || "",
             email: groupInfo.email || "",
+            respondentType: groupInfo.respondentType || "",
             groupSize: groupInfo.groupSize || "",
+            currentGroupSize: groupInfo.currentGroupSize || "",
+            desiredGroupSize: groupInfo.desiredGroupSize || "",
             systemPreference: groupInfo.systemPreference || "",
             audience: groupInfo.audience || "",
             ageBand: groupInfo.ageBand || ""
@@ -69,15 +67,37 @@ function toCanonicalIntake(normalized = {}) {
         },
 
         safety: {
+            experienceProfile,
+            contentSafetyMode,
             explicitYouthMode: Boolean(safetySignals.explicitYouthMode),
             audienceSuggestsYouth: Boolean(safetySignals.audienceSuggestsYouth),
+            audienceSuggestsKids: Boolean(safetySignals.audienceSuggestsKids),
+            audienceRequestsFamilyFriendly: Boolean(safetySignals.audienceRequestsFamilyFriendly),
             ageBandSuggestsYouth: Boolean(safetySignals.ageBandSuggestsYouth),
+            ageBandSuggestsKids: Boolean(safetySignals.ageBandSuggestsKids),
             familyFriendlyBoundary: Boolean(safetySignals.familyFriendlyBoundary),
             textSuggestsYouth: Boolean(safetySignals.textSuggestsYouth),
-            inferredYouthSafe: Boolean(safetySignals.inferredYouthSafe),
-            youthSafeMode: Boolean(resolvedFlags.youthSafeMode),
+            textSuggestsKids: Boolean(safetySignals.textSuggestsKids),
+            inferredYouthSafe: Boolean(
+                resolvedFlags.inferredYouthSafe || safetySignals.inferredYouthSafe
+            ),
+            youthSafeMode: Boolean(
+                resolvedFlags.youthSafeMode || safetySignals.youthSafeMode
+            ),
+            softerThemesMode: Boolean(
+                resolvedFlags.softerThemesMode || safetySignals.softerThemesMode
+            ),
+            fullSafeMode: Boolean(
+                resolvedFlags.fullSafeMode || safetySignals.fullSafeMode
+            ),
+            heroKidsMode: Boolean(
+                resolvedFlags.heroKidsMode || safetySignals.heroKidsMode
+            ),
+            horrorRestricted: Boolean(safetySignals.horrorRestricted),
+            graphicContentRestricted: Boolean(safetySignals.graphicContentRestricted),
+            oppressiveToneRestricted: Boolean(safetySignals.oppressiveToneRestricted),
             softYouthCueCount: Number(safetySignals.softYouthCueCount || 0),
-            contradictionNotes: diagnostics.contradictionNotes || []
+            contradictionNotes
         },
 
         rawSignals: {
@@ -90,7 +110,8 @@ function toCanonicalIntake(normalized = {}) {
         },
 
         diagnostics: {
-            hasMinimumViableSignal: Boolean(diagnostics.hasMinimumViableSignal)
+            hasMinimumViableSignal: Boolean(diagnostics.hasMinimumViableSignal),
+            contradictionNotes
         }
     };
 }

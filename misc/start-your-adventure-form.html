@@ -1,8 +1,8 @@
 <!--
 QuestForge Campaign Intake Form
 File: start-your-adventure.html
-Version: v1.2
-Last Updated: 2026-04-15
+Version: v1.3
+Last Updated: 2026-07-03
 Source of Truth: LOCAL (this file)
 -->
 <div class="qf-intake-builder-wrap">
@@ -302,6 +302,7 @@ Source of Truth: LOCAL (this file)
             <input type="hidden" name="_subject" value="New Questforge Campaign Intake">
             <input type="hidden" name="_format" value="plain">
             <textarea name="campaign_summary" id="qf-campaign-summary-field" style="display:none;"></textarea>
+            <input type="hidden" name="group_size" id="qf-group-size-legacy" value="">
 
             <!-- STEP 1 -->
             <div class="qf-step active" data-step="1">
@@ -323,10 +324,26 @@ Source of Truth: LOCAL (this file)
                         </div>
                     
                         <div class="qf-field-group">
-                            <label for="qf-group-size">Expected Group Size</label>
-                            <input type="text" id="qf-group-size" name="group_size" placeholder="Example: 4–6 players">
+                            <label for="qf-respondent-type">Who are you filling this out for?</label>
+                            <select id="qf-respondent-type" name="respondent_type">
+                                <option value="">Select one...</option>
+                                <option value="individual">Just myself — I am looking for a group</option>
+                                <option value="partial_group">Myself and one or more other players — we are looking to join or form a larger group</option>
+                                <option value="existing_group">An existing group — we already have the players together</option>
+                                <option value="group_organizer">I am organizing on behalf of a group</option>
+                            </select>
                         </div>
-                    
+
+                        <div class="qf-field-group">
+                            <label for="qf-current-group-size" id="qf-current-group-size-label">Current Group Size</label>
+                            <input type="text" id="qf-current-group-size" name="current_group_size" placeholder="Example: 1, 2, 4 players">
+                        </div>
+
+                        <div class="qf-field-group">
+                            <label for="qf-desired-group-size" id="qf-desired-group-size-label">Desired Total Group Size</label>
+                            <input type="text" id="qf-desired-group-size" name="desired_group_size" placeholder="Example: 4–6 players">
+                        </div>
+
                         <div class="qf-field-group">
                             <label for="qf-system">Preferred System (if any)</label>
                             <input type="text" id="qf-system" name="system" placeholder="D&D 5e, flexible, unsure, etc.">
@@ -717,6 +734,9 @@ Source of Truth: LOCAL (this file)
             const progressText = document.getElementById("qf-campaign-progress-text");
             const saveStatus = document.getElementById("qf-intake-save-status");
             const resetBtn = document.getElementById("qf-reset-btn");
+            const currentGroupSizeLabel = document.getElementById("qf-current-group-size-label");
+            const desiredGroupSizeLabel = document.getElementById("qf-desired-group-size-label");
+            const legacyGroupSizeField = document.getElementById("qf-group-size-legacy");
 
             let currentStep = 1;
 
@@ -780,6 +800,59 @@ Source of Truth: LOCAL (this file)
                 return field ? field.value.trim() : "";
             }
 
+            function labelForRespondentType(value) {
+                const labels = {
+                    individual: "Just myself — I am looking for a group",
+                    partial_group: "Myself and one or more other players — we are looking to join or form a larger group",
+                    existing_group: "An existing group — we already have the players together",
+                    group_organizer: "I am organizing on behalf of a group"
+                };
+
+                return labels[value] || "Not provided";
+            }
+
+            function updateGroupContextLabels() {
+                const respondentType = fieldValue("respondent_type");
+
+                if (!currentGroupSizeLabel || !desiredGroupSizeLabel) return;
+
+                if (respondentType === "individual") {
+                    currentGroupSizeLabel.textContent = "Current Group Size";
+                    desiredGroupSizeLabel.textContent = "Ideal Group Size to Join";
+                } else if (respondentType === "partial_group") {
+                    currentGroupSizeLabel.textContent = "Players Already in Your Group";
+                    desiredGroupSizeLabel.textContent = "Desired Total Group Size";
+                } else if (respondentType === "existing_group") {
+                    currentGroupSizeLabel.textContent = "Players Currently in the Group";
+                    desiredGroupSizeLabel.textContent = "Preferred Final Group Size, if Different";
+                } else if (respondentType === "group_organizer") {
+                    currentGroupSizeLabel.textContent = "Players Currently Committed";
+                    desiredGroupSizeLabel.textContent = "Planned Total Group Size";
+                } else {
+                    currentGroupSizeLabel.textContent = "Current Group Size";
+                    desiredGroupSizeLabel.textContent = "Desired Total Group Size";
+                }
+            }
+
+            function buildLegacyGroupSizeValue() {
+                const current = fieldValue("current_group_size");
+                const desired = fieldValue("desired_group_size");
+
+                if (current && desired) {
+                    return "Current: " + current + " | Desired: " + desired;
+                }
+
+                if (current) return "Current: " + current;
+                if (desired) return "Desired: " + desired;
+                return "";
+            }
+
+            function syncDerivedFields() {
+                if (legacyGroupSizeField) {
+                    legacyGroupSizeField.value = buildLegacyGroupSizeValue();
+                }
+            }
+
             function formatList(values) {
                 if (!values.length) return "- None selected";
                 return values.map(v => "- " + v).join("\n");
@@ -794,7 +867,10 @@ Source of Truth: LOCAL (this file)
                     "----------",
                     "Name: " + (fieldValue("name") || "Not provided"),
                     "Email: " + (fieldValue("email") || "Not provided"),
-                    "Group Size: " + (fieldValue("group_size") || "Not provided"),
+                    "Respondent Type: " + labelForRespondentType(fieldValue("respondent_type")),
+                    "Current Group Size: " + (fieldValue("current_group_size") || "Not provided"),
+                    "Desired Total Group Size: " + (fieldValue("desired_group_size") || "Not provided"),
+                    "Legacy Group Size Summary: " + (fieldValue("group_size") || "Not provided"),
                     "Preferred System: " + (fieldValue("system") || "Not provided"),
                     "Audience: " + (fieldValue("audience") || "Not provided"),
                     "Age Band: " + (fieldValue("age_band") || "Not provided"),
@@ -853,6 +929,8 @@ Source of Truth: LOCAL (this file)
             }
 
             function saveCampaignDraft() {
+                syncDerivedFields();
+
                 const data = {};
                 form.querySelectorAll("input, select, textarea").forEach((field) => {
                     if (!field.name) return;
@@ -897,6 +975,9 @@ Source of Truth: LOCAL (this file)
                     if (savedStep && savedStep >= 1 && savedStep <= totalSteps) {
                         currentStep = savedStep;
                     }
+
+                    updateGroupContextLabels();
+                    syncDerivedFields();
 
                     setSaveStatus("Saved progress restored.");
                 } catch (e) {
@@ -976,10 +1057,13 @@ Source of Truth: LOCAL (this file)
             };
 
             form.addEventListener("input", function () {
+                syncDerivedFields();
                 saveCampaignDraft();
             });
 
             form.addEventListener("change", function () {
+                updateGroupContextLabels();
+                syncDerivedFields();
                 saveCampaignDraft();
             });
 
@@ -999,6 +1083,9 @@ Source of Truth: LOCAL (this file)
                 e.preventDefault();
 
                 if (!validateCurrentStep()) return;
+
+                updateGroupContextLabels();
+                syncDerivedFields();
 
                 const summary = buildSummary();
                 summaryField.value = summary;
@@ -1057,6 +1144,8 @@ Source of Truth: LOCAL (this file)
                 }
             });
 
+            updateGroupContextLabels();
+            syncDerivedFields();
             restoreCampaignDraft();
             showStep(currentStep);
         })();

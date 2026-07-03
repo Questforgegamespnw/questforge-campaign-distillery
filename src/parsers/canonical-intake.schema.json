@@ -83,7 +83,10 @@
       "required": [
         "name",
         "email",
+        "respondentType",
         "groupSize",
+        "currentGroupSize",
+        "desiredGroupSize",
         "systemPreference",
         "audience",
         "ageBand"
@@ -115,6 +118,22 @@
             "mixed_age",
             ""
           ]
+        },
+        "respondentType": {
+          "type": "string",
+          "enum": [
+            "individual",
+            "partial_group",
+            "existing_group",
+            "group_organizer",
+            ""
+          ]
+        },
+        "currentGroupSize": {
+          "type": "string"
+        },
+        "desiredGroupSize": {
+          "type": "string"
         }
       }
     },
@@ -243,7 +262,9 @@
         "softYouthCueCount",
         "contradictionNotes",
         "experienceProfile",
+        "contentSafetyMode",
         "audienceSuggestsKids",
+        "audienceRequestsFamilyFriendly",
         "ageBandSuggestsKids",
         "textSuggestsKids",
         "softerThemesMode",
@@ -316,6 +337,18 @@
         },
         "oppressiveToneRestricted": {
           "type": "boolean"
+        },
+        "contentSafetyMode": {
+          "type": "string",
+          "enum": [
+            "standard",
+            "restricted",
+            "family_friendly",
+            "full_kid_safe"
+          ]
+        },
+        "audienceRequestsFamilyFriendly": {
+          "type": "boolean"
         }
       }
     },
@@ -355,11 +388,15 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "hasMinimumViableSignal"
+        "hasMinimumViableSignal",
+        "contradictionNotes"
       ],
       "properties": {
         "hasMinimumViableSignal": {
           "type": "boolean"
+        },
+        "contradictionNotes": {
+          "$ref": "#/$defs/stringArray"
         }
       }
     }

@@ -33,9 +33,23 @@ function buildTranslatorInput(canonical = {}) {
     const safety = canonical.safety || {};
 
     return {
-        youthMode: Boolean(safety.youthSafeMode),
+        experienceProfile: safety.experienceProfile || "standard",
+        contentSafetyMode: safety.contentSafetyMode || "standard",
+
+        // Backward-compatible boolean used by older translation logic.
+        youthMode: Boolean(safety.inferredYouthSafe || safety.youthSafeMode),
+
+        softerThemesMode: Boolean(safety.softerThemesMode),
+        fullSafeMode: Boolean(safety.fullSafeMode),
+        youthSafeMode: Boolean(safety.youthSafeMode),
+
         ageBand: group.ageBand || "",
         system: group.systemPreference || "",
+
+        respondentType: group.respondentType || "",
+        currentGroupSize: group.currentGroupSize || "",
+        desiredGroupSize: group.desiredGroupSize || "",
+        groupSize: group.groupSize || "",
 
         overallExperience: normalizeValue(firstItem(preferences.experiences)),
         tone: normalizeValue(preferences.tone),

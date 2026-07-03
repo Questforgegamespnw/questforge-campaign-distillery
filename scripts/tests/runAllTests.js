@@ -5,6 +5,10 @@ const includeFixtureTests = process.argv.includes("--include-fixtures");
 
 const tests = [
   "scripts/tests/testSharedScriptUtilities.js",
+
+  "scripts/tests/pipeline/testExperienceProfileBridge.js",
+  "scripts/tests/pipeline/testIntakeGroupContextAndProfile.js",
+
   "scripts/tests/phase1/testAiExpansion.js",
   "scripts/tests/phase1/testIdentityPolishRoundTrip.js",
   "scripts/tests/phase2/testPhase2CampaignConcept.js",

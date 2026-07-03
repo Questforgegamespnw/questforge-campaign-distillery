@@ -62,24 +62,45 @@ function applyMappedAnswer(mappingGroup, answerId, buckets) {
 
 /**
  * Infers the experience profile from explicit form answers.
- * Defaults to "standard" unless there is a clear youth signal.
+ * Canonical intake should provide experienceProfile directly.
+ * Legacy fallback still handles older translator inputs safely.
  * @param {object} answers
- * @returns {"standard" | "youth"}
+ * @returns {"standard" | "youth" | "kids"}
  */
-function inferExperienceProfile(answers) {
-  const explicitYouth =
-    answers?.youthMode === true ||
-    (answers?.ageBand && answers.ageBand !== "adult") ||
-    answers?.system === "hero_kids";
+function inferExperienceProfile(answers = {}) {
+  const direct = String(answers.experienceProfile || "").trim().toLowerCase();
+  if (["standard", "youth", "kids"].includes(direct)) {
+    return direct;
+  }
 
-  return explicitYouth ? "youth" : "standard";
+  const ageBand = String(answers.ageBand || "").trim().toLowerCase();
+  const system = String(answers.system || "").trim().toLowerCase();
+
+  if (
+    answers?.fullSafeMode === true ||
+    answers?.youthSafeMode === true ||
+    system === "hero_kids" ||
+    ["kids_11_13", "kids_8_10", "kids_5_7"].includes(ageBand)
+  ) {
+    return "kids";
+  }
+
+  if (
+    answers?.softerThemesMode === true ||
+    answers?.youthMode === true ||
+    ["teens_14_17", "mixed_age"].includes(ageBand)
+  ) {
+    return "youth";
+  }
+
+  return "standard";
 }
 
 /**
  * Translates structured form answers into weighted candidate pools.
  * @param {object} answers
  * @returns {{
- *   experienceProfile: "standard" | "youth",
+ *   experienceProfile: "standard" | "youth" | "kids",
  *   coreFrames: Array<{id: string, weight: number}>,
  *   systemFrames: Array<{id: string, weight: number}>,
  *   genreSkins: Array<{id: string, weight: number}>,
@@ -127,7 +148,7 @@ function translateFormAnswers(answers = {}) {
   }
 
   return {
-        experienceProfile: inferExperienceProfile(normalizedAnswers),
+    experienceProfile: inferExperienceProfile(normalizedAnswers),
     coreFrames: finalizeBucket(buckets.coreFrames),
     systemFrames: finalizeBucket(buckets.systemFrames),
     genreSkins: finalizeBucket(buckets.genreSkins),
