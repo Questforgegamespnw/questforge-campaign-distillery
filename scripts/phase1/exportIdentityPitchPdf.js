@@ -19,6 +19,10 @@ const {
 const {
   exportIdentityPitchDocument
 } = require("../../src/exporters/phase1/exportIdentityPitchDocument");
+const {
+  markSubmissionWorkflowStep,
+  relativePath
+} = require("../shared/submissionStatusUtils");
 
 const USAGE =
   'Usage: node scripts/phase1/exportIdentityPitchPdf.js <validated-json> [--client "Client Name"] [--reference "Submission 03"] [--html-only]';
@@ -57,6 +61,27 @@ async function main() {
   });
 
   console.log(`✅ HTML preview written to: ${result.htmlPath}`);
+
+  markSubmissionWorkflowStep({
+    inputFile: options.inputFile,
+    sourceFile: options.inputFile,
+    submissionSlug: deriveSubmissionSlug(options.inputFile),
+    stage: result.pdfPath ? "phase_1_pdf_exported" : "phase_1_html_exported",
+    phase: "phase1",
+    phasePatch: {
+      clientDeliveryComplete: Boolean(result.pdfPath)
+    },
+    artifacts: {
+      identityPitchHtml: relativePath(result.htmlPath),
+      identityPitchPdf: result.pdfPath ? relativePath(result.pdfPath) : ""
+    },
+    nextAction: result.pdfPath
+      ? "Send the Phase 1 Identity Pitch PDF to the client or record the selected identity direction when received."
+      : "Review the HTML preview and rerun without --html-only when ready to export the client PDF.",
+    message: result.pdfPath
+      ? "Phase 1 Identity Pitch PDF exported."
+      : "Phase 1 Identity Pitch HTML preview exported."
+  });
 
   if (result.pdfPath) {
     console.log(`✅ Client PDF written to: ${result.pdfPath}`);

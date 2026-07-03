@@ -19,8 +19,7 @@ const {
 const {
   cleanString,
   createFingerprint,
-  resolveIdentityPitches,
-  assertDirection,
+  resolveIdentitySource,
   createDefaultHandoff,
   buildInputFromHandoff,
   validateHandoffAgainstIdentity,
@@ -32,9 +31,13 @@ const {
 const {
   getExportPaths
 } = require("../shared/submissionPathUtils");
+const {
+  markSubmissionWorkflowStep,
+  relativePath
+} = require("../shared/submissionStatusUtils");
 
 const USAGE =
-  "Usage: node scripts/phase2/prepareCampaignConceptRoundTrip.js <validated-identity-pitches.json> --direction <primary|adjacent|wildcard> [--submission-id <id>] [--submission-slug <slug>] [--output-root <path>]";
+  "Usage: node scripts/phase2/prepareCampaignConceptRoundTrip.js <validated-identity-pitches-or-identity-selection-record.json> [--direction <primary|adjacent|wildcard>] [--submission-id <id>] [--submission-slug <slug>] [--output-root <path>]";
 
 function parseArgs(argv = process.argv.slice(2)) {
   const parsed = parseCliArgs(argv);
@@ -59,18 +62,19 @@ function main() {
 
   if (!fileExists(identityFile)) {
     throw new Error(
-      `Validated Identity Pitch file not found: ${identityFile}`
+      `Identity source file not found: ${identityFile}`
     );
   }
 
   const identityDocument = readJson(identityFile);
-  const pitches = resolveIdentityPitches(identityDocument);
-  const selectedPitch = assertDirection(directionKey, pitches);
+  const identitySource = resolveIdentitySource(identityDocument, directionKey);
+  const selectedDirection = identitySource.selectedIdentityDirection;
+  const selectedPitch = identitySource.selectedIdentityPitch;
   const paths = getExportPaths({
     inputFile: identityFile,
     submissionSlug,
     outputRoot,
-    direction: directionKey
+    direction: selectedDirection
   });
   const workspaceDir = ensureDirectory(paths.phase2RoundTrip);
   const artifacts = getRoundTripPaths(workspaceDir, "phase2");
@@ -81,21 +85,24 @@ function main() {
       createDefaultHandoff({
         identityFile,
         submissionId: submissionId || paths.slug,
-        selectedIdentityDirection: directionKey,
-        selectedIdentityPitch: selectedPitch
+        selectedIdentityDirection: selectedDirection,
+        selectedIdentityPitch: selectedPitch,
+        identitySelectionRecord: identitySource.identitySelectionRecord
       })
     );
 
     console.log(`📝 Created Phase 2 handoff: ${artifacts.handoff}`);
     console.log(
-      "Review it before generation if you have client feedback, system decisions, setting decisions, or safety constraints."
+      identitySource.identitySelectionRecord
+        ? "Review it before generation if you need to add system decisions, setting decisions, or operator notes. Client selection details were imported from the Identity Selection Record."
+        : "Review it before generation if you have client feedback, system decisions, setting decisions, or safety constraints."
     );
   }
 
   const handoff = readJson(artifacts.handoff);
   const handoffErrors = validateHandoffAgainstIdentity(
     handoff,
-    directionKey,
+    selectedDirection,
     selectedPitch
   );
 
@@ -130,6 +137,7 @@ function main() {
       handoffFile: path.relative(process.cwd(), artifacts.handoff),
       workspace: path.relative(process.cwd(), workspaceDir)
     }),
+    sourceIdentityType: identitySource.sourceType,
     submissionSlug: paths.slug,
     clientDelivery: path.relative(
       process.cwd(),
@@ -140,7 +148,8 @@ function main() {
   console.log("");
   console.log("✅ Phase 2 Campaign Concept round trip prepared");
   console.log(`📁 Submission: ${paths.slug}`);
-  console.log(`📁 Direction: ${directionKey}`);
+  console.log(`📁 Direction: ${selectedDirection}`);
+  console.log(`📁 Source type: ${identitySource.sourceType}`);
   console.log(`📁 Workspace: ${workspaceDir}`);
   console.log(`🧾 Handoff: ${artifacts.handoff}`);
   console.log(`📋 Copy into ChatGPT: ${artifacts.prompt}`);
@@ -171,3 +180,7 @@ try {
   console.error(error.message);
   process.exitCode = 1;
 }
+
+module.exports = {
+  parseArgs
+};

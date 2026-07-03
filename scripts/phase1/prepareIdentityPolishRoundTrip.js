@@ -27,6 +27,10 @@ const {
 const {
   getRoundTripPaths
 } = require("../shared/roundTripFiles");
+const {
+  markSubmissionWorkflowStep,
+  relativePath
+} = require("../shared/submissionStatusUtils");
 
 const USAGE =
   "Usage: node scripts/phase1/prepareIdentityPolishRoundTrip.js <submission-or-result.json> [--submission-slug <slug>] [--output-root <path>]";

@@ -30,6 +30,10 @@ const {
   assertResponseEnvelope,
   exportPitchExpansionPrompts
 } = require("../shared/identityPolishRoundTripUtils");
+const {
+  markSubmissionWorkflowStep,
+  relativePath
+} = require("../shared/submissionStatusUtils");
 
 const USAGE =
   "Usage: node scripts/phase1/completeIdentityPolishRoundTrip.js <round-trip-folder>";
@@ -119,6 +123,23 @@ function main() {
       completed: false,
       nextAction:
         "Review 03_VALIDATION_RESULT.json. Regenerate the round trip if the source file changed, or paste the response produced from this workspace's prompt."
+    });
+
+    markSubmissionWorkflowStep({
+      inputFile: sourceFile,
+      sourceFile,
+      submissionSlug: status.submissionSlug,
+      stage: "phase_1_validation_source_mismatch",
+      phase: "phase1",
+      phasePatch: {
+        aiPolishValidationFailed: true
+      },
+      artifacts: {
+        phase1ValidationResult: relativePath(artifacts.validation)
+      },
+      nextAction:
+        "Review 03_VALIDATION_RESULT.json. Regenerate the Phase 1 round trip if the source file changed.",
+      message: "Phase 1 Identity Pitch validation failed because the response source did not match."
     });
 
     process.exitCode = 1;
@@ -214,6 +235,28 @@ function main() {
     nextAction: allAccepted
       ? "Review 04_VALIDATED_IDENTITY_PITCHES.json for client delivery."
       : "Review 03_VALIDATION_RESULT.json, correct or regenerate the failed direction content, and rerun this completion command."
+  });
+
+  markSubmissionWorkflowStep({
+    inputFile: sourceFile,
+    sourceFile,
+    submissionSlug: status.submissionSlug,
+    stage: allAccepted ? "phase_1_validation_complete" : "phase_1_validation_review_required",
+    phase: "phase1",
+    phasePatch: {
+      aiPolishComplete: allAccepted,
+      aiPolishValidationFailed: !allAccepted
+    },
+    artifacts: {
+      phase1ValidationResult: relativePath(artifacts.validation),
+      validatedIdentityPitches: allAccepted ? relativePath(artifacts.validated) : ""
+    },
+    nextAction: allAccepted
+      ? "Review 04_VALIDATED_IDENTITY_PITCHES.json, export the Phase 1 PDF, or record the client-selected identity direction."
+      : "Review 03_VALIDATION_RESULT.json, correct or regenerate the failed direction content, and rerun completeIdentityPolishRoundTrip.js.",
+    message: allAccepted
+      ? "Phase 1 Identity Pitch validation completed."
+      : "Phase 1 Identity Pitch validation requires review."
   });
 
   console.log("");

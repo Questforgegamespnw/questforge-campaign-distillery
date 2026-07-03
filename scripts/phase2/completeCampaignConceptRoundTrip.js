@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-// scripts/completeCampaignConceptRoundTrip.js
-
 const fs = require("node:fs");
 const path = require("node:path");
 
@@ -13,19 +11,22 @@ const {
   readJson,
   writeJson,
   createFingerprint,
-  resolveIdentityPitches,
-  assertDirection,
+  resolveIdentitySource,
   buildInputFromHandoff,
   validateHandoffAgainstIdentity,
   validateCampaignConceptInput
-} = require("./campaignConceptRoundTripUtils");
+} = require("../shared/campaignConceptRoundTripUtils");
+const {
+  markSubmissionWorkflowStep,
+  relativePath
+} = require("../shared/submissionStatusUtils");
 
 function parseArgs(argv = process.argv.slice(2)) {
   const workspaceArg = argv[0];
 
   if (!workspaceArg) {
     throw new Error(
-      "Usage: node scripts/completeCampaignConceptRoundTrip.js <phase2-round-trip-folder>"
+      "Usage: node scripts/phase2/completeCampaignConceptRoundTrip.js <phase2-round-trip-folder>"
     );
   }
 
@@ -70,7 +71,7 @@ function main() {
   const handoffPath = path.resolve(process.cwd(), status.handoffFile);
 
   if (!fs.existsSync(identityFile)) {
-    throw new Error(`Validated Identity Pitch source no longer exists: ${identityFile}`);
+    throw new Error(`Identity source no longer exists: ${identityFile}`);
   }
 
   if (!fs.existsSync(handoffPath)) {
@@ -78,13 +79,16 @@ function main() {
   }
 
   const identityDocument = readJson(identityFile);
-  const pitches = resolveIdentityPitches(identityDocument);
-  const selectedPitch = assertDirection(status.selectedIdentityDirection, pitches);
+  const identitySource = resolveIdentitySource(
+    identityDocument,
+    status.selectedIdentityDirection
+  );
+  const selectedPitch = identitySource.selectedIdentityPitch;
   const handoff = readJson(handoffPath);
 
   const handoffErrors = validateHandoffAgainstIdentity(
     handoff,
-    status.selectedIdentityDirection,
+    identitySource.selectedIdentityDirection,
     selectedPitch
   );
 
@@ -104,6 +108,21 @@ function main() {
       "PHASE 2 CAMPAIGN CONCEPT VALIDATION FAILED",
       handoffErrors
     );
+    markSubmissionWorkflowStep({
+      inputFile: identityFile,
+      sourceFile: identityFile,
+      submissionSlug: status.submissionSlug,
+      stage: "phase_2_handoff_validation_failed",
+      phase: "phase2",
+      phasePatch: {
+        conceptValidationFailed: true
+      },
+      artifacts: {
+        phase2ValidationResult: relativePath(validationPath)
+      },
+      nextAction: "Review 03_VALIDATION_RESULT.json and rebuild the Phase 2 handoff from the selected identity source.",
+      message: "Phase 2 handoff failed source validation."
+    });
     process.exitCode = 1;
     return;
   }
@@ -128,6 +147,21 @@ function main() {
       inputValidation.errors,
       inputValidation.warnings
     );
+    markSubmissionWorkflowStep({
+      inputFile: identityFile,
+      sourceFile: identityFile,
+      submissionSlug: status.submissionSlug,
+      stage: "phase_2_input_invalid",
+      phase: "phase2",
+      phasePatch: {
+        conceptValidationFailed: true
+      },
+      artifacts: {
+        phase2ValidationResult: relativePath(validationPath)
+      },
+      nextAction: "Review 03_VALIDATION_RESULT.json and correct the Phase 2 handoff before regenerating the prompt.",
+      message: "Phase 2 handoff could not produce a valid campaign concept input."
+    });
     process.exitCode = 1;
     return;
   }
@@ -165,7 +199,24 @@ function main() {
       validationRun: true,
       completed: false,
       nextAction:
-        "Rerun prepareCampaignConceptRoundTrip.js for this Identity Pitch to regenerate the prompt from the updated handoff."
+        "Rerun prepareCampaignConceptRoundTrip.js for this Identity Pitch or Identity Selection Record to regenerate the prompt from the updated handoff."
+    });
+
+    markSubmissionWorkflowStep({
+      inputFile: identityFile,
+      sourceFile: identityFile,
+      submissionSlug: status.submissionSlug,
+      stage: "phase_2_source_changed_reprepare_required",
+      phase: "phase2",
+      phasePatch: {
+        conceptValidationFailed: true
+      },
+      artifacts: {
+        phase2ValidationResult: relativePath(validationPath)
+      },
+      nextAction:
+        "Rerun prepareCampaignConceptRoundTrip.js for this Identity Pitch or Identity Selection Record to regenerate the prompt from the updated handoff.",
+      message: "Phase 2 source fingerprint changed after prompt generation."
     });
 
     process.exitCode = 1;
@@ -183,7 +234,8 @@ function main() {
       selectedIdentityDirection: input.selectedIdentityDirection,
       generationMode: input.generationMode,
       sourceFingerprint: currentFingerprint,
-      sourceMatched: true
+      sourceMatched: true,
+      sourceIdentityType: identitySource.sourceType
     },
     accepted: result.accepted,
     parsed: result.parsed,
@@ -206,6 +258,7 @@ function main() {
     `Submission: ${input.submissionId}`,
     `Selected Identity: ${input.selectedIdentityDirection}`,
     `Generation mode: ${input.generationMode}`,
+    `Identity source type: ${identitySource.sourceType}`,
     `Source matched: true`,
     `Parsed: ${result.parsed}`,
     `Accepted: ${result.accepted}`,
@@ -226,6 +279,7 @@ function main() {
 
   writeJson(statusPath, {
     ...status,
+    sourceIdentityType: identitySource.sourceType,
     stage: result.accepted ? "complete" : "validation_review_required",
     responseImported: true,
     validationRun: true,
@@ -235,8 +289,31 @@ function main() {
       : "Review 03_VALIDATION_RESULT.json, correct or regenerate the ChatGPT response, and rerun this command."
   });
 
+  markSubmissionWorkflowStep({
+    inputFile: identityFile,
+    sourceFile: identityFile,
+    submissionSlug: status.submissionSlug,
+    stage: result.accepted ? "phase_2_validation_complete" : "phase_2_validation_review_required",
+    phase: "phase2",
+    phasePatch: {
+      conceptGenerationComplete: result.accepted,
+      conceptValidationFailed: !result.accepted
+    },
+    artifacts: {
+      phase2ValidationResult: relativePath(validationPath),
+      validatedCampaignConcepts: result.accepted ? relativePath(validatedPath) : ""
+    },
+    nextAction: result.accepted
+      ? "Review 04_VALIDATED_CAMPAIGN_CONCEPTS.json and export the Phase 2 client PDF."
+      : "Review 03_VALIDATION_RESULT.json, correct or regenerate the ChatGPT response, and rerun completeCampaignConceptRoundTrip.js.",
+    message: result.accepted
+      ? "Phase 2 Campaign Concept validation completed."
+      : "Phase 2 Campaign Concept validation requires review."
+  });
+
   console.log("");
   console.log(`✅ Source matched: ${input.submissionId}`);
+  console.log(`📁 Identity source type: ${identitySource.sourceType}`);
   console.log(`${result.accepted ? "✅" : "⚠️"} Accepted: ${result.accepted}`);
   console.log(`📄 Validation result: ${validationPath}`);
   console.log(`📄 Summary: ${summaryPath}`);
@@ -255,3 +332,7 @@ try {
   console.error(error.message);
   process.exitCode = 1;
 }
+
+module.exports = {
+  parseArgs
+};

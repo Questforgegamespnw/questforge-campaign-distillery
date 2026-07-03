@@ -21,6 +21,10 @@ const {
 const {
   exportCampaignConceptDocument
 } = require("../../src/exporters/phase2/exportCampaignConceptDocument");
+const {
+  markSubmissionWorkflowStep,
+  relativePath
+} = require("../shared/submissionStatusUtils");
 
 const USAGE =
   'Usage: node scripts/phase2/exportCampaignConceptPdf.js <validated-json> [--client "Client Name"] [--reference "Submission 03"] [--html-only]';
@@ -63,6 +67,27 @@ async function main() {
   });
 
   console.log(`✅ HTML preview written to: ${result.htmlPath}`);
+
+  markSubmissionWorkflowStep({
+    inputFile: options.inputFile,
+    sourceFile: options.inputFile,
+    submissionSlug: deriveSubmissionSlug(options.inputFile),
+    stage: result.pdfPath ? "phase_2_pdf_exported" : "phase_2_html_exported",
+    phase: "phase2",
+    phasePatch: {
+      clientDeliveryComplete: Boolean(result.pdfPath)
+    },
+    artifacts: {
+      campaignConceptHtml: relativePath(result.htmlPath),
+      campaignConceptPdf: result.pdfPath ? relativePath(result.pdfPath) : ""
+    },
+    nextAction: result.pdfPath
+      ? "Phase 2 Campaign Concept client PDF is ready for delivery."
+      : "Review the HTML preview and rerun without --html-only when ready to export the client PDF.",
+    message: result.pdfPath
+      ? "Phase 2 Campaign Concept PDF exported."
+      : "Phase 2 Campaign Concept HTML preview exported."
+  });
 
   if (result.pdfPath) {
     console.log(
