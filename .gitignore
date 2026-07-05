@@ -3,9 +3,11 @@ node_modules/
 .DS_Store
 dist/
 build/
-
+examples/
+misc/email-templates/
 
 # Real intake submissions and generated client data
+
 submissions/
 results/
 text submission forms/

@@ -34,7 +34,7 @@ Tests the public `runCampaignPipelineFromForm` entry point, intake bridges, audi
 
 ### Phase 1
 
-Tests expansion contracts, prompt export, fingerprints, response envelopes, JSON extraction, Identity Selection Record construction, and Identity Selection Record validation.
+Tests expansion contracts, prompt export, fingerprints, response envelopes, JSON extraction, enriched Identity Pitch handoff construction, Identity Selection Record construction, and Identity Selection Record validation.
 
 ### Phase 2
 
@@ -58,6 +58,7 @@ The v0.10 routine suite includes regression coverage for:
 - client-facing phrase boundaries;
 - Core Frame audience policy;
 - youth voice layer;
+- enriched Identity Pitch handoff;
 - Identity Selection Record builder/validator;
 - Identity Selection Record → Phase 2 bridge;
 - submission lifecycle status synchronization.

@@ -1,0 +1,27 @@
+{
+  "name": "questforge-operator-console",
+  "version": "0.1.3",
+  "private": true,
+  "description": "Private local Electron operator console for QuestForge Campaign Distillery.",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "start": "electron .",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "dev:open": "npm run dev"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "electron": "latest",
+    "concurrently": "latest",
+    "wait-on": "latest"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

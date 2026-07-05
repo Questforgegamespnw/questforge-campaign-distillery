@@ -29,6 +29,7 @@ exports/submissions/<slug>/phase-1/round-trip/
   02_PASTE_CHATGPT_RESPONSE_HERE.json
   03_VALIDATION_RESULT.json
   04_VALIDATED_IDENTITY_PITCHES.json
+  05_ENRICHED_IDENTITY_PITCHES.json
   05_VALIDATION_SUMMARY.txt
   round-trip-status.json
 ```
@@ -63,12 +64,30 @@ node scripts/phase1/completeIdentityPolishRoundTrip.js "exports/submissions/<slu
 
 A complete run writes `04_VALIDATED_IDENTITY_PITCHES.json`.
 
-## Next Step
+This file is intentionally narrow. It contains the validator-approved client-facing prose only.
 
-After the client reviews the Identity Pitch PDF and selects one direction, create the Identity Selection Record:
+## Build the Enriched Identity Pitch Handoff
+
+After validation succeeds, build the enriched handoff:
 
 ```powershell
-node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --direction primary
+node scripts/phase1/buildIdentityPitchHandoff.js "exports/submissions/<slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json"
+```
+
+This writes:
+
+```text
+exports/submissions/<slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json
+```
+
+The stitch step combines validated GPT-polished prose with deterministic Phase 1 metadata from the original source. This keeps validation narrow while preserving source frame data, context, constraints, genre, tone, environment, safety, audience, and handoff guidance for Phase 2.
+
+## Next Step
+
+After the client reviews the Identity Pitch PDF and selects one direction, create the Identity Selection Record from the enriched handoff:
+
+```powershell
+node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json" --direction primary
 ```
 
 This writes:
@@ -91,4 +110,4 @@ The AI may improve expression. It may not add:
 
 ## Status
 
-Prepare and complete commands update `submission-status.json` with current stage, next action, validation state, and artifact paths.
+Prepare, complete, and enriched-handoff commands update `submission-status.json` with current stage, next action, validation state, and artifact paths.

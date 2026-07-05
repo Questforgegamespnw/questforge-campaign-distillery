@@ -4,7 +4,7 @@
 
 ## Scope
 
-This document describes the implemented v0.10.0 architecture.
+This document describes the implemented v0.10.1 architecture.
 
 Solid workflow stages are implemented. Dashed downstream stages remain planned.
 
@@ -38,12 +38,13 @@ subgraph P1["Phase 1 — Identity Discovery"]
   P1AI["Manual ChatGPT polish"]:::human
   P1VALID["Envelope, fingerprint, and direction validation"]:::validation
   P1JSON["04_VALIDATED_IDENTITY_PITCHES.json"]:::artifact
+  ENRICHED["05_ENRICHED_IDENTITY_PITCHES.json"]:::artifact
   P1PDF["Phase 1 HTML + PDF"]:::artifact
   ISR["identity-selection-record.json"]:::artifact
 end
 
-PIPE --> SELECT --> RENDER --> VOICE --> P1PROMPT --> P1AI --> P1VALID --> P1JSON --> P1PDF
-P1PDF --> ISR
+PIPE --> SELECT --> RENDER --> VOICE --> P1PROMPT --> P1AI --> P1VALID --> P1JSON --> ENRICHED --> P1PDF
+ENRICHED --> ISR
 
 CLIENT["Client reviews Primary / Adjacent / Wildcard"]:::human
 HANDOFF["00_PHASE2_HANDOFF.json"]:::artifact
@@ -114,6 +115,7 @@ exports/
 
 ```text
 validated Identity Pitches
+→ enriched Identity Pitch Handoff
 → human selection
 → Identity Selection Record
 → Phase 2 handoff
@@ -148,6 +150,7 @@ scripts
 - combined Phase 1 AI round trip;
 - Identity Pitch validation;
 - Phase 1 HTML/PDF export;
+- enriched Identity Pitch handoff script;
 - Identity Selection Record builder and validator;
 - Phase 2 handoff from Identity Selection Record;
 - Campaign Concept contract and schema;

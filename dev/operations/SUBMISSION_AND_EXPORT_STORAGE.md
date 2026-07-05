@@ -35,6 +35,7 @@ exports/submissions/<submission-slug>/
   phase-1/
     identity-selection-record.json
     round-trip/
+      05_ENRICHED_IDENTITY_PITCHES.json
     client-delivery/
 
   phase-2/
@@ -46,6 +47,11 @@ exports/submissions/<submission-slug>/
 ### Phase 1 root contains
 
 - `identity-selection-record.json`, the validated selected-identity artifact.
+
+### Phase 1 round-trip contains
+
+- `04_VALIDATED_IDENTITY_PITCHES.json`, the narrow validator-approved client prose artifact;
+- `05_ENRICHED_IDENTITY_PITCHES.json`, the stitched Phase 1 handoff artifact that preserves deterministic metadata for selection and Phase 2.
 
 ### Round-trip folders contain
 
@@ -72,6 +78,7 @@ The lifecycle status file tracks:
 - Phase 1 round-trip preparation;
 - Phase 1 validation;
 - Phase 1 PDF export;
+- enriched Identity Pitch handoff creation;
 - Identity Selection Record creation;
 - Phase 2 handoff/preparation;
 - Phase 2 validation;

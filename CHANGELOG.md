@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## v0.10.1 — Phase 1 Handoff Metadata Preservation
+
+### Summary
+
+Fixed a Phase 1 → Phase 2 handoff bug discovered while testing the local Operator Console against recreated Formspree submissions.
+
+The validated Identity Pitch output remains intentionally narrow and client-facing, but Phase 2 now receives a stitched handoff artifact that combines validated GPT-polished pitch prose with the richer deterministic metadata from the original Phase 1 pipeline result.
+
+### Fixed
+
+- Prevented deterministic campaign metadata from being lost between Phase 1 validation and Phase 2 handoff preparation.
+- Preserved source frame data, context, constraints, genre, tone, environment, safety guidance, audience guidance, and handoff guidance for downstream Phase 2 use.
+- Avoided expanding `04_VALIDATED_IDENTITY_PITCHES.json` beyond its validator-approved scope.
+
+### Added
+
+- Added `scripts/phase1/buildIdentityPitchHandoff.js`.
+- Added a dedicated post-validation stitch step that combines:
+  - validated Identity Pitch prose from `04_VALIDATED_IDENTITY_PITCHES.json`;
+  - deterministic campaign context from the original Phase 1 source.
+
+### Design Decision
+
+`04_VALIDATED_IDENTITY_PITCHES.json` remains a narrow validation artifact. It should only contain the fields needed to confirm and deliver client-facing Identity Pitches:
+
+- `title`
+- `pitch`
+- `about`
+- `playersDo`
+- `hook`
+
+Operational metadata belongs in a separate Phase 1 handoff artifact, not in the validator output.
+
 ---
 
 ## v0.10.0 — Phase 1 → Phase 2 Handoff Hardening

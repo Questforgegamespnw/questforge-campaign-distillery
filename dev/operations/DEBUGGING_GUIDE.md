@@ -17,6 +17,7 @@ source record
 → deterministic rendering
 → round-trip source binding
 → AI validation
+→ enriched Identity Pitch handoff
 → Identity Selection Record
 → Phase 2 handoff
 → exporter normalization
@@ -34,6 +35,7 @@ Wrong normalized values?             → 01_NORMALIZED_SUBMISSION.json
 Wrong selected direction data?       → 02_PIPELINE_RESULT.json
 Wrong Phase 1 prose backbone?         → renderer layers
 Wrong polished Identity Pitch?        → Phase 1 round-trip validation
+Wrong enriched Phase 1 metadata?       → 05_ENRICHED_IDENTITY_PITCHES.json
 Wrong client selection?               → identity-selection-record.json
 Wrong approved identity in P2?        → identity-selection-record.json or 00_PHASE2_HANDOFF.json
 Wrong concrete concept?               → Phase 2 prompt/evaluator/schema
@@ -144,6 +146,29 @@ Inspect:
 Each direction is evaluated independently. Check missing keys, empty fields, extra keys, or forbidden drift.
 
 ---
+
+# Enriched Identity Pitch Handoff Failures
+
+## Missing deterministic metadata after Phase 1 validation
+
+Do not expand `04_VALIDATED_IDENTITY_PITCHES.json`. It is intentionally narrow.
+
+Run:
+
+```powershell
+node scripts/phase1/buildIdentityPitchHandoff.js "exports/submissions/<slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json"
+```
+
+Then create the Identity Selection Record from:
+
+```text
+exports/submissions/<slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json
+```
+
+## Source mismatch while building enriched handoff
+
+The stitch step recomputes the Phase 1 source fingerprint from the original source listed in `round-trip-status.json`. If that source changed, rerun Phase 1 prepare and complete before building the enriched handoff.
+
 
 # Identity Selection Record Failures
 

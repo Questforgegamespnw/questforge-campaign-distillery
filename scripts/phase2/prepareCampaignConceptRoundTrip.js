@@ -23,6 +23,7 @@ const {
   createDefaultHandoff,
   buildInputFromHandoff,
   validateHandoffAgainstIdentity,
+  validatePhase2IdentityMetadataPreserved,
   buildRoundTripPrompt,
   buildWorkspaceStatus,
   buildOutputSkeleton,
@@ -113,6 +114,18 @@ function main() {
   }
 
   const input = buildInputFromHandoff(handoff);
+  const preservationValidation = validatePhase2IdentityMetadataPreserved({
+    identitySource,
+    handoff,
+    input
+  });
+
+  if (!preservationValidation.isValid) {
+    throw new Error(
+      `Phase 2 identity metadata preservation failed:\n- ${preservationValidation.errors.join("\n- ")}`
+    );
+  }
+
   const inputValidation = validateCampaignConceptInput(input);
 
   if (!inputValidation.isValid) {

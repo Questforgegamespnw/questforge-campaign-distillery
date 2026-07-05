@@ -29,6 +29,7 @@ Raw Client Submission
 → Manual ChatGPT Response
 → Source and Contract Validation
 → Validated Identity Pitches
+→ Enriched Identity Pitch Handoff
 → Phase 1 HTML/PDF Export
 → Client Direction Selection
 → Identity Selection Record
@@ -67,6 +68,7 @@ exports/submissions/<slug>/
   phase-1/
     identity-selection-record.json
     round-trip/
+      05_ENRICHED_IDENTITY_PITCHES.json
     client-delivery/
 
   phase-2/
@@ -172,6 +174,22 @@ round-trip-status.json
 
 ---
 
+## 5A. Enriched Identity Pitch Handoff
+
+**Responsibilities**
+
+- keep `04_VALIDATED_IDENTITY_PITCHES.json` narrow and validator-focused;
+- stitch validated GPT-polished prose back onto deterministic Phase 1 metadata;
+- preserve source frame data, context, constraints, genre, tone, environment, safety, audience, and handoff guidance;
+- provide the enriched source used by Identity Selection Record creation.
+
+**Artifact**
+
+```text
+05_ENRICHED_IDENTITY_PITCHES.json
+```
+
+
 ## 6. Phase 1 Client Export
 
 **Responsibilities**
@@ -188,7 +206,7 @@ round-trip-status.json
 
 The client reviews the three Identity Pitches and selects one direction.
 
-The operator records the decision by creating an Identity Selection Record.
+The operator records the decision by creating an Identity Selection Record from the enriched Identity Pitch handoff.
 
 **Artifact**
 
@@ -196,7 +214,7 @@ The operator records the decision by creating an Identity Selection Record.
 exports/submissions/<slug>/phase-1/identity-selection-record.json
 ```
 
-The record captures selected direction, selected pitch, client response notes, preservation guidance, intake summary, safety profile, and optional system/setting context.
+The record captures selected direction, selected enriched pitch, client response notes, preservation guidance, intake summary, safety profile, deterministic context, and optional system/setting context.
 
 ---
 

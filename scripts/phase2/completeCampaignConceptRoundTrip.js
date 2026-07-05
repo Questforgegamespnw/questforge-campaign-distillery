@@ -14,6 +14,7 @@ const {
   resolveIdentitySource,
   buildInputFromHandoff,
   validateHandoffAgainstIdentity,
+  validatePhase2IdentityMetadataPreserved,
   validateCampaignConceptInput
 } = require("../shared/campaignConceptRoundTripUtils");
 const {
@@ -128,6 +129,48 @@ function main() {
   }
 
   const input = buildInputFromHandoff(handoff);
+  const preservationValidation = validatePhase2IdentityMetadataPreserved({
+    identitySource,
+    handoff,
+    input
+  });
+
+  if (!preservationValidation.isValid) {
+    const report = {
+      accepted: false,
+      parsed: false,
+      sourceMatched: false,
+      errors: preservationValidation.errors,
+      warnings: preservationValidation.warnings,
+      output: null
+    };
+
+    writeJson(validationPath, report);
+    writeFailureSummary(
+      summaryPath,
+      "PHASE 2 IDENTITY METADATA PRESERVATION FAILED",
+      preservationValidation.errors,
+      preservationValidation.warnings
+    );
+    markSubmissionWorkflowStep({
+      inputFile: identityFile,
+      sourceFile: identityFile,
+      submissionSlug: status.submissionSlug,
+      stage: "phase_2_identity_metadata_preservation_failed",
+      phase: "phase2",
+      phasePatch: {
+        conceptValidationFailed: true
+      },
+      artifacts: {
+        phase2ValidationResult: relativePath(validationPath)
+      },
+      nextAction: "Review 03_VALIDATION_RESULT.json and rebuild the Phase 2 handoff from the selected identity source.",
+      message: "Phase 2 handoff dropped selected identity metadata."
+    });
+    process.exitCode = 1;
+    return;
+  }
+
   const inputValidation = validateCampaignConceptInput(input);
 
   if (!inputValidation.isValid) {

@@ -88,8 +88,11 @@ function resolveIdentityPitches(value = {}) {
       if (!block) continue;
 
       pitches[directionKey] = {
-        title: block.title || block.output?.title || "",
-        ...(block.output || {})
+        title: block.title || block.output?.title || block.source?.title || "",
+        ...(block.output || {}),
+        context: block.context || {},
+        constraints: block.constraints || {},
+        source: block.source || {}
       };
     }
 
@@ -256,18 +259,25 @@ function createDefaultHandoff(options = {}) {
     cleanString(identitySelectionRecord?.submissionId) ||
     sourceName;
 
+  const pitchContext = plainObject(pitch.context);
+  const pitchConstraints = plainObject(pitch.constraints);
+
   const identitySummary = identitySelectionRecord
     ? buildIdentitySummaryFromSelectionRecord(identitySelectionRecord, pitch)
     : {
         identityTitle: pitch.title,
         identityPitch: pitch.pitch,
         corePromise: pitch.about,
-        playEmphasis: [pitch.playersDo],
-        tone: ["Preserve the tone established by the selected Identity Pitch"],
-        genre: ["Do not assume a more specific genre than the selected Identity Pitch supports"],
-        environment: [],
-        mustPreserve: [],
-        mustAvoid: []
+        playEmphasis: [pitch.playersDo].filter(Boolean),
+        tone: pitchContext.toneName
+          ? [pitchContext.toneName]
+          : ["Preserve the tone established by the selected Identity Pitch"],
+        genre: pitchContext.genreName
+          ? [pitchContext.genreName]
+          : ["Do not assume a more specific genre than the selected Identity Pitch supports"],
+        environment: stringArray(pitchContext.environmentNames),
+        mustPreserve: stringArray(pitchConstraints.mustInclude),
+        mustAvoid: stringArray(pitchConstraints.avoid)
       };
 
   const selectionRecord = identitySelectionRecord
@@ -297,7 +307,10 @@ function createDefaultHandoff(options = {}) {
       pitch: pitch.pitch,
       about: pitch.about,
       playersDo: pitch.playersDo,
-      hook: pitch.hook
+      hook: pitch.hook,
+      context: pitch.context || {},
+      constraints: pitch.constraints || {},
+      source: pitch.source || {}
     },
     identitySummary,
     selectionRecord,
@@ -379,6 +392,89 @@ function validateHandoffAgainstIdentity(handoff, directionKey, pitch) {
   return errors;
 }
 
+function validatePhase2IdentityMetadataPreserved({
+  identitySource = {},
+  handoff = {},
+  input = {}
+} = {}) {
+  const errors = [];
+  const warnings = [];
+
+  const pitch = identitySource.selectedIdentityPitch || handoff.selectedIdentityPitch || {};
+  const identitySelectionRecord = identitySource.identitySelectionRecord || null;
+  const recordSummary = plainObject(identitySelectionRecord?.identitySummary);
+  const preservation = plainObject(identitySelectionRecord?.preservationGuidance);
+  const context = plainObject(pitch.context);
+  const constraints = plainObject(pitch.constraints);
+  const summary = plainObject(input.identitySummary || handoff.identitySummary);
+
+  const expectedGenre = stringArray(recordSummary.genre,
+    context.genreName ? [context.genreName] : []
+  );
+  const expectedTone = stringArray(recordSummary.tone,
+    context.toneName ? [context.toneName] : []
+  );
+  const expectedEnvironment = stringArray(recordSummary.environment,
+    stringArray(context.environmentNames)
+  );
+  const expectedMustPreserve = stringArray(
+    recordSummary.mustPreserve,
+    stringArray(preservation.mustPreserve, stringArray(constraints.mustInclude))
+  );
+  const expectedMustAvoid = stringArray(
+    recordSummary.mustAvoid,
+    stringArray(preservation.avoid, stringArray(constraints.avoid))
+  );
+
+  const actualGenre = stringArray(summary.genre);
+  const actualTone = stringArray(summary.tone);
+  const actualEnvironment = stringArray(summary.environment);
+  const actualMustPreserve = stringArray(summary.mustPreserve);
+  const actualMustAvoid = stringArray(summary.mustAvoid);
+
+  for (const genre of expectedGenre) {
+    if (!actualGenre.includes(genre)) {
+      errors.push(`Phase 2 input dropped selected identity genre: ${genre}`);
+    }
+  }
+
+  for (const tone of expectedTone) {
+    if (!actualTone.includes(tone)) {
+      errors.push(`Phase 2 input dropped selected identity tone: ${tone}`);
+    }
+  }
+
+  for (const environment of expectedEnvironment) {
+    if (!actualEnvironment.includes(environment)) {
+      errors.push(`Phase 2 input dropped selected identity environment: ${environment}`);
+    }
+  }
+
+  for (const item of expectedMustPreserve) {
+    if (!actualMustPreserve.includes(item)) {
+      errors.push(`Phase 2 input dropped selected identity mustPreserve item: ${item}`);
+    }
+  }
+
+  for (const item of expectedMustAvoid) {
+    if (!actualMustAvoid.includes(item)) {
+      errors.push(`Phase 2 input dropped selected identity mustAvoid item: ${item}`);
+    }
+  }
+
+  if (expectedEnvironment.length === 0 && actualEnvironment.length === 0) {
+    warnings.push(
+      "Phase 2 identitySummary.environment is empty; confirm this is intentional and not a lost Phase 1 environment signal."
+    );
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+    warnings
+  };
+}
+
 function buildRoundTripPrompt(input, fingerprint) {
   const basePrompt = buildCampaignConceptPrompt(input);
 
@@ -433,6 +529,7 @@ module.exports = {
   createDefaultHandoff,
   buildInputFromHandoff,
   validateHandoffAgainstIdentity,
+  validatePhase2IdentityMetadataPreserved,
   buildRoundTripPrompt,
   buildWorkspaceStatus,
   buildOutputSkeleton,

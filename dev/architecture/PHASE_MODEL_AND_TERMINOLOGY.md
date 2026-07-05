@@ -19,6 +19,7 @@ raw intake
 → three identity directions
 → combined AI polish
 → source-bound validation
+→ enriched Identity Pitch handoff
 → client Identity Pitch PDF
 → Identity Selection Record
 ```
@@ -56,6 +57,8 @@ Use **Identity Pitch** for Phase 1 outputs.
 
 Use **identity direction** for Primary, Adjacent, and Wildcard.
 
+Use **Enriched Identity Pitch Handoff** for `05_ENRICHED_IDENTITY_PITCHES.json`, the post-validation artifact that combines validated prose with deterministic Phase 1 metadata.
+
 Use **Identity Selection Record** for the validated client-selection artifact that bridges Phase 1 and Phase 2.
 
 Use **Campaign Concept Pitch** for Phase 2 outputs.
@@ -65,6 +68,21 @@ Use **concept variant** for Core Interpretation, Alternate Situation, and Distin
 Use **Phase 2 handoff** for `00_PHASE2_HANDOFF.json`, the operator-reviewable file used to prepare Phase 2 generation.
 
 ---
+
+
+## Enriched Identity Pitch Handoff
+
+`04_VALIDATED_IDENTITY_PITCHES.json` is intentionally narrow. It contains only the validator-approved client-facing prose fields:
+
+- title;
+- pitch;
+- about;
+- playersDo;
+- hook.
+
+After validation, `buildIdentityPitchHandoff.js` creates `05_ENRICHED_IDENTITY_PITCHES.json` by stitching that validated prose back onto the deterministic source metadata from the original Phase 1 pipeline result.
+
+This preserves source frame data, context, constraints, genre, tone, environment, safety guidance, audience guidance, and handoff guidance for Phase 2 without expanding the validator output.
 
 ## Identity Selection Record
 
@@ -139,6 +157,7 @@ All invention must support the approved identity and recorded client constraints
 
 ```text
 validated Phase 1 Identity Pitches
+→ enriched Identity Pitch Handoff
 → client review
 → Identity Selection Record
 → Phase 2 handoff

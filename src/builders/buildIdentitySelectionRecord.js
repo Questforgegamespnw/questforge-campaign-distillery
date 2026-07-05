@@ -20,47 +20,93 @@ function toStringArray(value) {
   return cleaned ? [cleaned] : [];
 }
 
+function uniqueStringArray(...values) {
+  const seen = new Set();
+  const result = [];
+
+  for (const value of values) {
+    for (const entry of toStringArray(value)) {
+      if (seen.has(entry)) continue;
+      seen.add(entry);
+      result.push(entry);
+    }
+  }
+
+  return result;
+}
+
+function plainObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value
+    : {};
+}
+
+function hasOwnValue(value) {
+  return Boolean(
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    Object.keys(value).length > 0
+  );
+}
+
 function normalizeDirection(value = "") {
   return cleanString(value).toLowerCase();
 }
 
 function normalizePitchBlock(block = {}) {
-  const source = block.output && typeof block.output === "object"
-    ? { ...block.output, title: block.title || block.output.title }
-    : block;
+  const rawBlock = plainObject(block);
+  const output = plainObject(rawBlock.output);
+  const deterministicSource = plainObject(rawBlock.source);
+  const source = hasOwnValue(output)
+    ? {
+        ...output,
+        title:
+          rawBlock.title ||
+          output.title ||
+          deterministicSource.title
+      }
+    : rawBlock;
 
   return {
     title: cleanString(source.title),
     pitch: cleanString(source.pitch),
     about: cleanString(source.about),
     playersDo: cleanString(source.playersDo),
-    hook: cleanString(source.hook || source.distinctHook)
+    hook: cleanString(source.hook || source.distinctHook),
+    context: plainObject(source.context || rawBlock.context),
+    constraints: plainObject(source.constraints || rawBlock.constraints),
+    source: deterministicSource
   };
+}
+
+function normalizePitchCollection(pitches = {}) {
+  const normalized = {};
+
+  for (const directionKey of ALLOWED_DIRECTIONS) {
+    const block = pitches[directionKey];
+    if (!block) continue;
+    normalized[directionKey] = normalizePitchBlock(block);
+  }
+
+  return normalized;
 }
 
 function resolveIdentityPitches(value = {}) {
   if (value.identityPitches && typeof value.identityPitches === "object") {
-    return value.identityPitches;
+    return normalizePitchCollection(value.identityPitches);
   }
 
   if (value.directions && typeof value.directions === "object") {
-    const pitches = {};
-
-    for (const directionKey of ALLOWED_DIRECTIONS) {
-      const block = value.directions[directionKey];
-      if (!block) continue;
-      pitches[directionKey] = normalizePitchBlock(block);
-    }
-
-    return pitches;
+    return normalizePitchCollection(value.directions);
   }
 
   if (value.primary || value.adjacent || value.wildcard) {
-    return {
+    return normalizePitchCollection({
       primary: value.primary,
       adjacent: value.adjacent,
       wildcard: value.wildcard
-    };
+    });
   }
 
   return {};
@@ -86,6 +132,9 @@ function normalizePreservationGuidance(preservationGuidance = {}) {
 }
 
 function buildIdentitySummary(selectedPitch = {}, preservationGuidance = {}, identitySummary = {}) {
+  const context = plainObject(selectedPitch.context);
+  const constraints = plainObject(selectedPitch.constraints);
+
   return {
     identityTitle: cleanString(identitySummary.identityTitle) || selectedPitch.title,
     identityPitch: cleanString(identitySummary.identityPitch) || selectedPitch.pitch,
@@ -94,15 +143,25 @@ function buildIdentitySummary(selectedPitch = {}, preservationGuidance = {}, ide
       ? toStringArray(identitySummary.playEmphasis)
       : toStringArray(selectedPitch.playersDo),
     hook: cleanString(identitySummary.hook) || selectedPitch.hook,
-    tone: toStringArray(identitySummary.tone),
-    genre: toStringArray(identitySummary.genre),
-    environment: toStringArray(identitySummary.environment),
-    mustPreserve: toStringArray(identitySummary.mustPreserve).length > 0
-      ? toStringArray(identitySummary.mustPreserve)
-      : preservationGuidance.mustPreserve,
-    mustAvoid: toStringArray(identitySummary.mustAvoid).length > 0
-      ? toStringArray(identitySummary.mustAvoid)
-      : preservationGuidance.avoid
+    tone: toStringArray(identitySummary.tone).length > 0
+      ? toStringArray(identitySummary.tone)
+      : toStringArray(context.toneName),
+    genre: toStringArray(identitySummary.genre).length > 0
+      ? toStringArray(identitySummary.genre)
+      : toStringArray(context.genreName),
+    environment: toStringArray(identitySummary.environment).length > 0
+      ? toStringArray(identitySummary.environment)
+      : toStringArray(context.environmentNames),
+    mustPreserve: uniqueStringArray(
+      constraints.mustInclude,
+      preservationGuidance.mustPreserve,
+      identitySummary.mustPreserve
+    ),
+    mustAvoid: uniqueStringArray(
+      constraints.avoid,
+      preservationGuidance.avoid,
+      identitySummary.mustAvoid
+    )
   };
 }
 
@@ -122,6 +181,55 @@ function buildSelectionRecord({
     mustPreserve: preservationGuidance.mustPreserve,
     flexible: preservationGuidance.flexible,
     mustAvoid: preservationGuidance.avoid
+  };
+}
+
+function buildIntakeSummary(selectedPitch = {}, provided = {}) {
+  const constraints = plainObject(selectedPitch.constraints);
+
+  return {
+    canonicalSummary: cleanString(provided.canonicalSummary),
+    experienceProfile:
+      cleanString(provided.experienceProfile) ||
+      cleanString(constraints.experienceProfile) ||
+      "standard",
+    audienceMode:
+      cleanString(provided.audienceMode) ||
+      cleanString(constraints.audienceMode) ||
+      "standard",
+    campaignLength: cleanString(provided.campaignLength),
+    playerCount: cleanString(provided.playerCount),
+    additionalConstraints: toStringArray(provided.additionalConstraints)
+  };
+}
+
+function buildSafetyProfile(selectedPitch = {}, provided = {}) {
+  const constraints = plainObject(selectedPitch.constraints);
+
+  return {
+    youthSafeMode: Boolean(provided.youthSafeMode ?? constraints.youthSafeMode),
+    familyFriendly: Boolean(provided.familyFriendly ?? constraints.familyFriendly),
+    horrorRestricted: Boolean(provided.horrorRestricted ?? constraints.horrorRestricted),
+    graphicContentRestricted: Boolean(
+      provided.graphicContentRestricted ?? constraints.graphicContentRestricted
+    ),
+    oppressiveToneRestricted: Boolean(
+      provided.oppressiveToneRestricted ?? constraints.oppressiveToneRestricted
+    ),
+    toneGuardrails: toStringArray(
+      toStringArray(provided.toneGuardrails).length > 0
+        ? provided.toneGuardrails
+        : constraints.toneGuardrails
+    ),
+    audienceGuardrails: toStringArray(
+      toStringArray(provided.audienceGuardrails).length > 0
+        ? provided.audienceGuardrails
+        : constraints.audienceGuardrails
+    ),
+    mustAvoid: uniqueStringArray(
+      constraints.avoid,
+      provided.mustAvoid
+    )
   };
 }
 
@@ -159,8 +267,14 @@ function buildIdentitySelectionRecord(options = {}) {
     }),
     clientResponse,
     preservationGuidance,
-    intakeSummary: options.intakeSummary || {},
-    safetyProfile: options.safetyProfile || {},
+    intakeSummary: buildIntakeSummary(
+      selectedIdentityPitch,
+      options.intakeSummary || {}
+    ),
+    safetyProfile: buildSafetyProfile(
+      selectedIdentityPitch,
+      options.safetyProfile || {}
+    ),
     systemContext: options.systemContext || {
       status: "undecided",
       preferredSystem: "",

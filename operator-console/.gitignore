@@ -1,0 +1,4 @@
+node_modules/
+dist/
+staging/*.input.json
+.DS_Store

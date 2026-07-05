@@ -42,6 +42,18 @@ node scripts/phase1/prepareIdentityPolishRoundTrip.js "submissions/<slug>/02_PIP
 node scripts/phase1/completeIdentityPolishRoundTrip.js "exports/submissions/<slug>/phase-1/round-trip"
 ```
 
+### Build the enriched Phase 1 handoff
+
+```powershell
+node scripts/phase1/buildIdentityPitchHandoff.js "exports/submissions/<slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json"
+```
+
+This writes:
+
+```text
+exports/submissions/<slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json
+```
+
 ### Export Phase 1
 
 ```powershell
@@ -51,7 +63,7 @@ node scripts/phase1/exportIdentityPitchPdf.js "exports/submissions/<slug>/phase-
 ### Record the selected identity
 
 ```powershell
-node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --direction primary
+node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json" --direction primary
 ```
 
 Optional client-response flags may include `--selected-by`, `--notes`, `--liked`, `--concerns`, and `--requested-adjustments`.
@@ -83,6 +95,8 @@ node scripts/phase2/exportCampaignConceptPdf.js "exports/submissions/<slug>/phas
 ---
 
 ## Shared Utilities
+
+The validated Identity Pitch file is intentionally narrow. Use the enriched handoff file for client selection and Phase 2 continuity.
 
 Shared script plumbing belongs under `scripts/shared`, including:
 

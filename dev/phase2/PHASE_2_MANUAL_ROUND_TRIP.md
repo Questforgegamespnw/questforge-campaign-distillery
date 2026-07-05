@@ -6,6 +6,8 @@
 
 The Phase 2 round trip converts one validated Identity Selection Record into one or three source-bound Campaign Concepts.
 
+The Identity Selection Record should be created from `05_ENRICHED_IDENTITY_PITCHES.json`, not the narrow `04_VALIDATED_IDENTITY_PITCHES.json`, so Phase 2 receives the deterministic metadata required for continuity.
+
 The preferred v0.10 source is:
 
 ```text
@@ -64,6 +66,7 @@ exports/submissions/<slug>/phase-2/<direction>/round-trip/
 The workflow verifies:
 
 - the Identity Selection Record is valid, when used;
+- selected identity metadata from the enriched handoff is preserved into the Phase 2 input;
 - the selected direction still exists;
 - the handoff still contains the exact selected Identity Pitch;
 - the normalized Phase 2 input is valid;
@@ -91,6 +94,7 @@ A successful run writes:
 
 - source fingerprint;
 - Identity Selection Record validation, when used;
+- identity metadata preservation validation;
 - handoff identity binding;
 - input contract;
 - JSON parsing;

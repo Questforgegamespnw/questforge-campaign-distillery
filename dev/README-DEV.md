@@ -12,6 +12,7 @@ The current system implements a complete human-in-the-loop, two-phase campaign-d
    - combined AI polish round trip;
    - source-bound validation;
    - client-facing HTML and PDF export;
+   - enriched Identity Pitch handoff creation;
    - validated Identity Selection Record creation.
 
 2. **Phase 2 — Campaign Concept Development**
@@ -27,7 +28,7 @@ The guiding principle remains:
 > **Phase 1 discovers what the campaign wants to be.**  
 > **Phase 2 decides what is actually happening and what the players can change.**
 
-v0.10.0 hardens the production handoff between those phases.
+v0.10.1 hardens the production handoff between those phases and adds a post-validation enrichment step so Phase 2 keeps deterministic Phase 1 metadata.
 
 ---
 
@@ -73,6 +74,7 @@ v0.10.0 hardens the production handoff between those phases.
 - client-facing output boundary cleanup;
 - source-bound Phase 1 AI polish;
 - Phase 1 validation and client PDF delivery;
+- enriched Identity Pitch handoff script;
 - Identity Selection Record builder, validator, and creation script;
 - Phase 2 preparation from Identity Selection Records;
 - Campaign Concept input, prompt, schema, evaluation, and validation;

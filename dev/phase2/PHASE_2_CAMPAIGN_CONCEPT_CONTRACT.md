@@ -18,7 +18,7 @@ Phase 2 does not rediscover the campaign identity. It preserves one approved Pha
 
 ## Required Input
 
-The normalized input is built from the Identity Selection Record and Phase 2 handoff. It contains:
+The normalized input is built from the Identity Selection Record and Phase 2 handoff. The Identity Selection Record is expected to originate from the enriched Phase 1 handoff so Phase 2 retains deterministic context, constraints, genre, tone, environment, and safety metadata. It contains:
 
 - submission ID;
 - selected identity direction;

@@ -113,9 +113,12 @@ function inferExperienceProfile(answers = {}) {
  */
 
 function normalizeAnswers(answers = {}) {
+  const tone = String(answers.tone || "").trim();
+
   return {
     ...answers,
-    };
+    tone: toneIdMap[tone] || tone
+  };
 }
 
 function translateFormAnswers(answers = {}) {

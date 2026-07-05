@@ -44,9 +44,9 @@ GPT improvises. The Distillery creates a controlled process that can be reviewed
 
 ---
 
-## Current Runtime: v0.10.0
+## Current Runtime: v0.10.1
 
-v0.10.0 completes the core Phase 1 → Phase 2 handoff spine.
+v0.10.1 completes the core Phase 1 → Phase 2 handoff spine and preserves deterministic Phase 1 metadata through the Phase 2 handoff path.
 
 Implemented capabilities include:
 
@@ -55,7 +55,8 @@ Implemented capabilities include:
 - combined manual AI polish for all three Phase 1 directions;
 - source-bound Phase 1 validation;
 - Phase 1 HTML/PDF client delivery;
-- validated Identity Selection Record creation;
+- enriched Identity Pitch handoff creation after Phase 1 validation;
+- validated Identity Selection Record creation from the enriched handoff;
 - direct Phase 2 preparation from an Identity Selection Record;
 - Phase 2 Campaign Concept input, prompt, schema, evaluation, and validation;
 - Phase 2 HTML/PDF client delivery;
@@ -101,16 +102,30 @@ node scripts/phase1/prepareIdentityPolishRoundTrip.js "submissions/<submission-s
 node scripts/phase1/completeIdentityPolishRoundTrip.js "exports/submissions/<submission-slug>/phase-1/round-trip"
 ```
 
-### 4. Export the Phase 1 client packet
+### 4. Build the enriched Phase 1 handoff
+
+```powershell
+node scripts/phase1/buildIdentityPitchHandoff.js "exports/submissions/<submission-slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json"
+```
+
+This creates:
+
+```text
+exports/submissions/<submission-slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json
+```
+
+The validated Identity Pitch file remains intentionally narrow. The enriched handoff stitches the validated prose back to the deterministic metadata needed downstream.
+
+### 5. Export the Phase 1 client packet
 
 ```powershell
 node scripts/phase1/exportIdentityPitchPdf.js "exports/submissions/<submission-slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --client "Client Name"
 ```
 
-### 5. Record the client's selected identity
+### 6. Record the client's selected identity
 
 ```powershell
-node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<submission-slug>/phase-1/round-trip/04_VALIDATED_IDENTITY_PITCHES.json" --direction primary
+node scripts/phase1/createIdentitySelectionRecord.js "exports/submissions/<submission-slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json" --direction primary
 ```
 
 This creates:
@@ -119,19 +134,19 @@ This creates:
 exports/submissions/<submission-slug>/phase-1/identity-selection-record.json
 ```
 
-### 6. Prepare Phase 2 from the Identity Selection Record
+### 7. Prepare Phase 2 from the Identity Selection Record
 
 ```powershell
 node scripts/phase2/prepareCampaignConceptRoundTrip.js "exports/submissions/<submission-slug>/phase-1/identity-selection-record.json"
 ```
 
-### 7. Complete Phase 2 after pasting the ChatGPT response
+### 8. Complete Phase 2 after pasting the ChatGPT response
 
 ```powershell
 node scripts/phase2/completeCampaignConceptRoundTrip.js "exports/submissions/<submission-slug>/phase-2/primary/round-trip"
 ```
 
-### 8. Export the Phase 2 client packet
+### 9. Export the Phase 2 client packet
 
 ```powershell
 node scripts/phase2/exportCampaignConceptPdf.js "exports/submissions/<submission-slug>/phase-2/primary/round-trip/04_VALIDATED_CAMPAIGN_CONCEPTS.json" --client "Client Name"
@@ -149,6 +164,7 @@ Raw Form Submission
 → Three Identity Directions
 → Phase 1 AI Polish Round Trip
 → Validated Identity Pitches
+→ Enriched Identity Pitch Handoff
 → Phase 1 Client Delivery
 → Identity Selection Record
 → Phase 2 Handoff / Prompt
@@ -157,7 +173,7 @@ Raw Form Submission
 → Phase 2 Client Delivery
 ```
 
-The **Identity Selection Record** is the authoritative bridge between Phase 1 and Phase 2.
+The enriched Identity Pitch handoff preserves deterministic metadata after validation. The **Identity Selection Record** is the authoritative client-selection bridge between Phase 1 and Phase 2.
 
 ---
 
@@ -228,6 +244,7 @@ exports/submissions/<submission-slug>/
   phase-1/
     identity-selection-record.json
     round-trip/
+      05_ENRICHED_IDENTITY_PITCHES.json
     client-delivery/
 
   phase-2/
@@ -248,6 +265,7 @@ It tracks:
 - Phase 1 round-trip preparation;
 - Phase 1 validation;
 - Phase 1 PDF export;
+- enriched Identity Pitch handoff creation;
 - Identity Selection Record creation;
 - Phase 2 handoff/preparation;
 - Phase 2 validation;
@@ -283,7 +301,7 @@ It tracks:
 
 ## Next Focus
 
-1. Tag and stabilize v0.10.0.
+1. Tag and stabilize v0.10.1.
 2. Plan v0.11 around intake scaling and individual-player matchmaking.
 3. Build the system-recommendation stage.
 4. Add selected-concept finalization.
