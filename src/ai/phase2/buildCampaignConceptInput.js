@@ -23,6 +23,55 @@ function firstNonEmpty(...values) {
   return values.map(cleanString).find(Boolean) || "";
 }
 
+
+function namesFromEntries(value) {
+  if (!Array.isArray(value)) return [];
+
+  return cleanStringArray(
+    value.map((entry) => {
+      if (typeof entry === "string") return entry;
+      if (entry && typeof entry === "object") {
+        return entry.name || entry.id || "";
+      }
+      return "";
+    })
+  );
+}
+
+function deriveGenreContext(options = {}) {
+  const supplied = options.genreContext || {};
+  const sourceContext = options.sourceContext || {};
+  const pitchContext = options.selectedIdentityPitch?.context || {};
+  const pitchMetadata =
+    options.selectedIdentityPitch?.contextMetadata ||
+    pitchContext.contextMetadata ||
+    sourceContext.contextMetadata ||
+    {};
+
+  return {
+    legacyGenre: cleanStringArray(
+      supplied.legacyGenre?.length
+        ? supplied.legacyGenre
+        : sourceContext.genre || sourceContext.genreNames || pitchContext.genreName || pitchContext.genreNames
+    ),
+    eras: cleanStringArray(
+      supplied.eras?.length
+        ? supplied.eras
+        : sourceContext.eras || sourceContext.eraNames || pitchContext.eraNames || namesFromEntries(pitchMetadata.eraFrames)
+    ),
+    aesthetics: cleanStringArray(
+      supplied.aesthetics?.length
+        ? supplied.aesthetics
+        : sourceContext.aesthetics || sourceContext.aestheticNames || pitchContext.aestheticNames || namesFromEntries(pitchMetadata.aestheticSkins)
+    ),
+    worldConditions: cleanStringArray(
+      supplied.worldConditions?.length
+        ? supplied.worldConditions
+        : sourceContext.worldConditions || sourceContext.worldConditionNames || pitchContext.worldConditionNames || namesFromEntries(pitchMetadata.worldConditions)
+    )
+  };
+}
+
 function normalizeContextDecision(value = {}, kind) {
   const isSystem = kind === "system";
 
@@ -120,6 +169,7 @@ function buildCampaignConceptInput(options = {}) {
     ),
     generationMode: cleanString(options.generationMode) || "three_variants",
     identitySummary: deriveIdentitySummary(options),
+    genreContext: deriveGenreContext(options),
     selectionContext: {
       likedElements: cleanStringArray(selection.likedElements),
       elementsToAvoid: cleanStringArray(selection.elementsToAvoid),
@@ -160,5 +210,6 @@ module.exports = {
   buildCampaignConceptInput,
   cleanString,
   cleanStringArray,
-  normalizeContextDecision
+  normalizeContextDecision,
+  deriveGenreContext
 };

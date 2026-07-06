@@ -21,6 +21,7 @@ function buildOutputSkeleton(input) {
     selectedIdentityDirection: input.selectedIdentityDirection,
     generationMode: input.generationMode,
     identitySummary: input.identitySummary,
+    genreContext: input.genreContext,
     systemContext: input.systemContext,
     settingContext: input.settingContext,
     concepts: variantTypes.map((variantType) => ({
@@ -96,6 +97,7 @@ PRESERVE:
 - The selected identity's thematic promise and emotional center.
 - The approved style of play and recurring activity.
 - Tone, genre, and environment signals.
+- Decomposed genre context, including era, aesthetic, and world-condition guidance.
 - Client-liked elements and requested changes.
 - Audience, safety, inclusion, and exclusion constraints.
 - Confirmed system or setting decisions.
@@ -140,6 +142,9 @@ ${input.generationMode === "single"
   2. "alternate_situation": change at least three of the starting crisis, faction arrangement, player starting position, recurring engine, contested resource, or setting condition.
   3. "distinctive_interpretation": add one bold but compatible and understandable campaign feature.
 - The variants must differ in concrete situation without becoming different campaign identities.`}
+
+GENRE CONTEXT REQUIREMENT:
+Use genreContext as implementation guidance for concrete Phase 2 premises. It may shape the era texture, aesthetic presentation, and setting pressures, but it must not replace or broaden the approved identitySummary. If genreContext is sparse, do not invent a rigid setting package just to fill it.
 
 SPECIFICITY LIMIT:
 Invent enough detail to make each premise concrete and playable, but do not pre-write the campaign. Prefer two to four active forces, one immediate crisis, a clear recurring structure, and concise setting detail.

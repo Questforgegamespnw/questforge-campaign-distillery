@@ -44,6 +44,21 @@ function validateStringArrayField(source, fieldPath, errors) {
   }
 }
 
+function validateGenreContext(record, errors) {
+  if (record.genreContext === undefined) {
+    return;
+  }
+
+  if (!isPlainObject(record.genreContext)) {
+    errors.push("genreContext must be an object when supplied.");
+    return;
+  }
+
+  for (const field of ["legacyGenre", "eras", "aesthetics", "worldConditions"]) {
+    validateStringArrayField(record, `genreContext.${field}`, errors);
+  }
+}
+
 function validateIdentitySelectionRecord(record = {}) {
   const errors = [];
   const warnings = [];
@@ -104,6 +119,8 @@ function validateIdentitySelectionRecord(record = {}) {
     validateStringArrayField(record, "identitySummary.mustAvoid", errors);
   }
 
+  validateGenreContext(record, errors);
+
   if (!isPlainObject(record.selectionRecord)) {
     errors.push("selectionRecord must be an object.");
     missingFields.push("selectionRecord");
@@ -160,5 +177,6 @@ function validateIdentitySelectionRecord(record = {}) {
 module.exports = {
   ALLOWED_DIRECTIONS,
   REQUIRED_PITCH_FIELDS,
+  validateGenreContext,
   validateIdentitySelectionRecord
 };

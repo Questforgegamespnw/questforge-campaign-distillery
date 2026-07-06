@@ -9,7 +9,8 @@ const {
   CONCEPT_REQUIRED_FIELDS,
   CONCEPT_OPTIONAL_FIELDS,
   FACTION_REQUIRED_FIELDS,
-  CHOICE_REQUIRED_FIELDS
+  CHOICE_REQUIRED_FIELDS,
+  GENRE_CONTEXT_FIELDS
 } = require("./campaignConceptSchema");
 
 const TOP_LEVEL_FIELDS = Object.freeze([
@@ -18,6 +19,7 @@ const TOP_LEVEL_FIELDS = Object.freeze([
   "selectedIdentityDirection",
   "generationMode",
   "identitySummary",
+  "genreContext",
   "systemContext",
   "settingContext",
   "concepts",
@@ -106,6 +108,20 @@ function validateIdentitySummary(identity, errors) {
   validateStringArray(identity.environment, "identitySummary.environment", errors);
   validateStringArray(identity.mustPreserve, "identitySummary.mustPreserve", errors);
   validateStringArray(identity.mustAvoid, "identitySummary.mustAvoid", errors);
+}
+
+
+function validateGenreContext(context, errors) {
+  const path = "genreContext";
+  if (!isObject(context)) {
+    errors.push(`${path} must be an object.`);
+    return;
+  }
+
+  pushUnexpectedKeys(context, GENRE_CONTEXT_FIELDS, path, errors);
+  for (const field of GENRE_CONTEXT_FIELDS) {
+    validateStringArray(context[field], `${path}.${field}`, errors);
+  }
 }
 
 function validateSystemContext(context, errors) {
@@ -367,6 +383,7 @@ function validateCampaignConceptOutput(output, options = {}) {
   }
 
   validateIdentitySummary(output.identitySummary, errors);
+  validateGenreContext(output.genreContext, errors);
   validateSystemContext(output.systemContext, errors);
   validateSettingContext(output.settingContext, errors);
 
@@ -395,6 +412,7 @@ function validateCampaignConceptOutput(output, options = {}) {
 module.exports = {
   validateCampaignConceptOutput,
   semanticWarnings,
+  validateGenreContext,
   isObject,
   isNonEmptyString
 };

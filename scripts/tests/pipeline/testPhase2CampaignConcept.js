@@ -23,57 +23,57 @@ const candidate = require("../../fixtures/phase2/campaignConcept.example.json");
 
 function buildInput() {
   return buildCampaignConceptInput({
-  submissionId: "example_submission_001",
-  selectedIdentityDirection: "primary",
-  generationMode: "three_variants",
-  selectedIdentityPitch: {
-    title: "Power Awakened Within",
-    pitch:
-      "A campaign about inner power, disciplined growth, and the responsibility of deciding what that power should become.",
-    about:
-      "Power begins within the characters, but its meaning is defined by how they choose to shape and use it."
-  },
-  identitySummary: {
-    identityTitle: "Power Awakened Within",
-    identityPitch:
-      "A campaign about inner power, disciplined growth, and the responsibility of deciding what that power should become.",
-    corePromise:
-      "Power begins within the characters, but its meaning is defined by how they choose to shape and use it.",
-    playEmphasis: [
-      "tactical positioning",
-      "team coordination",
-      "character growth"
-    ],
-    tone: ["heroic", "hopeful"],
-    genre: ["fantasy"],
-    environment: ["underground ruins"],
-    mustPreserve: [
-      "inner awakening",
-      "teamwork",
-      "meaningful control of power"
-    ],
-    mustAvoid: [
-      "grimdark inevitability",
-      "mandatory corruption"
-    ]
-  },
-  genreContext: {
-    legacyGenre: ["fantasy"],
-    eras: [],
-    aesthetics: ["heroic_fantasy"],
-    worldConditions: []
-  },
-  systemContext: {
-    status: "open",
-    preferredSystem: "",
-    systemsToAvoid: []
-  },
-  settingContext: {
-    status: "open",
-    preferredSetting: "",
-    settingConstraints: []
-  }
-});
+    submissionId: "example_submission_001",
+    selectedIdentityDirection: "primary",
+    generationMode: "three_variants",
+    selectedIdentityPitch: {
+      title: "Power Awakened Within",
+      pitch:
+        "A campaign about inner power, disciplined growth, and the responsibility of deciding what that power should become.",
+      about:
+        "Power begins within the characters, but its meaning is defined by how they choose to shape and use it."
+    },
+    identitySummary: {
+      identityTitle: "Power Awakened Within",
+      identityPitch:
+        "A campaign about inner power, disciplined growth, and the responsibility of deciding what that power should become.",
+      corePromise:
+        "Power begins within the characters, but its meaning is defined by how they choose to shape and use it.",
+      playEmphasis: [
+        "tactical positioning",
+        "team coordination",
+        "character growth"
+      ],
+      tone: ["heroic", "hopeful"],
+      genre: ["fantasy"],
+      environment: ["underground ruins"],
+      mustPreserve: [
+        "inner awakening",
+        "teamwork",
+        "meaningful control of power"
+      ],
+      mustAvoid: [
+        "grimdark inevitability",
+        "mandatory corruption"
+      ]
+    },
+    genreContext: {
+      legacyGenre: ["fantasy"],
+      eras: [],
+      aesthetics: ["heroic_fantasy"],
+      worldConditions: []
+    },
+    systemContext: {
+      status: "open",
+      preferredSystem: "",
+      systemsToAvoid: []
+    },
+    settingContext: {
+      status: "open",
+      preferredSetting: "",
+      settingConstraints: []
+    }
+  });
 }
 
 function main() {
@@ -89,6 +89,8 @@ function main() {
   assert.match(prompt, /Phase 1 has already determined/);
   assert.match(prompt, /three concrete, playable campaign premises/);
   assert.match(prompt, /meaningful player choices/i);
+  assert.match(prompt, /genreContext/);
+  assert.match(prompt, /implementation guidance/i);
 
   const outputValidation = validateCampaignConceptOutput(candidate, {
     sourceInput: input

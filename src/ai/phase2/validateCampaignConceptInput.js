@@ -4,7 +4,8 @@ const {
   CONTRACT_VERSION,
   IDENTITY_DIRECTIONS,
   GENERATION_MODES,
-  CONTEXT_STATUSES
+  CONTEXT_STATUSES,
+  GENRE_CONTEXT_FIELDS
 } = require("./campaignConceptSchema");
 
 function isNonEmptyString(value) {
@@ -28,6 +29,23 @@ function validateStringArray(value, path, errors, options = {}) {
       errors.push(`${path}[${index}] must be a non-empty string.`);
     }
   });
+}
+
+
+function validateGenreContext(value, path, errors) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    errors.push(`${path} must be an object.`);
+    return;
+  }
+
+  const unexpected = Object.keys(value).filter((key) => !GENRE_CONTEXT_FIELDS.includes(key));
+  if (unexpected.length) {
+    errors.push(`${path} contains unexpected keys: ${unexpected.join(", ")}.`);
+  }
+
+  for (const field of GENRE_CONTEXT_FIELDS) {
+    validateStringArray(value[field], `${path}.${field}`, errors);
+  }
 }
 
 function validateCampaignConceptInput(input) {
@@ -87,6 +105,8 @@ function validateCampaignConceptInput(input) {
     validateStringArray(identity.mustPreserve, "identitySummary.mustPreserve", errors);
     validateStringArray(identity.mustAvoid, "identitySummary.mustAvoid", errors);
   }
+
+  validateGenreContext(input.genreContext, "genreContext", errors);
 
   for (const [path, context] of [
     ["systemContext", input.systemContext],
@@ -170,5 +190,6 @@ function validateCampaignConceptInput(input) {
 module.exports = {
   validateCampaignConceptInput,
   isNonEmptyString,
-  validateStringArray
+  validateStringArray,
+  validateGenreContext
 };

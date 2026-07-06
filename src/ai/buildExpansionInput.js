@@ -48,6 +48,28 @@ function mergeNoteLists(...values) {
   return [...new Set(values.flatMap(normalizeNoteList))];
 }
 
+
+function summarizeContextNames(entries) {
+  return (entries || [])
+    .map((entry) => {
+      if (typeof entry === "string") return entry.trim();
+      if (entry && typeof entry === "object") return entry.name || entry.id || "";
+      return "";
+    })
+    .filter(Boolean);
+}
+
+function getGenreContext(directionBundle = {}) {
+  const metadata = directionBundle.contextMetadata || {};
+
+  return {
+    legacyGenre: summarizeNames(directionBundle.genreSkin),
+    eras: summarizeContextNames(metadata.eraFrames || directionBundle.eraFrames),
+    aesthetics: summarizeContextNames(metadata.aestheticSkins || directionBundle.aestheticSkins),
+    worldConditions: summarizeContextNames(metadata.worldConditions || directionBundle.worldConditions)
+  };
+}
+
 function getSafetyContext(directionBundle = {}, campaignContext = {}) {
   const adjudication = directionBundle.adjudication || {};
   const constraints = adjudication.constraints || {};
@@ -176,7 +198,8 @@ function buildExpansionInput(directionBundle = {}, source = {}, campaignContext 
       systemNames: summarizeNames(directionBundle.systemFrames),
       genreName: summarizeNames(directionBundle.genreSkin)[0] || "",
       toneName: summarizeNames(directionBundle.toneSkin)[0] || "",
-      environmentNames: summarizeNames(directionBundle.environmentSkins)
+      environmentNames: summarizeNames(directionBundle.environmentSkins),
+      genreContext: getGenreContext(directionBundle)
     },
     constraints: {
       mustInclude: mergeNoteLists(
@@ -197,5 +220,6 @@ function buildExpansionInput(directionBundle = {}, source = {}, campaignContext 
 module.exports = {
   buildExpansionInput,
   getSafetyContext,
-  normalizeSource
+  normalizeSource,
+  getGenreContext
 };

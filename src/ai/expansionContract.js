@@ -38,7 +38,7 @@ const PRESERVE_RULES = Object.freeze([
 const ALLOWED_CHANGES = Object.freeze([
   "Improve clarity, cadence, transitions, and client-facing readability.",
   "Deepen ideas already present in the source.",
-  "Add restrained sensory or emotional specificity when directly supported by the supplied genre, tone, or environments.",
+  "Add restrained sensory or emotional specificity when directly supported by the supplied genre, tone, environments, or light genre context.",
   "Vary phrasing while preserving intent and scope."
 ]);
 
@@ -46,7 +46,7 @@ const FORBIDDEN_CHANGES = Object.freeze([
   "Do not invent mechanics, rules, subsystems, or character options.",
   "Do not invent named NPCs, factions, locations, villains, artifacts, or historical events.",
   "Do not add a plot outline, quest chain, twist, or campaign ending.",
-  "Do not change selected frames, genre, tone, environments, or safety boundaries.",
+  "Do not change selected frames, genre, tone, environments, light genre context, or safety boundaries.",
   "Do not add keys, commentary, markdown, or explanations outside the required JSON object.",
   "Do not make the prose more extreme, hopeless, violent, or psychologically heavy than the source allows."
 ]);

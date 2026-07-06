@@ -32,6 +32,16 @@
       "mandatory corruption"
     ]
   },
+  "genreContext": {
+    "legacyGenre": [
+      "fantasy"
+    ],
+    "eras": [],
+    "aesthetics": [
+      "heroic_fantasy"
+    ],
+    "worldConditions": []
+  },
   "systemContext": {
     "status": "open",
     "preferredSystem": "",

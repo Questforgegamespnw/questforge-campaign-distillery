@@ -14,6 +14,13 @@ const GENERATION_MODES = Object.freeze([
   "three_variants"
 ]);
 
+const GENRE_CONTEXT_FIELDS = Object.freeze([
+  "legacyGenre",
+  "eras",
+  "aesthetics",
+  "worldConditions"
+]);
+
 const CONTEXT_STATUSES = Object.freeze([
   "confirmed",
   "preferred",
@@ -66,6 +73,7 @@ module.exports = {
   CONTRACT_VERSION,
   IDENTITY_DIRECTIONS,
   GENERATION_MODES,
+  GENRE_CONTEXT_FIELDS,
   CONTEXT_STATUSES,
   VARIANT_TYPES,
   CONCEPT_REQUIRED_FIELDS,

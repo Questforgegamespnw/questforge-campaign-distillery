@@ -11,6 +11,7 @@
     "selectedIdentityDirection",
     "generationMode",
     "identitySummary",
+    "genreContext",
     "concepts",
     "validationSummary"
   ],
@@ -218,6 +219,50 @@
             "type": "string",
             "minLength": 1
           }
+        }
+      }
+    },
+    "genreContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legacyGenre",
+        "eras",
+        "aesthetics",
+        "worldConditions"
+      ],
+      "properties": {
+        "legacyGenre": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "eras": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "aesthetics": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "worldConditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
         }
       }
     }
