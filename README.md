@@ -44,27 +44,38 @@ GPT improvises. The Distillery creates a controlled process that can be reviewed
 
 ---
 
-## Current Runtime: v0.10.1
+## Current Runtime: v0.11.0
 
-v0.10.1 completes the core Phase 1 → Phase 2 handoff spine and preserves deterministic Phase 1 metadata through the Phase 2 handoff path.
+Decomposed Genre Context Pipeline
 
-Implemented capabilities include:
+### Added
+- Added end-to-end support for decomposed genre context:
+  - `eraFrames`
+  - `aestheticSkins`
+  - `worldConditions`
+- Added `genreContext` / `contextMetadata` handoff support so decomposed genre signals survive from intake through Phase 2.
+- Added enum and alias support for expanded era, aesthetic, and world-condition form layers.
+- Added Phase 2 AI prompt support for genre context as implementation guidance.
+- Added Phase 2 exporter rendering for implementation context.
 
-- canonical intake normalization and validation;
-- deterministic Phase 1 Identity Pitch generation;
-- combined manual AI polish for all three Phase 1 directions;
-- source-bound Phase 1 validation;
-- Phase 1 HTML/PDF client delivery;
-- enriched Identity Pitch handoff creation after Phase 1 validation;
-- validated Identity Selection Record creation from the enriched handoff;
-- direct Phase 2 preparation from an Identity Selection Record;
-- Phase 2 Campaign Concept input, prompt, schema, evaluation, and validation;
-- Phase 2 HTML/PDF client delivery;
-- shared submission lifecycle status through `submission-status.json`;
-- profile-aware `standard` / `youth` / `kids` handling;
-- Core Frame audience policy;
-- youth/kids voice shaping;
-- client-facing phrase-boundary cleanup.
+### Changed
+- Preserved `genreSkin` as the Phase 1 flavor bridge while allowing it to percolate into the newer era/aesthetic/world-condition model.
+- Clarified the pipeline boundary:
+  - Phase 1 remains core/system-first and identity-driven.
+  - Genre remains a light client-facing flavor layer.
+  - Era, aesthetic, and world condition are preserved primarily for audit, handoff, compatibility, and Phase 2 implementation.
+- Updated Phase 2 campaign concept input/output contracts to carry `genreContext`.
+- Updated identity handoff flow so enriched identity pitches retain the restored genre context needed for Phase 2.
+- Updated selectors, resolvers, validators, schemas, builders, exporters, config, AI helpers, and test fixtures for the new context model.
+
+### Fixed
+- Prevented richer genre metadata from being lost after AI identity pitch validation.
+- Prevented Phase 2 concept generation from losing decomposed genre context during handoff.
+- Updated stale test expectations around expanded genre-layer compatibility and Phase 2 fixture validation.
+
+### Notes
+- `genreSkin` is intentionally retained for now as a legacy-compatible Phase 1 flavor layer.
+- The new decomposed genre layers should not drive Phase 1 identity selection. They are context signals for later implementation, especially Phase 2 campaign concept development.
 
 ---
 

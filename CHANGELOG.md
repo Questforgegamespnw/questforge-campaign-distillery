@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.11.0 — Decomposed Genre Context Pipeline
+
+### Added
+- Added end-to-end support for decomposed genre context:
+  - `eraFrames`
+  - `aestheticSkins`
+  - `worldConditions`
+- Added `genreContext` / `contextMetadata` handoff support so decomposed genre signals survive from intake through Phase 2.
+- Added enum and alias support for expanded era, aesthetic, and world-condition form layers.
+- Added Phase 2 AI prompt support for genre context as implementation guidance.
+- Added Phase 2 exporter rendering for implementation context.
+
+### Changed
+- Preserved `genreSkin` as the Phase 1 flavor bridge while allowing it to percolate into the newer era/aesthetic/world-condition model.
+- Clarified the pipeline boundary:
+  - Phase 1 remains core/system-first and identity-driven.
+  - Genre remains a light client-facing flavor layer.
+  - Era, aesthetic, and world condition are preserved primarily for audit, handoff, compatibility, and Phase 2 implementation.
+- Updated Phase 2 campaign concept input/output contracts to carry `genreContext`.
+- Updated identity handoff flow so enriched identity pitches retain the restored genre context needed for Phase 2.
+- Updated selectors, resolvers, validators, schemas, builders, exporters, config, AI helpers, and test fixtures for the new context model.
+
+### Fixed
+- Prevented richer genre metadata from being lost after AI identity pitch validation.
+- Prevented Phase 2 concept generation from losing decomposed genre context during handoff.
+- Updated stale test expectations around expanded genre-layer compatibility and Phase 2 fixture validation.
+
+### Notes
+- `genreSkin` is intentionally retained for now as a legacy-compatible Phase 1 flavor layer.
+- The new decomposed genre layers should not drive Phase 1 identity selection. They are context signals for later implementation, especially Phase 2 campaign concept development.
+---
 
 ## v0.10.1 — Phase 1 Handoff Metadata Preservation
 

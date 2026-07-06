@@ -73,19 +73,22 @@ function buildEnrichedPitch({ directionKey, validatedPitch, promptExport }) {
   const expansionInput = plainObject(promptExport[directionKey]?.expansionInput);
   const deterministicSource = plainObject(expansionInput.source);
 
-  return {
-    title:
-      cleanString(validatedPitch.title) ||
-      cleanString(deterministicSource.title),
-    pitch: cleanString(validatedPitch.pitch),
-    about: cleanString(validatedPitch.about),
-    playersDo: cleanString(validatedPitch.playersDo),
-    hook: cleanString(validatedPitch.hook || validatedPitch.distinctHook),
-    direction: plainObject(expansionInput.direction),
-    source: deterministicSource,
-    context: plainObject(expansionInput.context),
-    constraints: plainObject(expansionInput.constraints)
-  };
+  const context = plainObject(expansionInput.context);
+
+return {
+  title:
+    cleanString(validatedPitch.title) ||
+    cleanString(deterministicSource.title),
+  pitch: cleanString(validatedPitch.pitch),
+  about: cleanString(validatedPitch.about),
+  playersDo: cleanString(validatedPitch.playersDo),
+  hook: cleanString(validatedPitch.hook || validatedPitch.distinctHook),
+  direction: plainObject(expansionInput.direction),
+  source: deterministicSource,
+  context,
+  genreContext: plainObject(context.genreContext),
+  constraints: plainObject(expansionInput.constraints)
+};
 }
 
 function buildIdentityPitchHandoff({
