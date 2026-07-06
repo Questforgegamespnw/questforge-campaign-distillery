@@ -32,25 +32,33 @@ function normalizeLabelText(value) {
         .trim();
 }
 
+function normalizeIdLike(value) {
+    return normalizeLabelText(value)
+        .replace(/\s+/g, "_")
+        .replace(/^_+|_+$/g, "");
+}
+
 function normalizeTone(value) {
     const normalized = normalizeLabelText(value);
-    return TONE_ALIASES[normalized] || normalized;
+    return TONE_ALIASES[normalized] || normalizeIdLike(value);
 }
 
 function normalizeGenre(value) {
     const normalized = normalizeLabelText(value);
-    return GENRE_ALIASES[normalized] || normalized;
+    return GENRE_ALIASES[normalized] || normalizeIdLike(value);
 }
 
 function normalizeEnvironment(value) {
     const normalized = normalizeLabelText(value);
-    return ENVIRONMENT_ALIASES[normalized] || normalized;
+    return ENVIRONMENT_ALIASES[normalized] || normalizeIdLike(value);
+}
+
+function normalizeLayerChoice(value) {
+    return normalizeIdLike(value);
 }
 
 function normalizeRespondentType(value) {
-    const normalized = normalizeLabelText(value)
-        .replace(/^just_/, "")
-        .replace(/_+/g, "_");
+    const normalized = normalizeIdLike(value).replace(/^just_/, "");
 
     const aliases = {
         individual: "individual",
@@ -82,6 +90,15 @@ function buildLegacyGroupSize({ legacyGroupSize = "", currentGroupSize = "", des
     return "";
 }
 
+function firstPresentArray(raw, ...keys) {
+    for (const key of keys) {
+        const values = toArray(raw[key]);
+        if (values.length > 0) return values;
+    }
+
+    return [];
+}
+
 function unique(values) {
     return [...new Set(values)];
 }
@@ -99,7 +116,7 @@ function mapFormSubmission(raw = {}) {
     const mapped = {
         source: {
             type: "website_form",
-            formId: "qf-intake-form-v4",
+            formId: "qf-intake-form-v5",
             subject: toString(raw._subject)
         },
 
@@ -116,16 +133,26 @@ function mapFormSubmission(raw = {}) {
         },
 
         selections: {
-            experiences: unique(toArray(raw.experience || raw["experience[]"])),
-            setups: unique(toArray(raw.setup || raw["setup[]"])),
+            experiences: unique(firstPresentArray(raw, "experience", "experience[]")),
+            setups: unique(firstPresentArray(raw, "setup", "setup[]")),
             tone: normalizeTone(raw.tone),
             choiceWeight: toString(raw.choice_weight),
-            genres: unique(toArray(raw.genre || raw["genre[]"]).map(normalizeGenre)),
+
+            // Legacy broad genre layer. Keep as light Phase 1 flavor while the
+            // richer layers below mature into the long-term structure.
+            genres: unique(firstPresentArray(raw, "genre", "genre[]").map(normalizeGenre)),
+
+            // New decomposed genre-context layers. These should be preserved for
+            // audit and Phase 2 handoff, not used as primary Phase 1 identity drivers.
+            eras: unique(firstPresentArray(raw, "era", "era[]", "eras", "eras[]").map(normalizeLayerChoice)),
+            aesthetics: unique(firstPresentArray(raw, "aesthetic", "aesthetic[]", "aesthetics", "aesthetics[]").map(normalizeLayerChoice)),
+            worldConditions: unique(firstPresentArray(raw, "world_condition", "world_condition[]", "worldCondition", "worldConditions", "world_conditions", "world_conditions[]").map(normalizeLayerChoice)),
+
             environments: unique(
-                toArray(raw.environment || raw["environment[]"]).map(normalizeEnvironment)
+                firstPresentArray(raw, "environment", "environment[]").map(normalizeEnvironment)
             ),
-            gameplayInterests: unique(toArray(raw.gameplay || raw["gameplay[]"])),
-            playerFantasy: unique(toArray(raw.fantasy || raw["fantasy[]"]))
+            gameplayInterests: unique(firstPresentArray(raw, "gameplay", "gameplay[]")),
+            playerFantasy: unique(firstPresentArray(raw, "fantasy", "fantasy[]"))
         },
 
         freeText: {
@@ -136,7 +163,7 @@ function mapFormSubmission(raw = {}) {
 
         boundaries: {
             contentBoundaries: unique(
-                toArray(raw.content_boundaries || raw["content_boundaries[]"])
+                firstPresentArray(raw, "content_boundaries", "content_boundaries[]")
             )
         },
 
@@ -145,7 +172,7 @@ function mapFormSubmission(raw = {}) {
             audience: toString(raw.audience),
             ageBand: toString(raw.age_band),
             contentBoundaries: unique(
-                toArray(raw.content_boundaries || raw["content_boundaries[]"])
+                firstPresentArray(raw, "content_boundaries", "content_boundaries[]")
             ),
             mustHaves: toString(raw.must_haves),
             avoid: toString(raw.avoid)
@@ -179,6 +206,9 @@ function mapFormSubmission(raw = {}) {
                 mapped.selections.experiences.length > 0 ||
                 mapped.selections.setups.length > 0 ||
                 mapped.selections.genres.length > 0 ||
+                mapped.selections.eras.length > 0 ||
+                mapped.selections.aesthetics.length > 0 ||
+                mapped.selections.worldConditions.length > 0 ||
                 mapped.selections.environments.length > 0 ||
                 mapped.selections.gameplayInterests.length > 0 ||
                 mapped.selections.playerFantasy.length > 0,

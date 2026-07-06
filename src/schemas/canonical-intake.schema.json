@@ -146,6 +146,9 @@
         "tone",
         "choiceWeight",
         "genres",
+        "eras",
+        "aesthetics",
+        "worldConditions",
         "environments",
         "gameplayInterests",
         "playerFantasy"
@@ -158,60 +161,30 @@
           "$ref": "#/$defs/stringArray"
         },
         "tone": {
-          "type": "string",
-          "enum": [
-            "lighthearted_and_fun",
-            "adventurous_with_some_serious_moments",
-            "dramatic_and_emotionally_weighty",
-            "dark_and_dangerous",
-            "bleak_brutal_and_high_stakes",
-            "chaotic_lighthearted",
-            ""
-          ]
+          "type": "string"
         },
         "choiceWeight": {
           "type": "string"
         },
         "genres": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "classic_fantasy",
-              "dark_fantasy",
-              "heroic_fantasy",
-              "gothic_victorian",
-              "western_frontier",
-              "feudal_eastern",
-              "sci_fi_spacefaring",
-              "post_apocalyptic",
-              "mythic_divine",
-              "weird_surreal_otherworldly"
-            ]
-          }
+          "$ref": "#/$defs/stringArray"
         },
         "environments": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "cities_and_urban_intrigue",
-              "jungles_and_overgrown_ruins",
-              "frozen_wastes",
-              "deserts_and_wastelands",
-              "coastlines_islands_and_oceans",
-              "mountains_and_wild_frontiers",
-              "underground_caverns_and_deep_places",
-              "ancient_ruins_and_fallen_civilizations",
-              "strange_dreamlike_or_reality_warped_places",
-              "volcanic_lands_and_fire_scarred_regions"
-            ]
-          }
+          "$ref": "#/$defs/stringArray"
         },
         "gameplayInterests": {
           "$ref": "#/$defs/stringArray"
         },
         "playerFantasy": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "eras": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "aesthetics": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "worldConditions": {
           "$ref": "#/$defs/stringArray"
         }
       }

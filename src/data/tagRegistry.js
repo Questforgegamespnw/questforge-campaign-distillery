@@ -4,6 +4,9 @@ export const tagRegistry = {
         systemFrames: {},
         toneSkins: {},
         genreSkins: {},
+        eraFrames: {},
+        aestheticSkins: {},
+        worldConditions: {},
         environmentSkins: {},
 
         youthCoreFrames: {},

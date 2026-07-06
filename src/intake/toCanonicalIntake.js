@@ -50,7 +50,15 @@ function toCanonicalIntake(normalized = {}) {
             setups: selections.setups || [],
             tone: selections.tone || "",
             choiceWeight: selections.choiceWeight || "",
+
+            // Legacy broad genre field retained for light Phase 1 flavor.
             genres: selections.genres || [],
+
+            // Decomposed genre-context fields retained for audit and Phase 2 handoff.
+            eras: selections.eras || [],
+            aesthetics: selections.aesthetics || [],
+            worldConditions: selections.worldConditions || [],
+
             environments: selections.environments || [],
             gameplayInterests: selections.gameplayInterests || [],
             playerFantasy: selections.playerFantasy || []

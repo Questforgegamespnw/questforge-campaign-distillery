@@ -18,9 +18,19 @@ function normalizeValue(value) {
         .replace(/^_+|_+$/g, "");
 }
 
+function normalizeArray(values = []) {
+    return (Array.isArray(values) ? values : [])
+        .map(normalizeValue)
+        .filter(Boolean);
+}
+
 /**
  * Builds translator-ready input from canonical intake.
  * This is a derived adapter layer — NOT part of canonical intake.
+ *
+ * Phase 1 identity remains core/system-first. Genre stays available as light
+ * client-facing flavor. Era/aesthetic/world-condition context is preserved for
+ * audit and Phase 2 handoff.
  *
  * @param {object} canonical
  * @returns {object}
@@ -31,6 +41,14 @@ function buildTranslatorInput(canonical = {}) {
     const notes = canonical.notes || {};
     const boundaries = canonical.boundaries || {};
     const safety = canonical.safety || {};
+
+    const overallExperiences = normalizeArray(preferences.experiences);
+    const conflicts = normalizeArray(preferences.setups);
+    const legacyGenres = normalizeArray(preferences.genres);
+    const eras = normalizeArray(preferences.eras);
+    const aesthetics = normalizeArray(preferences.aesthetics);
+    const worldConditions = normalizeArray(preferences.worldConditions);
+    const playerFantasies = normalizeArray(preferences.playerFantasy);
 
     return {
         experienceProfile: safety.experienceProfile || "standard",
@@ -51,15 +69,29 @@ function buildTranslatorInput(canonical = {}) {
         desiredGroupSize: group.desiredGroupSize || "",
         groupSize: group.groupSize || "",
 
-        overallExperience: normalizeValue(firstItem(preferences.experiences)),
+        // Legacy scalar fields kept for compatibility.
+        overallExperience: firstItem(overallExperiences),
         tone: normalizeValue(preferences.tone),
-        worldAesthetic: normalizeValue(firstItem(preferences.genres)),
-        conflict: normalizeValue(firstItem(preferences.setups)),
+        worldAesthetic: firstItem(legacyGenres),
+        conflict: firstItem(conflicts),
         choiceWeight: normalizeValue(preferences.choiceWeight),
-        playerFantasy: normalizeValue(firstItem(preferences.playerFantasy)),
+        playerFantasy: firstItem(playerFantasies),
 
-        gameplay: (preferences.gameplayInterests || []).map(normalizeValue),
-        environments: (preferences.environments || []).map(normalizeValue),
+        // Expanded fields used by the current translator.
+        overallExperiences,
+        conflicts,
+        legacyGenres,
+        eras,
+        aesthetics,
+        worldConditions,
+        playerFantasies,
+
+        // Phase 2-forward context. Prefer explicit aesthetic selections when
+        // present, then fall back to legacy genre flavor.
+        activeAesthetics: aesthetics.length > 0 ? aesthetics : legacyGenres,
+
+        gameplay: normalizeArray(preferences.gameplayInterests),
+        environments: normalizeArray(preferences.environments),
 
         includeNotes: joinNotes(
             notes.mustHaves,

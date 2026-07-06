@@ -238,6 +238,9 @@ function adjudicateSignals(translated = {}, canonicalIntake = {}) {
             coreFrames: normalizeSignalBucket(translated.coreFrames, "coreFrames"),
             systemFrames: normalizeSignalBucket(translated.systemFrames, "systemFrames"),
             genreSkins: normalizeSignalBucket(translated.genreSkins, "genreSkins"),
+            eraFrames: normalizeSignalBucket(translated.eraFrames, "eraFrames"),
+            aestheticSkins: normalizeSignalBucket(translated.aestheticSkins, "aestheticSkins"),
+            worldConditions: normalizeSignalBucket(translated.worldConditions, "worldConditions"),
             toneSkins: normalizeSignalBucket(translated.toneSkins, "toneSkins"),
             environmentSkins: normalizeSignalBucket(translated.environmentSkins, "environmentSkins")
         },

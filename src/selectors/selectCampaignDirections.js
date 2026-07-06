@@ -2,6 +2,7 @@ const { adjudicateSignals } = require("./adjudicateSignals");
 const { selectTopWeighted } = require("./selectTopWeighted");
 const systemFrameLibrary = require("../data/systemFrames");
 const coreFrameLibrary = require("../data/coreFrames");
+const { addGenreLayerCompatibilityBuckets } = require("../data/genreLayerCompatibility");
 
 
 function isAdjudicatedInput(input = {}) {
@@ -18,11 +19,14 @@ function flattenAdjudicatedSignals(adjudicated = {}) {
       }));
   }
 
-  return {
+  const flattened = {
     experienceProfile: adjudicated.experienceProfile || "standard",
     coreFrames: flattenBucket(adjudicated.signals?.coreFrames),
     systemFrames: flattenBucket(adjudicated.signals?.systemFrames),
     genreSkins: flattenBucket(adjudicated.signals?.genreSkins),
+    eraFrames: flattenBucket(adjudicated.signals?.eraFrames),
+    aestheticSkins: flattenBucket(adjudicated.signals?.aestheticSkins),
+    worldConditions: flattenBucket(adjudicated.signals?.worldConditions),
     toneSkins: flattenBucket(adjudicated.signals?.toneSkins),
     environmentSkins: flattenBucket(adjudicated.signals?.environmentSkins),
     modifiers: adjudicated.modifiers || {},
@@ -30,6 +34,15 @@ function flattenAdjudicatedSignals(adjudicated = {}) {
     excludeNotes: adjudicated.constraints?.excludeNotes || "",
     adjudication: adjudicated
   };
+
+  const hasNewGenreLayers =
+    flattened.eraFrames.length > 0 ||
+    flattened.aestheticSkins.length > 0 ||
+    flattened.worldConditions.length > 0;
+
+  return hasNewGenreLayers
+    ? flattened
+    : addGenreLayerCompatibilityBuckets(flattened);
 }
 /**
  * Returns the first item in pool whose id is not already used.
@@ -270,6 +283,17 @@ function getToneSystemBonus(system, toneSelection) {
 }
 
 
+
+function buildContextMetadata(weightedPools = {}) {
+  return {
+    // Decomposed genre-context for audit and Phase 2 handoff. These are not
+    // intended to drive Phase 1 identity selection; core/system remain primary.
+    eraFrames: selectTopWeighted(weightedPools.eraFrames || [], 3),
+    aestheticSkins: selectTopWeighted(weightedPools.aestheticSkins || [], 3),
+    worldConditions: selectTopWeighted(weightedPools.worldConditions || [], 3)
+  };
+}
+
 /**
  * Ensures a direction has at least one item in key slots.
  *
@@ -284,6 +308,9 @@ function backfillDirection(direction, pools) {
     coreFrames: Array.isArray(direction.coreFrames) ? direction.coreFrames.filter(Boolean) : [],
     systemFrames: Array.isArray(direction.systemFrames) ? direction.systemFrames.filter(Boolean) : [],
     genreSkin: Array.isArray(direction.genreSkin) ? direction.genreSkin.filter(Boolean) : [],
+    eraFrames: Array.isArray(direction.eraFrames) ? direction.eraFrames.filter(Boolean) : [],
+    aestheticSkins: Array.isArray(direction.aestheticSkins) ? direction.aestheticSkins.filter(Boolean) : [],
+    worldConditions: Array.isArray(direction.worldConditions) ? direction.worldConditions.filter(Boolean) : [],
     toneSkin: Array.isArray(direction.toneSkin) ? direction.toneSkin.filter(Boolean) : [],
     environmentSkins: Array.isArray(direction.environmentSkins) ? direction.environmentSkins.filter(Boolean) : [],
     includeNotes: direction.includeNotes || "",
@@ -304,6 +331,21 @@ function backfillDirection(direction, pools) {
   if (safeDirection.genreSkin.length === 0) {
     const fallback = pickByRank(pools.genreSkins, 0);
     if (fallback) safeDirection.genreSkin.push(fallback);
+  }
+
+  if (safeDirection.eraFrames.length === 0) {
+    const fallback = pickByRank(pools.eraFrames, 0);
+    if (fallback) safeDirection.eraFrames.push(fallback);
+  }
+
+  if (safeDirection.aestheticSkins.length === 0) {
+    const fallback = pickByRank(pools.aestheticSkins, 0);
+    if (fallback) safeDirection.aestheticSkins.push(fallback);
+  }
+
+  if (safeDirection.worldConditions.length === 0) {
+    const fallback = pickByRank(pools.worldConditions, 0);
+    if (fallback) safeDirection.worldConditions.push(fallback);
   }
 
   if (safeDirection.toneSkin.length === 0) {
@@ -327,6 +369,9 @@ function backfillDirection(direction, pools) {
  *   coreFrames: Array<{id, weight}>,
  *   systemFrames: Array<{id, weight}>,
  *   genreSkins: Array<{id, weight}>,
+ *   eraFrames: Array<{id, weight}>,
+ *   aestheticSkins: Array<{id, weight}>,
+ *   worldConditions: Array<{id, weight}>,
  *   toneSkins: Array<{id, weight}>,
  *   environmentSkins: Array<{id, weight}>,
  *   modifiers: Record<string, number>,
@@ -352,6 +397,9 @@ function selectCampaignDirections(input = {}, canonicalIntake = {}) {
     coreFrames: selectTopWeighted(weightedPools.coreFrames || [], 5),
     systemFrames: selectTopWeighted(weightedPools.systemFrames || [], 5),
     genreSkins: selectTopWeighted(weightedPools.genreSkins || [], 3),
+    eraFrames: selectTopWeighted(weightedPools.eraFrames || [], 3),
+    aestheticSkins: selectTopWeighted(weightedPools.aestheticSkins || [], 3),
+    worldConditions: selectTopWeighted(weightedPools.worldConditions || [], 3),
     toneSkins: selectTopWeighted(weightedPools.toneSkins || [], 3),
     environmentSkins: selectTopWeighted(weightedPools.environmentSkins || [], 5)
   };
@@ -359,6 +407,7 @@ function selectCampaignDirections(input = {}, canonicalIntake = {}) {
   const includeNotes = weightedPools.includeNotes || "";
   const excludeNotes = weightedPools.excludeNotes || "";
   const modifiers = weightedPools.modifiers || {};
+  const contextMetadata = buildContextMetadata(weightedPools);
 
   const primary = backfillDirection(
     {
@@ -392,6 +441,9 @@ function selectCampaignDirections(input = {}, canonicalIntake = {}) {
   return [primarySystem, secondarySystem].filter(Boolean);
 })(),
       genreSkin: [pickByRank(pools.genreSkins, 0)].filter(Boolean),
+      eraFrames: [pickByRank(pools.eraFrames, 0)].filter(Boolean),
+      aestheticSkins: [pickByRank(pools.aestheticSkins, 0)].filter(Boolean),
+      worldConditions: [pickByRank(pools.worldConditions, 0)].filter(Boolean),
       toneSkin: [pickByRank(pools.toneSkins, 0)].filter(Boolean),
       environmentSkins: (() => {
   const envA = pickByRank(pools.environmentSkins, 0);
@@ -442,6 +494,9 @@ const envB = pickByRank(pools.environmentSkins, 1) || pickByRank(pools.environme
 })(),
 
       genreSkin: [pickByRank(pools.genreSkins, 0)].filter(Boolean),
+      eraFrames: [pickByRank(pools.eraFrames, 0)].filter(Boolean),
+      aestheticSkins: [pickByRank(pools.aestheticSkins, 0)].filter(Boolean),
+      worldConditions: [pickByRank(pools.worldConditions, 1) || pickByRank(pools.worldConditions, 0)].filter(Boolean),
       toneSkin: [pickByRank(pools.toneSkins, 1) || pickByRank(pools.toneSkins, 0)].filter(Boolean),
       environmentSkins: (() => {
   const envA = pickByRank(pools.environmentSkins, 1) || pickByRank(pools.environmentSkins, 0);
@@ -475,6 +530,9 @@ const envB = pickByRank(pools.environmentSkins, 1) || pickByRank(pools.environme
       coreFrames: wildcardCoreFrames,
       systemFrames: wildcardSystemFrames,
       genreSkin: [pickByRank(pools.genreSkins, 1) || pickByRank(pools.genreSkins, 0)].filter(Boolean),
+      eraFrames: [pickByRank(pools.eraFrames, 1) || pickByRank(pools.eraFrames, 0)].filter(Boolean),
+      aestheticSkins: [pickByRank(pools.aestheticSkins, 1) || pickByRank(pools.aestheticSkins, 0)].filter(Boolean),
+      worldConditions: [pickByRank(pools.worldConditions, 2) || pickByRank(pools.worldConditions, 1) || pickByRank(pools.worldConditions, 0)].filter(Boolean),
       toneSkin: [pickByRank(pools.toneSkins, 2) || pickByRank(pools.toneSkins, 1) || pickByRank(pools.toneSkins, 0)].filter(Boolean),
       environmentSkins: wildcardEnvironmentSkins,
       includeNotes,
@@ -487,19 +545,23 @@ const envB = pickByRank(pools.environmentSkins, 1) || pickByRank(pools.environme
   return {
     primary: {
       ...primary,
+      contextMetadata,
       adjudication: weightedPools.adjudication
     },
     adjacent: {
       ...adjacent,
+      contextMetadata,
       adjudication: weightedPools.adjudication
     },
     wildcard: {
       ...wildcard,
+      contextMetadata,
       adjudication: weightedPools.adjudication
     }
   };
 }
 
 module.exports = {
-  selectCampaignDirections
+  selectCampaignDirections,
+  buildContextMetadata
 };

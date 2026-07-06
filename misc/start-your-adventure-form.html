@@ -1,8 +1,8 @@
 <!--
 QuestForge Campaign Intake Form
 File: start-your-adventure.html
-Version: v1.3
-Last Updated: 2026-07-03
+Version: v1.5
+Last Updated: 2026-07-05
 Source of Truth: LOCAL (this file)
 -->
 <div class="qf-intake-builder-wrap">
@@ -140,6 +140,26 @@ Source of Truth: LOCAL (this file)
             margin-top: 12px;
             color: #bfb5a4;
             font-size: 0.92rem;
+        }
+
+        .qf-layer-block {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .qf-layer-title {
+            margin: 0 0 6px 0;
+            color: #f0d9a1;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .qf-layer-help {
+            margin: 0 0 10px 0;
+            color: #d0c7b8;
+            line-height: 1.5;
+            font-size: 0.93rem;
         }
 
         .qf-actions {
@@ -292,13 +312,13 @@ Source of Truth: LOCAL (this file)
             </p>
 
             <div class="qf-progress" aria-hidden="true">
-                <div class="qf-progress-bar" id="qf-campaign-progress-bar" style="width: 16.6667%;"></div>
+                <div class="qf-progress-bar" id="qf-campaign-progress-bar" style="width: 12.5%;"></div>
             </div>
-            <p class="qf-note-line" id="qf-campaign-progress-text">Step 1 of 6</p>
+            <p class="qf-note-line" id="qf-campaign-progress-text">Step 1 of 8</p>
             <p class="qf-note-line" id="qf-intake-save-status">Progress saves automatically on this device.</p>
         </div>
 
-        <form class="qf-intake-form" id="qf-intake-form-v4" action="https://formspree.io/f/meepwwzq" method="POST">
+        <form class="qf-intake-form" id="qf-intake-form-v5" action="https://formspree.io/f/meepwwzq" method="POST">
             <input type="hidden" name="_subject" value="New Questforge Campaign Intake">
             <input type="hidden" name="_format" value="plain">
             <textarea name="campaign_summary" id="qf-campaign-summary-field" style="display:none;"></textarea>
@@ -396,37 +416,30 @@ Source of Truth: LOCAL (this file)
             <div class="qf-step" data-step="2">
                 <div class="qf-form-card">
                     <h3 class="qf-form-card-title">Overall Experience</h3>
-                    <p class="qf-form-card-help">Pick up to 3.</p>
+                    <p class="qf-form-card-help">Pick up to 4. These are the broad table experiences your group wants most often.</p>
 
                     <div class="qf-check-grid">
-                        <label class="qf-check"><input type="checkbox" name="experience[]"
-                                value="Surviving against dangerous odds">Surviving against dangerous odds</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]"
-                                value="Solving mysteries and uncovering secrets">Solving mysteries and uncovering
-                            secrets</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]"
-                                value="Big heroic action and epic moments">Big heroic action and epic moments</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]"
-                                value="Political tension, factions, and tough choices">Political tension, factions, and
-                            tough choices</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]"
-                                value="Exploration and discovering strange places">Exploration and discovering strange
-                            places</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]"
-                                value="Horror, tension, and unsettling threats">Horror, tension, and unsettling
-                            threats</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]"
-                                value="Character-driven drama and meaningful personal arcs">Character-driven drama and
-                            meaningful personal arcs</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Surviving against dangerous odds">Surviving against dangerous odds</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Solving mysteries and uncovering secrets">Solving mysteries and uncovering secrets</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Big heroic action and epic moments">Big heroic action and epic moments</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Political tension, factions, and tough choices">Political tension, factions, and tough choices</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Exploration and discovering strange places">Exploration and discovering strange places</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Horror, tension, and unsettling threats">Horror, tension, and unsettling threats</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Character-driven drama and meaningful personal arcs">Character-driven drama and meaningful personal arcs</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Lighthearted adventure and playful chaos">Lighthearted adventure and playful chaos</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Wonder, beauty, and magical discovery">Wonder, beauty, and magical discovery</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Tactical problem-solving and clever plans">Tactical problem-solving and clever plans</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Social drama, alliances, and rivalries">Social drama, alliances, and rivalries</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Heists, missions, and daring operations">Heists, missions, and daring operations</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Building a home, faction, or community">Building a home, faction, or community</label>
+                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Travel, road adventure, and episodic discoveries">Travel, road adventure, and episodic discoveries</label>
                     </div>
 
                     <p class="qf-note-line qf-step-error" data-step-error="2" style="display:none;"></p>
 
                     <div class="qf-actions">
-                        <button type="button" class="qf-btn qf-btn-secondary"
-                            onclick="qfCampaignPrevStep()">Back</button>
-                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
-                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
                         <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
                     </div>
                 </div>
@@ -435,43 +448,45 @@ Source of Truth: LOCAL (this file)
             <!-- STEP 3 -->
             <div class="qf-step" data-step="3">
                 <div class="qf-form-card">
-                    <h3 class="qf-form-card-title">Story Setup</h3>
-                    <p class="qf-form-card-help">Pick the starting roles or campaign setups that sound the most fun.</p>
+                    <h3 class="qf-form-card-title">Era / Setting Frame</h3>
+                    <p class="qf-form-card-help">Pick any periods, tech baselines, or social frames that sound exciting. This is about when the world feels like it belongs.</p>
 
                     <div class="qf-check-grid">
-                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Treasure Hunters">Treasure
-                            Hunters</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Mercenaries for Hire">Mercenaries for Hire</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Haunted Investigators">Haunted Investigators</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Wandering Adventurers">Wandering Adventurers</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Rebels and Resistance">Rebels and Resistance</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Expedition Team">Expedition
-                            Team</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Starship Crew">Starship
-                            Crew</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Monster Hunters">Monster
-                            Hunters</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Nobles, Envoys, or Court Operatives">Nobles, Envoys, or Court Operatives</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Escaped or Chosen Survivors">Escaped or Chosen Survivors</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Relic Bearers or Marked Ones">Relic Bearers or Marked Ones</label>
-                        <label class="qf-check"><input type="checkbox" name="setup[]"
-                                value="Criminal Crew or Heist Team">Criminal Crew or Heist Team</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Ancient">Ancient</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Bronze Age">Bronze Age</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Classical Age">Classical Age</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Medieval">Medieval</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Feudal">Feudal</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Renaissance">Renaissance</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Elizabethan">Elizabethan</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Early Modern">Early Modern</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Age of Sail">Age of Sail</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Regency">Regency</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Victorian">Victorian</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Edwardian">Edwardian</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Industrial Revolution">Industrial Revolution</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Gilded Age">Gilded Age</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Great War Era">Great War Era</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Interwar 1920s / 1930s">Interwar 1920s / 1930s</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Pulp 1930s">Pulp 1930s</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Wartime 1940s">Wartime 1940s</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Atomic 1950s">Atomic 1950s</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Cold War">Cold War</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Late 20th Century">Late 20th Century</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Modern">Modern</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Near Future">Near Future</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Cybernetic Future">Cybernetic Future</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Spacefaring Future">Spacefaring Future</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Far Future">Far Future</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Post-Collapse">Post-Collapse</label>
+                        <label class="qf-check"><input type="checkbox" name="era[]" value="Timeless / Mythic">Timeless / Mythic</label>
                     </div>
 
                     <p class="qf-note-line qf-step-error" data-step-error="3" style="display:none;"></p>
 
                     <div class="qf-actions">
-                        <button type="button" class="qf-btn qf-btn-secondary"
-                            onclick="qfCampaignPrevStep()">Back</button>
-                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
-                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
                         <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
                     </div>
                 </div>
@@ -480,9 +495,8 @@ Source of Truth: LOCAL (this file)
             <!-- STEP 4 -->
             <div class="qf-step" data-step="4">
                 <div class="qf-form-card">
-                    <h3 class="qf-form-card-title">World Style &amp; Tone</h3>
-                    <p class="qf-form-card-help">Choose the aesthetic skin and emotional feel you want your campaign to
-                        carry.</p>
+                    <h3 class="qf-form-card-title">Aesthetic &amp; Tone</h3>
+                    <p class="qf-form-card-help">Pick the storytelling skin, visual language, and emotional feel you want the campaign to carry.</p>
 
                     <div class="qf-grid-2">
                         <div class="qf-field-group">
@@ -498,6 +512,9 @@ Source of Truth: LOCAL (this file)
                                 <option>Political / Intrigue</option>
                                 <option>Chaotic / Lighthearted</option>
                                 <option>Emotional / Character-Driven</option>
+                                <option>Hopeful</option>
+                                <option>Melancholic</option>
+                                <option>Tense</option>
                             </select>
                         </div>
 
@@ -514,35 +531,46 @@ Source of Truth: LOCAL (this file)
                     </div>
 
                     <div class="qf-check-grid" style="margin-top:16px;">
-                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Classic Fantasy">Classic
-                            Fantasy</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Dark Fantasy">Dark
-                            Fantasy</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]"
-                                value="Heroic / Mythic Fantasy">Heroic / Mythic Fantasy</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Gothic / Victorian">Gothic
-                            / Victorian</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Western Frontier">Western
-                            Frontier</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Feudal Eastern">Feudal
-                            Eastern</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]"
-                                value="Sci-Fi / Spacefaring">Sci-Fi / Spacefaring</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]"
-                                value="Post-Apocalyptic">Post-Apocalyptic</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]" value="Mythic / Divine">Mythic /
-                            Divine</label>
-                        <label class="qf-check"><input type="checkbox" name="genre[]"
-                                value="Weird / Surreal / Otherworldly">Weird / Surreal / Otherworldly</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Classic Fantasy">Classic Fantasy</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Heroic Fantasy">Heroic Fantasy</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Dark Fantasy">Dark Fantasy</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Gothic">Gothic</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Romantic Gothic">Romantic Gothic</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Noir">Noir</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Hardboiled">Hardboiled</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Pulp Adventure">Pulp Adventure</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Swashbuckling">Swashbuckling</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Mythological">Mythological</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Folk Horror">Folk Horror</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Fairy Tale">Fairy Tale</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Cosmic / Eldritch">Cosmic / Eldritch</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Weird / Surreal">Weird / Surreal</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Arcane Academia">Arcane Academia</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Martial Heroic">Martial Heroic</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Western">Western</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Space Opera">Space Opera</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Hard Sci-Fi">Hard Sci-Fi</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Cyberpunk">Cyberpunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Biopunk">Biopunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Nanopunk">Nanopunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Solarpunk">Solarpunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Steampunk">Steampunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Clockpunk">Clockpunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Dieselpunk">Dieselpunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Atompunk">Atompunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Cassette Futurism">Cassette Futurism</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Retrofuturism">Retrofuturism</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Raygun Gothic">Raygun Gothic</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Post-Apocalyptic">Post-Apocalyptic</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Hopepunk">Hopepunk</label>
+                        <label class="qf-check"><input type="checkbox" name="aesthetic[]" value="Noblebright">Noblebright</label>
                     </div>
 
                     <p class="qf-note-line qf-step-error" data-step-error="4" style="display:none;"></p>
 
                     <div class="qf-actions">
-                        <button type="button" class="qf-btn qf-btn-secondary"
-                            onclick="qfCampaignPrevStep()">Back</button>
-                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
-                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
                         <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
                     </div>
                 </div>
@@ -551,75 +579,50 @@ Source of Truth: LOCAL (this file)
             <!-- STEP 5 -->
             <div class="qf-step" data-step="5">
                 <div class="qf-form-card">
-                    <h3 class="qf-form-card-title">Environments &amp; Gameplay</h3>
-                    <p class="qf-form-card-help">Pick the places that sound exciting to explore and the types of play
-                        your group enjoys most.</p>
+                    <h3 class="qf-form-card-title">World Condition</h3>
+                    <p class="qf-form-card-help">Pick the structural pressures or world states that should shape the campaign. This is about how the world behaves, not just what it looks like.</p>
 
-                    <div class="qf-grid-2">
-                        <div>
-                            <div class="qf-field-group"><label>Key Environments</label></div>
-                            <div class="qf-check-grid">
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Dense Cities & Urban Intrigue">Dense Cities & Urban Intrigue</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Jungles & Overgrown Ruins">Jungles & Overgrown Ruins</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Frozen Wastes">Frozen Wastes</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Deserts & Wastelands">Deserts & Wastelands</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Coastlines, Islands & Oceans">Coastlines, Islands & Oceans</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Mountains & Wild Frontiers">Mountains & Wild Frontiers</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Underground Caverns & Deep Places">Underground Caverns & Deep
-                                    Places</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Ancient Ruins & Fallen Civilizations">Ancient Ruins & Fallen
-                                    Civilizations</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Dreamlike or Reality-Warped Places">Dreamlike or Reality-Warped
-                                    Places</label>
-                                <label class="qf-check"><input type="checkbox" name="environment[]"
-                                        value="Volcanic Lands & Fire-Scarred Regions">Volcanic Lands & Fire-Scarred
-                                    Regions</label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="qf-field-group"><label>Gameplay Interests</label></div>
-                            <div class="qf-check-grid">
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Tactical combat">Tactical combat</label>
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Dangerous boss fights">Dangerous boss fights</label>
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Investigation and clue-solving">Investigation and clue-solving</label>
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Exploration and discovery">Exploration and discovery</label>
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Social intrigue and negotiations">Social intrigue and
-                                    negotiations</label>
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Resource management and survival pressure">Resource management and
-                                    survival pressure</label>
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Building alliances or choosing factions">Building alliances or choosing
-                                    factions</label>
-                                <label class="qf-check"><input type="checkbox" name="gameplay[]"
-                                        value="Character growth and transformation">Character growth and
-                                    transformation</label>
-                            </div>
-                        </div>
+                    <div class="qf-check-grid">
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Frontier">Frontier</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Lawless">Lawless</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Isolated">Isolated</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Urbanized">Urbanized</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Hidden World">Hidden World</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Sealed World">Sealed World</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Occupied">Occupied</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Colonized">Colonized</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Expanding Empire">Expanding Empire</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Declining Empire">Declining Empire</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Fallen Empire">Fallen Empire</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Contested Borderland">Contested Borderland</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="War-Torn">War-Torn</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Post-War Recovery">Post-War Recovery</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Scarcity-Driven">Scarcity-Driven</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Collapsing">Collapsing</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Post-Collapse">Post-Collapse</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Rebuilding">Rebuilding</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Oppressive Order">Oppressive Order</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Revolutionary Pressure">Revolutionary Pressure</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Fractured Realms">Fractured Realms</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="City-States">City-States</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Gold Rush / Resource Boom">Gold Rush / Resource Boom</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Haunted Past">Haunted Past</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Living World">Living World</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Dying World">Dying World</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Wandering World">Wandering World</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Corporate-Controlled">Corporate-Controlled</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Surveillance State">Surveillance State</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Ecological Recovery">Ecological Recovery</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Ecological Collapse">Ecological Collapse</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Technological Runaway">Technological Runaway</label>
+                        <label class="qf-check"><input type="checkbox" name="world_condition[]" value="Lost Golden Age">Lost Golden Age</label>
                     </div>
 
                     <p class="qf-note-line qf-step-error" data-step-error="5" style="display:none;"></p>
 
                     <div class="qf-actions">
-                        <button type="button" class="qf-btn qf-btn-secondary"
-                            onclick="qfCampaignPrevStep()">Back</button>
-                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
-                            Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
                         <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
                     </div>
                 </div>
@@ -628,40 +631,112 @@ Source of Truth: LOCAL (this file)
             <!-- STEP 6 -->
             <div class="qf-step" data-step="6">
                 <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Story Setup</h3>
+                    <p class="qf-form-card-help">Pick the starting roles or campaign setups that sound the most fun.</p>
+
+                    <div class="qf-check-grid">
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Treasure Hunters">Treasure Hunters</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Mercenaries for Hire">Mercenaries for Hire</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Haunted Investigators">Haunted Investigators</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Wandering Adventurers">Wandering Adventurers</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Rebels and Resistance">Rebels and Resistance</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Expedition Team">Expedition Team</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Starship Crew">Starship Crew</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Monster Hunters">Monster Hunters</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Nobles, Envoys, or Court Operatives">Nobles, Envoys, or Court Operatives</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Escaped or Chosen Survivors">Escaped or Chosen Survivors</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Relic Bearers or Marked Ones">Relic Bearers or Marked Ones</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Criminal Crew or Heist Team">Criminal Crew or Heist Team</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Pilgrims or Sacred Questers">Pilgrims or Sacred Questers</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Scholars or Arcane Students">Scholars or Arcane Students</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Diplomats or Peacekeepers">Diplomats or Peacekeepers</label>
+                        <label class="qf-check"><input type="checkbox" name="setup[]" value="Settlers, Builders, or Founders">Settlers, Builders, or Founders</label>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="6" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 7 -->
+            <div class="qf-step" data-step="7">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Environments &amp; Gameplay</h3>
+                    <p class="qf-form-card-help">Pick the places that sound exciting to explore and the types of play your group enjoys most.</p>
+
+                    <div class="qf-grid-2">
+                        <div>
+                            <div class="qf-field-group"><label>Key Environments</label></div>
+                            <div class="qf-check-grid">
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Dense Cities & Urban Intrigue">Dense Cities & Urban Intrigue</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Jungles & Overgrown Ruins">Jungles & Overgrown Ruins</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Frozen Wastes">Frozen Wastes</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Deserts & Wastelands">Deserts & Wastelands</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Coastlines, Islands & Oceans">Coastlines, Islands & Oceans</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Mountains & Wild Frontiers">Mountains & Wild Frontiers</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Underground Caverns & Deep Places">Underground Caverns & Deep Places</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Ancient Ruins & Fallen Civilizations">Ancient Ruins & Fallen Civilizations</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Dreamlike or Reality-Warped Places">Dreamlike or Reality-Warped Places</label>
+                                <label class="qf-check"><input type="checkbox" name="environment[]" value="Volcanic Lands & Fire-Scarred Regions">Volcanic Lands & Fire-Scarred Regions</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="qf-field-group"><label>Gameplay Interests</label></div>
+                            <div class="qf-check-grid">
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Tactical combat">Tactical combat</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Dangerous boss fights">Dangerous boss fights</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Investigation and clue-solving">Investigation and clue-solving</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Exploration and discovery">Exploration and discovery</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Social intrigue and negotiations">Social intrigue and negotiations</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Resource management and survival pressure">Resource management and survival pressure</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Building alliances or choosing factions">Building alliances or choosing factions</label>
+                                <label class="qf-check"><input type="checkbox" name="gameplay[]" value="Character growth and transformation">Character growth and transformation</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="7" style="display:none;"></p>
+
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary" onclick="qfCampaignNextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 8 -->
+            <div class="qf-step" data-step="8">
+                <div class="qf-form-card">
                     <h3 class="qf-form-card-title">Player Fantasy &amp; Boundaries</h3>
-                    <p class="qf-form-card-help">Tell me what kind of fantasy your group wants to live out, along with
-                        anything you definitely want included or avoided.</p>
+                    <p class="qf-form-card-help">Tell me what kind of fantasy your group wants to live out, along with anything you definitely want included or avoided.</p>
 
                     <div class="qf-check-grid" style="margin-bottom:16px;">
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Becoming heroes">Becoming
-                            heroes</label>
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
-                                value="Surviving impossible odds">Surviving impossible odds</label>
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
-                                value="Mastering dangerous power">Mastering dangerous power</label>
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
-                                value="Uncovering forbidden truth">Uncovering forbidden truth</label>
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
-                                value="Changing the world">Changing the world</label>
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
-                                value="Holding the line against disaster">Holding the line against disaster</label>
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
-                                value="Deciding who to trust and betray">Deciding who to trust and betray</label>
-                        <label class="qf-check"><input type="checkbox" name="fantasy[]"
-                                value="Discovering who we really are">Discovering who we really are</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Becoming heroes">Becoming heroes</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Surviving impossible odds">Surviving impossible odds</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Mastering dangerous power">Mastering dangerous power</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Uncovering forbidden truth">Uncovering forbidden truth</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Changing the world">Changing the world</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Holding the line against disaster">Holding the line against disaster</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Deciding who to trust and betray">Deciding who to trust and betray</label>
+                        <label class="qf-check"><input type="checkbox" name="fantasy[]" value="Discovering who we really are">Discovering who we really are</label>
                     </div>
 
                     <div class="qf-grid-2">
                         <div class="qf-field-group">
                             <label for="qf-must-haves">Must-Haves</label>
-                            <textarea id="qf-must-haves" name="must_haves"
-                                placeholder="Examples: dragons, tragic NPCs, sea travel, horror elements, ancient ruins, political tension..."></textarea>
+                            <textarea id="qf-must-haves" name="must_haves" placeholder="Examples: dragons, tragic NPCs, sea travel, horror elements, ancient ruins, political tension..."></textarea>
                         </div>
 
                         <div class="qf-field-group">
                             <label for="qf-avoid">Avoid / Do-Not-Wants</label>
-                            <textarea id="qf-avoid" name="avoid"
-                                placeholder="Examples: spiders, body horror, PvP, excessive gore, permanent character loss..."></textarea>
+                            <textarea id="qf-avoid" name="avoid" placeholder="Examples: spiders, body horror, PvP, excessive gore, permanent character loss..."></textarea>
                         </div>
                     </div>
 
@@ -694,15 +769,12 @@ Source of Truth: LOCAL (this file)
                         Broad preferences are enough — you do not need to have every detail locked in.
                     </div>
 
-                    <p class="qf-note-line qf-step-error" data-step-error="6" style="display:none;"></p>
+                    <p class="qf-note-line qf-step-error" data-step-error="8" style="display:none;"></p>
 
                     <div class="qf-actions">
-                        <button type="button" class="qf-btn qf-btn-secondary"
-                            onclick="qfCampaignPrevStep()">Back</button>
-                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp;
-                            Continue Later</button>
-                        <button type="submit" class="qf-btn qf-btn-primary" id="qf-submit-btn">Send Campaign
-                            Request</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
+                        <button type="submit" class="qf-btn qf-btn-primary" id="qf-submit-btn">Send Campaign Request</button>
                         <button type="reset" class="qf-btn qf-btn-secondary" id="qf-reset-btn">Reset Form</button>
                     </div>
                 </div>
@@ -721,8 +793,8 @@ Source of Truth: LOCAL (this file)
         (function () {
             const STORAGE_KEY = "qfCampaignBuilderDraft";
             const STEP_KEY = "qfCampaignBuilderStep";
-            const MAX_EXPERIENCE = 3;
-            const totalSteps = 6;
+            const MAX_EXPERIENCE = 4;
+            const totalSteps = 8;
 
             const form = document.getElementById("qf-intake-form-v4");
             const statusBox = document.getElementById("qf-status-box");
@@ -880,9 +952,13 @@ Source of Truth: LOCAL (this file)
                     "------------------",
                     formatList(checkedValues("experience[]")),
                     "",
-                    "STORY SETUP",
-                    "-----------",
-                    formatList(checkedValues("setup[]")),
+                    "ERA / SETTING FRAME",
+                    "-------------------",
+                    formatList(checkedValues("era[]")),
+                    "",
+                    "AESTHETIC / NARRATIVE SKIN",
+                    "--------------------------",
+                    formatList(checkedValues("aesthetic[]")),
                     "",
                     "TONE",
                     "----",
@@ -892,9 +968,13 @@ Source of Truth: LOCAL (this file)
                     "-------------",
                     fieldValue("choice_weight") || "Not selected",
                     "",
-                    "WORLD STYLE",
+                    "WORLD CONDITION / STRUCTURAL CONTEXT",
+                    "------------------------------------",
+                    formatList(checkedValues("world_condition[]")),
+                    "",
+                    "STORY SETUP",
                     "-----------",
-                    formatList(checkedValues("genre[]")),
+                    formatList(checkedValues("setup[]")),
                     "",
                     "KEY ENVIRONMENTS",
                     "----------------",
@@ -1029,7 +1109,7 @@ Source of Truth: LOCAL (this file)
                         return false;
                     }
                     if (experience.length > MAX_EXPERIENCE) {
-                        setStepError(2, "Please choose no more than 3 overall experience options.");
+                        setStepError(2, "Please choose no more than 4 overall experience options.");
                         return false;
                     }
                 }

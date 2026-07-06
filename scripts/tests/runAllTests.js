@@ -20,6 +20,7 @@ const tests = [
   "scripts/tests/pipeline/testCoreFrameAudiencePolicy.js",
   "scripts/tests/pipeline/testYouthVoiceLayer.js",
   "scripts/tests/pipeline/testSubmissionStatusWorkflow.js",
+  "scripts/tests/pipeline/testGenreLayerCompatibility.js",
 ];
 
 if (includeFixtureTests) {

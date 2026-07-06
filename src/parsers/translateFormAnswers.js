@@ -1,8 +1,15 @@
 const intakeMappings = require("../data/intakeMappings");
+
 const toneIdMap = {
   chaotic_lighthearted: "lighthearted_chaotic",
   lighthearted_chaotic: "lighthearted_chaotic"
 };
+
+function toArray(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (value === undefined || value === null || value === "") return [];
+  return [value];
+}
 
 /**
  * Adds weighted entries into a score map.
@@ -10,9 +17,18 @@ const toneIdMap = {
  * @param {Array<{id: string, weight: number}>} entries
  */
 function addWeightedEntries(bucket, entries = []) {
-  for (const entry of entries) {
+  for (const entry of entries || []) {
+    if (!entry || !entry.id) continue;
+    const weight = Number(entry.weight || 0);
     const current = bucket.get(entry.id) || 0;
-    bucket.set(entry.id, current + entry.weight);
+    bucket.set(entry.id, current + weight);
+  }
+}
+
+function addDirectSelections(bucket, ids = [], weight = 5) {
+  for (const id of toArray(ids)) {
+    if (!id) continue;
+    addWeightedEntries(bucket, [{ id, weight }]);
   }
 }
 
@@ -22,7 +38,7 @@ function addWeightedEntries(bucket, entries = []) {
  * @param {object} source
  */
 function mergeModifiers(target, source = {}) {
-  for (const [key, value] of Object.entries(source)) {
+  for (const [key, value] of Object.entries(source || {})) {
     const current = target[key] || 0;
     target[key] = current + value;
   }
@@ -37,6 +53,13 @@ function finalizeBucket(bucket) {
   return Array.from(bucket.entries())
     .map(([id, weight]) => ({ id, weight }))
     .sort((a, b) => b.weight - a.weight);
+}
+
+function firstMappingGroup(...names) {
+  for (const name of names) {
+    if (intakeMappings[name]) return intakeMappings[name];
+  }
+  return null;
 }
 
 /**
@@ -55,9 +78,18 @@ function applyMappedAnswer(mappingGroup, answerId, buckets) {
   addWeightedEntries(buckets.coreFrames, mapping.coreFrames);
   addWeightedEntries(buckets.systemFrames, mapping.systemFrames);
   addWeightedEntries(buckets.genreSkins, mapping.genreSkins);
+  addWeightedEntries(buckets.eraFrames, mapping.eraFrames);
+  addWeightedEntries(buckets.aestheticSkins, mapping.aestheticSkins);
+  addWeightedEntries(buckets.worldConditions, mapping.worldConditions);
   addWeightedEntries(buckets.toneSkins, mapping.toneSkins);
   addWeightedEntries(buckets.environmentSkins, mapping.environmentSkins);
   mergeModifiers(buckets.modifiers, mapping.modifiers);
+}
+
+function applyMappedAnswers(mappingGroup, answerIds, buckets) {
+  for (const answerId of toArray(answerIds)) {
+    applyMappedAnswer(mappingGroup, answerId, buckets);
+  }
 }
 
 /**
@@ -96,31 +128,30 @@ function inferExperienceProfile(answers = {}) {
   return "standard";
 }
 
-/**
- * Translates structured form answers into weighted candidate pools.
- * @param {object} answers
- * @returns {{
- *   experienceProfile: "standard" | "youth" | "kids",
- *   coreFrames: Array<{id: string, weight: number}>,
- *   systemFrames: Array<{id: string, weight: number}>,
- *   genreSkins: Array<{id: string, weight: number}>,
- *   toneSkins: Array<{id: string, weight: number}>,
- *   environmentSkins: Array<{id: string, weight: number}>,
- *   modifiers: Record<string, number>,
- *   includeNotes: string,
- *   excludeNotes: string
- * }}
- */
-
 function normalizeAnswers(answers = {}) {
   const tone = String(answers.tone || "").trim();
 
   return {
     ...answers,
-    tone: toneIdMap[tone] || tone
+    tone: toneIdMap[tone] || tone,
+    overallExperiences: toArray(answers.overallExperiences || answers.overallExperience),
+    conflicts: toArray(answers.conflicts || answers.conflict),
+    legacyGenres: toArray(answers.legacyGenres || answers.worldAesthetic),
+    eras: toArray(answers.eras),
+    aesthetics: toArray(answers.aesthetics || answers.activeAesthetics),
+    worldConditions: toArray(answers.worldConditions),
+    playerFantasies: toArray(answers.playerFantasies || answers.playerFantasy),
+    gameplay: toArray(answers.gameplay),
+    environments: toArray(answers.environments)
   };
 }
 
+/**
+ * Translates structured form answers into weighted candidate pools.
+ * Core/system/tone/environment and legacy genre remain the Phase 1-facing
+ * signal shape. Era/aesthetic/world-condition are decomposed genre context for
+ * audit and Phase 2 handoff.
+ */
 function translateFormAnswers(answers = {}) {
   const normalizedAnswers = normalizeAnswers(answers);
 
@@ -128,33 +159,49 @@ function translateFormAnswers(answers = {}) {
     coreFrames: new Map(),
     systemFrames: new Map(),
     genreSkins: new Map(),
+    eraFrames: new Map(),
+    aestheticSkins: new Map(),
+    worldConditions: new Map(),
     toneSkins: new Map(),
     environmentSkins: new Map(),
     modifiers: {}
   };
 
-  applyMappedAnswer(intakeMappings.overallExperience, normalizedAnswers.overallExperience, buckets);
+  applyMappedAnswers(intakeMappings.overallExperience, normalizedAnswers.overallExperiences, buckets);
   applyMappedAnswer(intakeMappings.tone, normalizedAnswers.tone, buckets);
-  applyMappedAnswer(intakeMappings.worldAesthetic, normalizedAnswers.worldAesthetic, buckets);
-  applyMappedAnswer(intakeMappings.conflict, normalizedAnswers.conflict, buckets);
+  applyMappedAnswers(intakeMappings.worldAesthetic, normalizedAnswers.legacyGenres, buckets);
+  applyMappedAnswers(intakeMappings.conflict, normalizedAnswers.conflicts, buckets);
   applyMappedAnswer(intakeMappings.choiceWeight, normalizedAnswers.choiceWeight, buckets);
-  applyMappedAnswer(intakeMappings.playerFantasy, normalizedAnswers.playerFantasy, buckets);
+  applyMappedAnswers(intakeMappings.playerFantasy, normalizedAnswers.playerFantasies, buckets);
 
-  const gameplayAnswers = Array.isArray(normalizedAnswers.gameplay) ? normalizedAnswers.gameplay : [];
-  for (const gameplayAnswer of gameplayAnswers) {
+  for (const gameplayAnswer of normalizedAnswers.gameplay) {
     applyMappedAnswer(intakeMappings.gameplay, gameplayAnswer, buckets);
   }
 
-  const environmentAnswers = Array.isArray(normalizedAnswers.environments) ? normalizedAnswers.environments : [];
-  for (const environmentAnswer of environmentAnswers) {
+  for (const environmentAnswer of normalizedAnswers.environments) {
     applyMappedAnswer(intakeMappings.environments, environmentAnswer, buckets);
   }
+
+  // Optional future mapping groups. These allow richer mapping later without
+  // requiring this translator to change again.
+  applyMappedAnswers(firstMappingGroup("era", "eras", "eraFrames"), normalizedAnswers.eras, buckets);
+  applyMappedAnswers(firstMappingGroup("aesthetic", "aesthetics", "aestheticSkins"), normalizedAnswers.aesthetics, buckets);
+  applyMappedAnswers(firstMappingGroup("worldCondition", "worldConditions"), normalizedAnswers.worldConditions, buckets);
+
+  // Direct structured selections. These preserve new form fields even before
+  // dedicated mapping groups exist in intakeMappings.js.
+  addDirectSelections(buckets.eraFrames, normalizedAnswers.eras, 5);
+  addDirectSelections(buckets.aestheticSkins, normalizedAnswers.aesthetics, 5);
+  addDirectSelections(buckets.worldConditions, normalizedAnswers.worldConditions, 5);
 
   return {
     experienceProfile: inferExperienceProfile(normalizedAnswers),
     coreFrames: finalizeBucket(buckets.coreFrames),
     systemFrames: finalizeBucket(buckets.systemFrames),
     genreSkins: finalizeBucket(buckets.genreSkins),
+    eraFrames: finalizeBucket(buckets.eraFrames),
+    aestheticSkins: finalizeBucket(buckets.aestheticSkins),
+    worldConditions: finalizeBucket(buckets.worldConditions),
     toneSkins: finalizeBucket(buckets.toneSkins),
     environmentSkins: finalizeBucket(buckets.environmentSkins),
     modifiers: buckets.modifiers,

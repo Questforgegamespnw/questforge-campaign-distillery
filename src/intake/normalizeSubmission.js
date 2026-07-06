@@ -47,6 +47,9 @@ function normalizeSubmission(mapped = {}) {
             tone: ensureString(mapped.selections?.tone),
             choiceWeight: ensureString(mapped.selections?.choiceWeight),
             genres: ensureArray(mapped.selections?.genres),
+            eras: ensureArray(mapped.selections?.eras),
+            aesthetics: ensureArray(mapped.selections?.aesthetics),
+            worldConditions: ensureArray(mapped.selections?.worldConditions),
             environments: ensureArray(mapped.selections?.environments),
             gameplayInterests: ensureArray(mapped.selections?.gameplayInterests),
             playerFantasy: ensureArray(mapped.selections?.playerFantasy)

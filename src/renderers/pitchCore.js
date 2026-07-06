@@ -11,6 +11,9 @@ function buildPitchContext(selections = {}) {
     const coreFrames = uniqueByName(selections.coreFrames || []);
     const systemFrames = uniqueByName(selections.systemFrames || []);
     const genreSkin = uniqueByName(selections.genreSkin || []);
+    const eraFrames = uniqueByName(selections.eraFrames || []);
+    const aestheticSkins = uniqueByName(selections.aestheticSkins || []);
+    const worldConditions = uniqueByName(selections.worldConditions || []);
     const toneSkin = uniqueByName(selections.toneSkin || []);
     const environmentSkins = uniqueByName(selections.environmentSkins || []);
 
@@ -18,7 +21,10 @@ function buildPitchContext(selections = {}) {
     const coreB = second(coreFrames);
     const systemA = first(systemFrames);
     const systemB = second(systemFrames);
-    const genre = first(genreSkin);
+    const genre = first(genreSkin) || first(aestheticSkins);
+    const era = first(eraFrames);
+    const aesthetic = first(aestheticSkins);
+    const worldCondition = first(worldConditions);
     const tone = first(toneSkin);
 
     const label = cleanName(selections.label, "direction").toLowerCase();
@@ -44,6 +50,9 @@ function buildPitchContext(selections = {}) {
         coreFrames,
         systemFrames,
         genreSkin,
+        eraFrames,
+        aestheticSkins,
+        worldConditions,
         toneSkin,
         environmentSkins,
         coreA,
@@ -51,6 +60,9 @@ function buildPitchContext(selections = {}) {
         systemA,
         systemB,
         genre,
+        era,
+        aesthetic,
+        worldCondition,
         tone,
         label,
         emphasis,

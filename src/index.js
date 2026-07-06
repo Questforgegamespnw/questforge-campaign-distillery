@@ -11,6 +11,9 @@ const { generateCampaignPitch } = require("./renderers/generateCampaignPitch");
 const coreFrames = require("./data/coreFrames");
 const systemFrames = require("./data/systemFrames");
 const genreSkins = require("./data/genreSkins");
+const eraFrames = require("./data/eraFrames");
+const aestheticSkins = require("./data/aestheticSkins");
+const worldConditions = require("./data/worldConditions");
 const toneSkins = require("./data/toneSkins");
 const environmentSkins = require("./data/environmentSkins");
 
@@ -61,6 +64,9 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
             ),
             systemFrames: resolveSelections(direction.systemFrames || [], systemFrames),
             genreSkin: resolveSelections(direction.genreSkin || [], genreSkins),
+            eraFrames: resolveSelections(direction.eraFrames || [], eraFrames),
+            aestheticSkins: resolveSelections(direction.aestheticSkins || [], aestheticSkins),
+            worldConditions: resolveSelections(direction.worldConditions || [], worldConditions),
             toneSkin: resolveSelections(direction.toneSkin || [], toneSkins),
             environmentSkins: resolveSelections(direction.environmentSkins || [], environmentSkins)
         };
@@ -112,6 +118,9 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
         wildcard: toAuditPitchBlock(fullPitch.wildcard)
     };
 
+    const presentation = clientPitch;
+    const diagnostics = auditPitch;
+
     return {
         intake: {
             mapped,
@@ -122,8 +131,15 @@ function runCampaignPipelineFromForm(rawSubmission = {}) {
         translated,
         selected,
         resolved,
+
+        // Backward-compatible Phase 1 output names.
         clientPitch,
-        auditPitch
+        auditPitch,
+
+        // Future-facing aliases for UI/API/operator-console use.
+        presentation,
+        diagnostics
+
         // debug only
         // fullPitch
     };

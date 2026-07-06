@@ -3,7 +3,11 @@ const youthCoreFrames = require("../data/youthCoreFrames");
 const systemFrames = require("../data/systemFrames");
 const toneSkins = require("../data/toneSkins");
 const genreSkins = require("../data/genreSkins");
+const eraFrames = require("../data/eraFrames");
+const aestheticSkins = require("../data/aestheticSkins");
+const worldConditions = require("../data/worldConditions");
 const environmentSkins = require("../data/environmentSkins");
+const { addGenreLayerCompatibilityBuckets } = require("../data/genreLayerCompatibility");
 const { applyFrameCrosswalk } = require("./frameCrosswalk");
 const {
     getCoreFrameAudiencePolicy,
@@ -91,6 +95,7 @@ function finalizeExperienceProfile({
     rawAnswers = {}
 }) {
     const canonicalProfile = normalizeExperienceProfile(
+        normalizedIntake?.safety?.experienceProfile ||
         normalizedIntake?.experienceProfile
     );
     if (canonicalProfile) return canonicalProfile;
@@ -204,16 +209,21 @@ function resolveCampaignContext({
 
     const rules = getProfileRules(experienceProfile);
 
-    const profileFilteredBuckets = applyProfileRulesToBuckets(
-        {
-            coreFrames: translatedForm.coreFrames || [],
-            systemFrames: translatedForm.systemFrames || [],
-            toneSkins: translatedForm.toneSkins || [],
-            genreSkins: translatedForm.genreSkins || [],
-            environmentSkins: translatedForm.environmentSkins || [],
-            modifiers: translatedForm.modifiers || {}
-        },
-        rules
+    const profileFilteredBuckets = addGenreLayerCompatibilityBuckets(
+        applyProfileRulesToBuckets(
+            {
+                coreFrames: translatedForm.coreFrames || [],
+                systemFrames: translatedForm.systemFrames || [],
+                toneSkins: translatedForm.toneSkins || [],
+                genreSkins: translatedForm.genreSkins || [],
+                eraFrames: translatedForm.eraFrames || [],
+                aestheticSkins: translatedForm.aestheticSkins || [],
+                worldConditions: translatedForm.worldConditions || [],
+                environmentSkins: translatedForm.environmentSkins || [],
+                modifiers: translatedForm.modifiers || {}
+            },
+            rules
+        )
     );
 
     const candidateBuckets = applyFrameCrosswalk({
@@ -228,6 +238,9 @@ function resolveCampaignContext({
             systemFrames,
             toneSkins,
             genreSkins,
+            eraFrames,
+            aestheticSkins,
+            worldConditions,
             environmentSkins
         },
         candidateBuckets,
