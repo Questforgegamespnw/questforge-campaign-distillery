@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "1.0",
+  "playerId": "demo-finn",
+  "submissionId": "demo-submission-demo-finn",
+  "status": "active",
+  "statusReason": "Demo fixture is active for matchmaking analysis.",
+  "consent": {
+    "matchmaking": true,
+    "profileRetention": true,
+    "operatorReview": true,
+    "contactForIntroduction": true,
+    "shareableSummary": true
+  },
+  "identity": {
+    "displayName": "Finn Mercer",
+    "contactRef": "demo-contact-demo-finn"
+  },
+  "logistics": {
+    "timezone": "America/Los_Angeles",
+    "playFormats": [
+      "online"
+    ],
+    "availability": [
+      {
+        "day": "tuesday",
+        "start": "18:00",
+        "end": "22:00"
+      }
+    ],
+    "frequencyPreferences": [
+      "weekly",
+      "biweekly"
+    ],
+    "sessionDuration": {
+      "minimumHours": 3,
+      "maximumHours": 4
+    },
+    "scheduleFlexibility": "moderate"
+  },
+  "commitment": {
+    "campaignLengths": [
+      "medium",
+      "long"
+    ],
+    "attendanceExpectation": "consistent",
+    "startReadiness": "within_one_month"
+  },
+  "systems": {
+    "preferred": [
+      "call_of_cthulhu"
+    ],
+    "acceptable": [
+      "dnd_5e"
+    ],
+    "excluded": [],
+    "openness": "open_with_guidance"
+  },
+  "campaignPreferences": {
+    "experiences": [
+      "investigation",
+      "survival_horror"
+    ],
+    "setups": [
+      "isolated_mystery"
+    ],
+    "tone": "horror",
+    "choiceWeight": "strong_choices",
+    "genres": [
+      "cosmic_horror"
+    ],
+    "eras": [
+      "modern"
+    ],
+    "aesthetics": [
+      "gothic"
+    ],
+    "worldConditions": [
+      "collapse"
+    ],
+    "environments": [
+      "isolated_city"
+    ],
+    "gameplayInterests": [
+      "investigation"
+    ],
+    "playerFantasy": [
+      "survival"
+    ],
+    "mustHaves": "",
+    "avoid": "",
+    "systemPreference": "Call of Cthulhu"
+  },
+  "tablePreferences": {
+    "roleplayIntensity": "low",
+    "tacticalIntensity": "low",
+    "rulesApproach": "rules_light",
+    "characterCollaboration": "optional",
+    "communicationStyles": [
+      "indirect"
+    ],
+    "voiceRequired": true,
+    "videoPreference": "required"
+  },
+  "experience": {
+    "overallLevel": "intermediate",
+    "systemsPlayed": [
+      "dnd_5e"
+    ],
+    "gmExperience": false,
+    "mixedExperienceComfort": true
+  },
+  "safety": {
+    "contentSafetyMode": "standard",
+    "boundaries": [],
+    "hardExclusions": [],
+    "operatorPrivateNotes": [],
+    "shareableGuidance": []
+  },
+  "groupPreferences": {
+    "minimumPlayers": 3,
+    "preferredPlayers": 4,
+    "maximumPlayers": 5
+  },
+  "requirements": {
+    "mustHaves": [],
+    "hardConstraints": {
+      "schedule": [],
+      "format": [],
+      "content": [],
+      "system": [],
+      "commitment": [],
+      "tableCulture": []
+    },
+    "freeTextNotes": []
+  },
+  "shareableSummary": {
+    "campaignInterests": [
+      "cosmic horror",
+      "investigation",
+      "survival"
+    ],
+    "availabilitySummary": "Tuesday evenings, Pacific time; weekly or biweekly.",
+    "systemSummary": "Prefers Call of Cthulhu but will consider D&D 5e.",
+    "tableStyleSummary": "Rules-light investigation with limited tactical emphasis.",
+    "commitmentSummary": "Consistent attendance for a medium or long campaign.",
+    "sessionZeroTopics": []
+  },
+  "completeness": {
+    "percentage": 100,
+    "missingRequiredFields": [],
+    "warnings": [],
+    "contradictions": [],
+    "explicitFieldCount": 12,
+    "inferredFieldCount": 0
+  },
+  "provenance": {
+    "profileVersion": 1,
+    "sourceCanonicalSchemaVersion": "1.0",
+    "sourceCanonicalHash": "425fb8cfaa3ad301f02f372ec15f767e866a270c0897645cffd6aa336cd24b79",
+    "sourceType": "main_intake",
+    "createdAt": "2026-07-12T20:00:00.000Z",
+    "updatedAt": "2026-07-12T20:00:00.000Z",
+    "lastConfirmedAt": "2026-07-12T20:00:00.000Z"
+  },
+  "lifecycle": {
+    "statusChangedAt": "2026-07-12T20:00:00.000Z",
+    "matchedReference": "",
+    "history": [
+      {
+        "status": "active",
+        "reason": "Demo fixture activated.",
+        "timestamp": "2026-07-12T20:00:00.000Z"
+      }
+    ]
+  }
+}

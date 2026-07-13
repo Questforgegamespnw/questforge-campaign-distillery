@@ -190,10 +190,12 @@ function translateFormAnswers(answers = {}) {
 
   // Direct structured selections. These preserve new form fields even before
   // dedicated mapping groups exist in intakeMappings.js.
-  addDirectSelections(buckets.eraFrames, normalizedAnswers.eras, 5);
-  addDirectSelections(buckets.aestheticSkins, normalizedAnswers.aesthetics, 5);
-  addDirectSelections(buckets.worldConditions, normalizedAnswers.worldConditions, 5);
+  const DIRECT_CONTEXT_WEIGHT = 1;
 
+   addDirectSelections(buckets.eraFrames, normalizedAnswers.eras, DIRECT_CONTEXT_WEIGHT);
+    addDirectSelections(buckets.aestheticSkins, normalizedAnswers.aesthetics, DIRECT_CONTEXT_WEIGHT);
+    addDirectSelections(buckets.worldConditions, normalizedAnswers.worldConditions, DIRECT_CONTEXT_WEIGHT);
+    
   return {
     experienceProfile: inferExperienceProfile(normalizedAnswers),
     coreFrames: finalizeBucket(buckets.coreFrames),

@@ -21,6 +21,9 @@ const tests = [
   "scripts/tests/pipeline/testYouthVoiceLayer.js",
   "scripts/tests/pipeline/testSubmissionStatusWorkflow.js",
   "scripts/tests/pipeline/testGenreLayerCompatibility.js",
+
+  "scripts/tests/matchmaking/matchmaking-intake.smoke.test.js",
+  "scripts/tests/matchmaking/compatibility-profile.smoke.test.js",
 ];
 
 if (includeFixtureTests) {

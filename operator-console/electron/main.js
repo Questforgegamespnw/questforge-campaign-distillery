@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain, shell, clipboard } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
 const { spawn } = require("node:child_process");
+const { registerMatchmakingHandlers } = require("./ipc/matchmakingHandlers");
+const { registerIntroductionHandlers } = require("./ipc/introductionHandlers");
 
 const isDev = !app.isPackaged;
 
@@ -448,6 +450,9 @@ app.whenReady().then(() => {
     fs.writeFileSync(stagedPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
     return { slug, stagedPath };
   });
+
+  registerMatchmakingHandlers({ ipcMain, getProjectRoot });
+  registerIntroductionHandlers({ ipcMain, getProjectRoot });
 
   createWindow();
 });

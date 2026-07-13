@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuestForge Group Match Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "matchId",
+    "matchType",
+    "members",
+    "eligibility",
+    "score",
+    "pairResults",
+    "classification",
+    "strongAlignment",
+    "manageableDifferences",
+    "discussionPoints",
+    "blockingConflicts",
+    "operatorRecommendation",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "matchId": { "type": "string", "minLength": 1 },
+    "matchType": { "const": "group" },
+    "members": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "eligibility": { "$ref": "#/$defs/eligibility" },
+    "score": { "$ref": "#/$defs/score" },
+    "pairResults": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/pairSummary" }
+    },
+    "classification": {
+      "enum": [
+        "strong_group",
+        "potential_group",
+        "needs_session_zero_alignment",
+        "low_confidence",
+        "not_currently_viable",
+        "blocked_by_schedule",
+        "blocked_by_format",
+        "blocked_by_commitment",
+        "blocked_by_group_size",
+        "blocked_by_hard_conflict"
+      ]
+    },
+    "strongAlignment": { "$ref": "#/$defs/stringArray" },
+    "manageableDifferences": { "$ref": "#/$defs/stringArray" },
+    "discussionPoints": { "$ref": "#/$defs/stringArray" },
+    "blockingConflicts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blockingConflict" }
+    },
+    "operatorRecommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recommendedAction",
+        "requiresHumanApproval",
+        "introductionReady"
+      ],
+      "properties": {
+        "recommendedAction": { "type": "string" },
+        "requiresHumanApproval": { "type": "boolean" },
+        "introductionReady": { "type": "boolean" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scoringModelVersion",
+        "profileVersions",
+        "evaluatedAt"
+      ],
+      "properties": {
+        "scoringModelVersion": { "type": "string" },
+        "profileVersions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "evaluatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "blockingConflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimension",
+        "classification",
+        "reason",
+        "evidence"
+      ],
+      "properties": {
+        "dimension": { "type": "string" },
+        "classification": { "type": "string" },
+        "reason": { "type": "string" },
+        "evidence": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eligible",
+        "status",
+        "blockingConflicts"
+      ],
+      "properties": {
+        "eligible": { "type": "boolean" },
+        "status": { "type": "string" },
+        "blockingConflicts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/blockingConflict" }
+        }
+      }
+    },
+    "sharedLogistics": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["score", "maximum", "evidence"],
+      "properties": {
+        "score": { "type": "number", "minimum": 0, "maximum": 15 },
+        "maximum": { "const": 15 },
+        "evidence": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overall",
+        "pairAverage",
+        "weakestPairScore",
+        "scoreSpread",
+        "cohesionScore",
+        "sharedLogisticsScore",
+        "confidence",
+        "confidenceNumeric",
+        "confidenceReasons"
+      ],
+      "properties": {
+        "overall": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "pairAverage": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "weakestPairScore": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "scoreSpread": { "type": ["number", "null"], "minimum": 0 },
+        "cohesionScore": { "type": ["number", "null"], "minimum": 0, "maximum": 15 },
+        "sharedLogisticsScore": { "$ref": "#/$defs/sharedLogistics" },
+        "confidence": {
+          "enum": ["high", "moderate", "low", "insufficient"]
+        },
+        "confidenceNumeric": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "confidenceReasons": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "pairSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "matchId",
+        "members",
+        "score",
+        "confidence",
+        "classification"
+      ],
+      "properties": {
+        "matchId": { "type": "string" },
+        "members": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "string" }
+        },
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "confidence": {
+          "enum": ["high", "moderate", "low", "insufficient"]
+        },
+        "classification": { "type": "string" }
+      }
+    }
+  }
+}

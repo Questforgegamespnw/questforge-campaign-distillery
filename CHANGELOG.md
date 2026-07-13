@@ -2,6 +2,110 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.12.0 — Matchmaking and Controlled Introductions
+
+### Summary
+
+Added a complete, opt-in matchmaking branch for individuals and partial groups seeking a table. The branch remains separate from campaign Identity Pitch and Campaign Concept development while reusing canonical intake as its source boundary.
+
+The implementation now covers intake, compatibility profiles, pair evaluation, active-pool comparison, group analysis, operator review, and controlled introductions.
+
+### Added
+
+#### Matchmaking intake
+- Added matchmaking opt-in to the main intake.
+- Added a standalone matchmaking addendum for existing submissions.
+- Added canonical matchmaking mapping, merge behavior, and semantic validation.
+- Preserved backward compatibility for canonical records without matchmaking data.
+
+#### Compatibility profiles
+- Added derived, versioned compatibility profiles.
+- Added active, paused, matched, archived, and expired lifecycle states.
+- Added completeness diagnostics, provenance, consent fields, and sanitized shareable summaries.
+- Added privacy separation between operator-private data, match-shareable summaries, and contact references.
+
+#### Pair engine
+- Added hard eligibility gates before scoring.
+- Added weighted scoring across:
+  - schedule and logistics;
+  - safety and hard requirements;
+  - commitment;
+  - table culture;
+  - gameplay;
+  - systems;
+  - tone;
+  - genre and aesthetic context.
+- Added separate adaptability and confidence calculations.
+- Added stable symmetric pair IDs and versioned pair results.
+- Added human-readable alignments, differences, discussion points, and blockers.
+
+#### Pool and persistence
+- Added validated compatibility-profile storage.
+- Added a rebuildable active-pool index.
+- Added self-excluding pool comparison and deterministic ranking.
+- Added persisted pair evaluations.
+- Added stale-result detection for profile-version and scoring-model changes.
+
+#### Group analysis
+- Added deterministic group IDs and complete pair coverage.
+- Added whole-group schedule, format, frequency, campaign-length, and size validation.
+- Added weakest-pair protection, pair-average scoring, score spread, cohesion, and shared logistics.
+- Prevented strong averages from hiding a poor or blocked pair.
+- Added normalized operator presentation for grouped blockers and Session Zero concerns.
+
+#### Operator Console
+- Refactored the Electron console into separate Campaign Operations and Matchmaking modes.
+- Added matchmaking overview, profile review, pair review, group builder, and introduction views.
+- Added demo dataset loading and selective cleanup.
+- Added privacy-safe empty states and controlled operator actions.
+- Advanced the console architecture beyond the original v0.1 single-workspace structure.
+
+#### Demo dataset
+- Added wrapped demo fixtures under `misc/matchmaking-demo/`.
+- Added strong-match, schedule-block, format-block, low-confidence, and weak-link-group scenarios.
+- Kept preserved fixtures separate from generated runtime records.
+
+#### Controlled introductions
+- Added introduction records and lifecycle:
+  - draft;
+  - awaiting operator approval;
+  - awaiting participant consent;
+  - approved;
+  - contact released;
+  - introduced;
+  - declined;
+  - archived.
+- Added readiness checks, sanitized previews, participant responses, contact-release gating, and audit history.
+- Added current consent and profile-version rechecks at release time.
+- Added matched-profile lifecycle updates only after introduction completion.
+
+### Safety and Privacy
+- Matchmaking is explicitly opt-in and revocable.
+- Hard blockers are evaluated before numerical score.
+- Compatibility and confidence are separate.
+- Contact data is not included in drafts or match summaries.
+- Contact references cannot be released until all required approvals and current consents are present.
+- Every introduction requires human approval.
+
+### Tests
+- Added targeted smoke suites for:
+  - compatibility profiles;
+  - pair compatibility;
+  - pool storage and comparison;
+  - group compatibility;
+  - introduction workflow.
+- All targeted matchmaking smoke tests pass.
+
+### Architecture Decision
+- Canonical intake is the source boundary.
+- Compatibility profiles are derived operational artifacts.
+- Matchmaking is a parallel branch, not a continuation of campaign generation.
+- The campaign translator may supply preference context, but it is not the matcher.
+- Runtime matchmaking data belongs under `matchmaking/`.
+- Preserved demo fixtures belong under `misc/matchmaking-demo/`.
+
+---
+
 ## v0.11.0 — Decomposed Genre Context Pipeline
 
 ### Added

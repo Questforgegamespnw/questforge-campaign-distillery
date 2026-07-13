@@ -1,0 +1,76 @@
+.introduction-actions {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.introduction-score-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+.introduction-score-row > div,
+.response-card,
+.introduction-members article,
+.released-contact-grid > div {
+  padding: .8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255,255,255,.025);
+}
+
+.introduction-score-row span,
+.released-contact-grid span,
+.history-list span {
+  display: block;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.introduction-score-row strong {
+  display: block;
+  margin-top: .3rem;
+  font-size: 1.15rem;
+  text-transform: capitalize;
+}
+
+.introduction-members,
+.response-grid,
+.released-contact-grid {
+  display: grid;
+  gap: .75rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.introduction-members h4,
+.response-card strong {
+  margin: 0 0 .45rem;
+}
+
+.response-card {
+  display: grid;
+  gap: .5rem;
+}
+
+.participant-action-stack {
+  display: grid;
+  gap: .65rem;
+}
+
+.participant-action-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) auto auto;
+  gap: .6rem;
+  align-items: center;
+}
+
+.history-list {
+  display: grid;
+  gap: .65rem;
+  padding-left: 1.2rem;
+}
+
+.history-list p {
+  margin: .25rem 0 0;
+}

@@ -1,0 +1,8 @@
+{
+  "scenarioId": "format-block",
+  "members": [
+    "demo-aria",
+    "demo-devon"
+  ],
+  "purpose": "Should be blocked by play format."
+}

@@ -4,7 +4,7 @@
 
 ## Scope
 
-This document describes the implemented v0.10.1 architecture.
+This document describes the implemented v0.12.0 architecture.
 
 Solid workflow stages are implemented. Dashed downstream stages remain planned.
 
@@ -64,10 +64,19 @@ HANDOFF --> INPUT --> INPUTVALID --> P2PROMPT --> P2AI --> P2VALID --> P2JSON --
 
 SYSREC["Structured system recommendation"]:::planned
 FINAL["Selected-concept refinement"]:::planned
-MATCH["Individual matchmaking / compatibility pool"]:::planned
 P2PDF --> SYSREC
 P2PDF --> FINAL
-ISR -.future pool input.-> MATCH
+
+subgraph MM["Matchmaking — Parallel Branch"]
+  MMPROFILE["Compatibility Profile"]:::artifact
+  PAIR["Pair Eligibility + Compatibility + Confidence"]:::process
+  POOL["Active Pool + Persisted Evaluations"]:::artifact
+  GROUP["Group Analysis"]:::process
+  CONSOLE["Operator Review Console"]:::human
+  INTRO["Controlled Introduction Record"]:::artifact
+end
+
+NORMAL --> MMPROFILE --> PAIR --> POOL --> GROUP --> CONSOLE --> INTRO
 
 subgraph SUPPORT["Shared Runtime and Operations"]
   PATHS["projectPaths / submissionPathUtils"]:::process
@@ -161,11 +170,17 @@ scripts
 - shared submission lifecycle status;
 - shared script infrastructure;
 - categorized tests;
-- generated developer wiki.
+- generated developer wiki;
+- matchmaking intake and compatibility profiles;
+- pair scoring and confidence;
+- active-pool persistence and stale-result detection;
+- group analysis;
+- multi-mode Electron Operator Console;
+- controlled introduction lifecycle.
 
 ## Planned Components
 
 - system recommendation;
 - selected-concept finalization;
 - automated form and email transport;
-- individual-player matchmaking and compatibility pools.
+- dedicated contact-directory resolution.

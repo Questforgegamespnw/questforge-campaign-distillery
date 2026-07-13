@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0",
+  "matchId": "pair-demo-aria-demo-devon",
+  "matchType": "pair",
+  "members": [
+    "demo-aria",
+    "demo-devon"
+  ],
+  "eligibility": {
+    "eligible": false,
+    "status": "blocked_by_format",
+    "blockingConflicts": [
+      {
+        "dimension": "format",
+        "classification": "blocked_by_format",
+        "reason": "The applicants do not share a compatible play format.",
+        "evidence": [
+          "Devon Pike: in_person.",
+          "Aria Vale: online."
+        ]
+      }
+    ]
+  },
+  "score": {
+    "overall": null,
+    "baseScore": null,
+    "adaptabilityAdjustment": {
+      "score": 0,
+      "maximum": 5,
+      "evidence": []
+    },
+    "confidence": "high",
+    "confidenceNumeric": 90,
+    "confidenceReasons": [
+      "Both profiles were confirmed within the last 30 days.",
+      "Average profile completeness is 100%."
+    ]
+  },
+  "dimensionScores": {},
+  "classification": "blocked_by_format",
+  "strongAlignment": [],
+  "manageableDifferences": [],
+  "discussionPoints": [],
+  "blockingConflicts": [
+    {
+      "dimension": "format",
+      "classification": "blocked_by_format",
+      "reason": "The applicants do not share a compatible play format.",
+      "evidence": [
+        "Devon Pike: in_person.",
+        "Aria Vale: online."
+      ]
+    }
+  ],
+  "operatorRecommendation": {
+    "recommendedAction": "do_not_recommend",
+    "requiresHumanApproval": true,
+    "introductionReady": false
+  },
+  "provenance": {
+    "scoringModelVersion": "1.0",
+    "profileVersions": {
+      "demo-devon": 1,
+      "demo-aria": 1
+    },
+    "evaluatedAt": "2026-07-12T23:56:56.313Z"
+  }
+}

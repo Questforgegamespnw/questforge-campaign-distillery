@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0",
+  "matchId": "group-2c89e2d778b4b183",
+  "matchType": "group",
+  "members": [
+    "demo-aria",
+    "demo-ben",
+    "demo-finn"
+  ],
+  "eligibility": {
+    "eligible": true,
+    "status": "eligible",
+    "blockingConflicts": []
+  },
+  "score": {
+    "overall": 75.21,
+    "pairAverage": 78.82,
+    "weakestPairScore": 70.15,
+    "scoreSpread": 12.27,
+    "cohesionScore": 7.64,
+    "sharedLogisticsScore": {
+      "score": 15,
+      "maximum": 15,
+      "evidence": [
+        "All members share approximately 4 recurring hours.",
+        "Shared format: online.",
+        "Shared frequency: weekly, biweekly.",
+        "Shared campaign length: medium, long."
+      ]
+    },
+    "confidence": "high",
+    "confidenceNumeric": 93.5,
+    "confidenceReasons": [
+      "Average member profile completeness is 100%.",
+      "Average pair-evaluation confidence is 90%."
+    ]
+  },
+  "pairResults": [
+    {
+      "matchId": "pair-demo-aria-demo-ben",
+      "members": [
+        "demo-aria",
+        "demo-ben"
+      ],
+      "score": 96.17,
+      "confidence": "high",
+      "classification": "strong_match"
+    },
+    {
+      "matchId": "pair-demo-aria-demo-finn",
+      "members": [
+        "demo-aria",
+        "demo-finn"
+      ],
+      "score": 70.15,
+      "confidence": "high",
+      "classification": "potential_match"
+    },
+    {
+      "matchId": "pair-demo-ben-demo-finn",
+      "members": [
+        "demo-ben",
+        "demo-finn"
+      ],
+      "score": 70.15,
+      "confidence": "high",
+      "classification": "potential_match"
+    }
+  ],
+  "classification": "potential_group",
+  "strongAlignment": [
+    "All members share approximately 4 recurring hours.",
+    "Shared format: online.",
+    "Shared frequency: weekly, biweekly.",
+    "Shared campaign length: medium, long.",
+    "demo-aria / demo-ben form a strong pairwise match."
+  ],
+  "manageableDifferences": [
+    "At least one applicant is open to learning with guidance.",
+    "At least one applicant has moderate scheduling flexibility.",
+    "Both applicants are comfortable with mixed-experience groups."
+  ],
+  "discussionPoints": [
+    "demo-aria / demo-finn should review their pairwise discussion points.",
+    "Voice-chat expectations align.",
+    "Video preferences differ but may be manageable.",
+    "Confirm gameplay expectations during Session Zero.",
+    "Campaign tone is a meaningful Session Zero discussion point.",
+    "Setting and aesthetic interests differ, but this is a low-weight dimension.",
+    "demo-ben / demo-finn should review their pairwise discussion points."
+  ],
+  "blockingConflicts": [],
+  "operatorRecommendation": {
+    "recommendedAction": "operator_review",
+    "requiresHumanApproval": true,
+    "introductionReady": true
+  },
+  "provenance": {
+    "scoringModelVersion": "1.0",
+    "profileVersions": {
+      "demo-aria": 1,
+      "demo-ben": 1,
+      "demo-finn": 1
+    },
+    "evaluatedAt": "2026-07-12T23:56:56.889Z"
+  }
+}

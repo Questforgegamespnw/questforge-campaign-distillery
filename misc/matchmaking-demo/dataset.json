@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "questforge-matchmaking-demo-v1",
+  "label": "QuestForge Matchmaking Demo Set",
+  "description": "Six wrapped compatibility profiles covering strong alignment, schedule blocking, format blocking, low confidence, and a weak-link group.",
+  "profileDirectory": "profiles",
+  "scenarioDirectory": "scenarios",
+  "expectedDirectory": "expected"
+}

@@ -1,0 +1,8 @@
+{
+  "scenarioId": "low-confidence-pair",
+  "members": [
+    "demo-aria",
+    "demo-erin"
+  ],
+  "purpose": "Should remain eligible while receiving reduced confidence."
+}

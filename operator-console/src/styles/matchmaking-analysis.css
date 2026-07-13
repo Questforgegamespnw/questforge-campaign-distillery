@@ -1,0 +1,71 @@
+.analysis-sections {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+  margin-top: 1rem;
+}
+
+.analysis-sections section {
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px;
+  background: rgba(17, 13, 22, .28);
+}
+
+.analysis-sections section h3 {
+  margin: 0 0 .75rem;
+}
+
+.analysis-sections ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.analysis-sections li + li {
+  margin-top: .35rem;
+}
+
+.pair-review-list,
+.pair-blocker-list {
+  display: grid;
+  gap: .55rem;
+}
+
+.pair-review-card,
+.pair-blocker-card {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  padding: .7rem .8rem;
+  border-radius: 7px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.07);
+}
+
+.pair-review-card span,
+.pair-blocker-card span {
+  color: #bdaec8;
+  font-size: .84rem;
+}
+
+.blocker-sections section {
+  border-color: rgba(190,72,72,.24);
+  background: rgba(190,72,72,.055);
+}
+
+.blocker-dimensions {
+  display: grid;
+  gap: .85rem;
+}
+
+.blocker-dimension h4 {
+  margin: 0 0 .45rem;
+  color: #e8bd58;
+  font-size: .76rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.pair-blocker-card strong {
+  color: #f0d7d7;
+}

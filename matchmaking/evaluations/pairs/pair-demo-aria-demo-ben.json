@@ -1,0 +1,265 @@
+{
+  "schemaVersion": "1.0",
+  "matchId": "pair-demo-aria-demo-ben",
+  "matchType": "pair",
+  "members": [
+    "demo-aria",
+    "demo-ben"
+  ],
+  "eligibility": {
+    "eligible": true,
+    "status": "eligible",
+    "blockingConflicts": []
+  },
+  "score": {
+    "overall": 96.17,
+    "baseScore": 93.17,
+    "adaptabilityAdjustment": {
+      "score": 3,
+      "maximum": 5,
+      "evidence": [
+        "At least one applicant is open to learning with guidance.",
+        "At least one applicant has moderate scheduling flexibility.",
+        "Both applicants are comfortable with mixed-experience groups."
+      ]
+    },
+    "confidence": "high",
+    "confidenceNumeric": 90,
+    "confidenceReasons": [
+      "Both profiles were confirmed within the last 30 days.",
+      "Average profile completeness is 100%."
+    ]
+  },
+  "dimensionScores": {
+    "schedule": {
+      "score": 24,
+      "maximum": 25,
+      "status": "strong_alignment",
+      "evidence": [
+        "A recurring availability overlap of approximately 4 hours was found.",
+        "Shared play format: online.",
+        "Shared session frequency: weekly, biweekly.",
+        "Compatible session duration: 3–4 hours.",
+        "Both applicants use the same timezone."
+      ],
+      "details": {
+        "overlaps": [
+          {
+            "start": "2026-07-15T01:00:00.000Z",
+            "end": "2026-07-15T05:00:00.000Z",
+            "durationHours": 4,
+            "sourceA": {
+              "start": 1784077200000,
+              "end": 1784091600000,
+              "timezone": "America/Los_Angeles",
+              "day": "tuesday",
+              "localStart": "18:00",
+              "localEnd": "22:00"
+            },
+            "sourceB": {
+              "start": 1784077200000,
+              "end": 1784091600000,
+              "timezone": "America/Los_Angeles",
+              "day": "tuesday",
+              "localStart": "18:00",
+              "localEnd": "22:00"
+            }
+          }
+        ],
+        "formats": [
+          "online"
+        ],
+        "frequency": [
+          "weekly",
+          "biweekly"
+        ],
+        "duration": {
+          "minimum": 3,
+          "maximum": 4
+        }
+      }
+    },
+    "safety": {
+      "score": 16,
+      "maximum": 20,
+      "status": "aligned",
+      "evidence": [
+        "Both applicants use the standard content-safety mode."
+      ],
+      "details": {
+        "sharedBoundaries": [],
+        "sharedHardExclusions": []
+      }
+    },
+    "commitment": {
+      "score": 15,
+      "maximum": 15,
+      "status": "strong_alignment",
+      "evidence": [
+        "Shared campaign-length preference: medium, long.",
+        "Attendance expectations are closely aligned.",
+        "Campaign start readiness is compatible."
+      ],
+      "details": {
+        "campaignLengthOverlap": [
+          "medium",
+          "long"
+        ]
+      }
+    },
+    "tableCulture": {
+      "score": 15,
+      "maximum": 15,
+      "status": "strong_alignment",
+      "evidence": [
+        "Shared communication style: direct, collaborative.",
+        "Voice-chat expectations align.",
+        "Video preferences align.",
+        "Roleplay-intensity preferences are compatible.",
+        "Tactical-intensity preferences are compatible.",
+        "Rules approaches are compatible."
+      ],
+      "details": {
+        "roleplayScore": 3,
+        "tacticalScore": 3,
+        "rulesScore": 3,
+        "communicationOverlap": [
+          "direct",
+          "collaborative"
+        ]
+      }
+    },
+    "gameplay": {
+      "score": 8.67,
+      "maximum": 10,
+      "status": "strong_alignment",
+      "evidence": [
+        "Shared gameplay interests: tactical_combat, exploration.",
+        "Shared overall experiences: character_driven_drama, tactical_challenges.",
+        "Shared story setups: expedition_team.",
+        "Shared player fantasies: becoming_heroes."
+      ],
+      "details": {
+        "gameplay interests": {
+          "overlap": [
+            "tactical_combat",
+            "exploration"
+          ],
+          "ratio": 0.6666666666666666
+        },
+        "overall experiences": {
+          "overlap": [
+            "character_driven_drama",
+            "tactical_challenges"
+          ],
+          "ratio": 1
+        },
+        "story setups": {
+          "overlap": [
+            "expedition_team"
+          ],
+          "ratio": 1
+        },
+        "player fantasies": {
+          "overlap": [
+            "becoming_heroes"
+          ],
+          "ratio": 1
+        }
+      }
+    },
+    "systems": {
+      "score": 7,
+      "maximum": 7,
+      "status": "strong_alignment",
+      "evidence": [
+        "Shared preferred system: dnd_5e."
+      ],
+      "details": {
+        "sharedPreferred": [
+          "dnd_5e"
+        ],
+        "preferredAcceptable": [],
+        "sharedAcceptable": [
+          "pathfinder_2e",
+          "draw_steel"
+        ]
+      }
+    },
+    "tone": {
+      "score": 5,
+      "maximum": 5,
+      "status": "strong_alignment",
+      "evidence": [
+        "Both applicants selected the same tone: heroic."
+      ],
+      "details": {
+        "toneA": "heroic",
+        "toneB": "heroic"
+      }
+    },
+    "genre": {
+      "score": 2.5,
+      "maximum": 3,
+      "status": "aligned",
+      "evidence": [
+        "Shared setting or aesthetic interests: fantasy, medieval, heroic_fantasy, frontier, ancient_ruins."
+      ],
+      "details": {
+        "shared": [
+          "fantasy",
+          "medieval",
+          "heroic_fantasy",
+          "frontier",
+          "ancient_ruins"
+        ],
+        "ratio": 0.8333333333333334
+      }
+    }
+  },
+  "classification": "strong_match",
+  "strongAlignment": [
+    "A recurring availability overlap of approximately 4 hours was found.",
+    "Shared play format: online.",
+    "Shared session frequency: weekly, biweekly.",
+    "Compatible session duration: 3–4 hours.",
+    "Both applicants use the same timezone.",
+    "Both applicants use the standard content-safety mode.",
+    "Shared campaign-length preference: medium, long.",
+    "Attendance expectations are closely aligned.",
+    "Campaign start readiness is compatible.",
+    "Shared communication style: direct, collaborative.",
+    "Voice-chat expectations align.",
+    "Video preferences align.",
+    "Roleplay-intensity preferences are compatible.",
+    "Tactical-intensity preferences are compatible.",
+    "Rules approaches are compatible.",
+    "Shared gameplay interests: tactical_combat, exploration.",
+    "Shared overall experiences: character_driven_drama, tactical_challenges.",
+    "Shared story setups: expedition_team.",
+    "Shared player fantasies: becoming_heroes.",
+    "Shared preferred system: dnd_5e.",
+    "Both applicants selected the same tone: heroic.",
+    "Shared setting or aesthetic interests: fantasy, medieval, heroic_fantasy, frontier, ancient_ruins."
+  ],
+  "manageableDifferences": [
+    "At least one applicant is open to learning with guidance.",
+    "At least one applicant has moderate scheduling flexibility.",
+    "Both applicants are comfortable with mixed-experience groups."
+  ],
+  "discussionPoints": [],
+  "blockingConflicts": [],
+  "operatorRecommendation": {
+    "recommendedAction": "review_for_introduction",
+    "requiresHumanApproval": true,
+    "introductionReady": true
+  },
+  "provenance": {
+    "scoringModelVersion": "1.0",
+    "profileVersions": {
+      "demo-ben": 1,
+      "demo-aria": 1
+    },
+    "evaluatedAt": "2026-07-12T23:56:55.871Z"
+  }
+}

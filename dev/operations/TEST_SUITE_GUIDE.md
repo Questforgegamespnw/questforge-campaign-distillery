@@ -10,6 +10,7 @@ scripts/tests/
   phase1/
   phase2/
   exporters/
+  matchmaking/
   testUtils.js
   runAllTests.js
 ```
@@ -75,3 +76,34 @@ The v0.10 routine suite includes regression coverage for:
 ## Retired Behavior
 
 The old three-response AI import test is retired. The combined Phase 1 round trip is the only supported operator workflow.
+
+
+---
+
+## Matchmaking Smoke Tests
+
+```powershell
+node scripts/tests/matchmaking/compatibility-profile.smoke.test.js
+node scripts/tests/matchmaking/pair-compatibility.smoke.test.js
+node scripts/tests/matchmaking/matchmaking-pool.smoke.test.js
+node scripts/tests/matchmaking/group-compatibility.smoke.test.js
+node scripts/tests/matchmaking/introduction-workflow.smoke.test.js
+```
+
+Coverage:
+
+- compatibility-profile construction, lifecycle, and privacy;
+- pair eligibility, scoring, confidence, symmetry, and validation;
+- profile storage, pool indexing, ranking, persistence, and staleness;
+- group eligibility, whole-group scheduling, weakest-pair behavior, and determinism;
+- introduction approval, participant responses, consent rechecks, contact release, completion, decline, and archive.
+
+## Operator Console Build
+
+From `operator-console/`:
+
+```powershell
+npm.cmd run build
+```
+
+The Electron renderer build is part of release validation even though it is not run by the root Node smoke suites.

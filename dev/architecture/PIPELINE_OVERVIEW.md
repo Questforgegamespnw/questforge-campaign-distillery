@@ -43,7 +43,7 @@ Raw Client Submission
 → Guided Client Concept Selection
 ```
 
-The structured system-recommendation stage is not yet implemented.
+The structured system-recommendation stage is not yet implemented. Matchmaking is implemented as a parallel branch from canonical intake.
 
 ---
 
@@ -350,10 +350,27 @@ Mapping does not render. Rendering does not select. Exporters do not redefine co
 
 ---
 
+# Parallel Matchmaking Branch
+
+```text
+Canonical Intake
+→ Matchmaking Opt-In
+→ Compatibility Profile
+→ Pair Eligibility and Scoring
+→ Active Pool Comparison
+→ Group Analysis
+→ Operator Review
+→ Controlled Introduction
+```
+
+This branch is operationally separate from Phase 1 and Phase 2 campaign development. It may reuse campaign preference signals, but it does not generate Identity Pitches or Campaign Concepts.
+
+See [Matchmaking Architecture](MATCHMAKING_ARCHITECTURE.md).
+
 ## Future Pipeline Work
 
 - structured system recommendation;
 - selected-concept refinement;
 - automatic email delivery;
 - form-provider integration;
-- individual-player matchmaking and compatibility pools.
+- dedicated contact-directory resolution.

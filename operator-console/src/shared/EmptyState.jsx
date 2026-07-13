@@ -1,0 +1,4 @@
+import React from "react";
+export default function EmptyState({ title, children }) {
+  return <div className="empty-state"><h3>{title}</h3>{children && <p>{children}</p>}</div>;
+}

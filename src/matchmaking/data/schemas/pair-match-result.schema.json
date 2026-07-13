@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuestForge Pair Match Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "matchId",
+    "matchType",
+    "members",
+    "eligibility",
+    "score",
+    "dimensionScores",
+    "classification",
+    "strongAlignment",
+    "manageableDifferences",
+    "discussionPoints",
+    "blockingConflicts",
+    "operatorRecommendation",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "matchId": { "type": "string", "minLength": 1 },
+    "matchType": { "const": "pair" },
+    "members": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "eligibility": { "$ref": "#/$defs/eligibility" },
+    "score": { "$ref": "#/$defs/score" },
+    "dimensionScores": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schedule": { "$ref": "#/$defs/dimension" },
+        "safety": { "$ref": "#/$defs/dimension" },
+        "commitment": { "$ref": "#/$defs/dimension" },
+        "tableCulture": { "$ref": "#/$defs/dimension" },
+        "gameplay": { "$ref": "#/$defs/dimension" },
+        "systems": { "$ref": "#/$defs/dimension" },
+        "tone": { "$ref": "#/$defs/dimension" },
+        "genre": { "$ref": "#/$defs/dimension" }
+      }
+    },
+    "classification": {
+      "enum": [
+        "strong_match",
+        "potential_match",
+        "needs_session_zero_alignment",
+        "low_confidence",
+        "not_currently_viable",
+        "blocked_by_schedule",
+        "blocked_by_format",
+        "blocked_by_commitment",
+        "blocked_by_hard_conflict"
+      ]
+    },
+    "strongAlignment": { "$ref": "#/$defs/stringArray" },
+    "manageableDifferences": { "$ref": "#/$defs/stringArray" },
+    "discussionPoints": { "$ref": "#/$defs/stringArray" },
+    "blockingConflicts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blockingConflict" }
+    },
+    "operatorRecommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recommendedAction", "requiresHumanApproval", "introductionReady"],
+      "properties": {
+        "recommendedAction": { "type": "string" },
+        "requiresHumanApproval": { "type": "boolean" },
+        "introductionReady": { "type": "boolean" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scoringModelVersion", "profileVersions", "evaluatedAt"],
+      "properties": {
+        "scoringModelVersion": { "type": "string" },
+        "profileVersions": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        },
+        "evaluatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "blockingConflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "classification", "reason", "evidence"],
+      "properties": {
+        "dimension": { "type": "string" },
+        "classification": { "type": "string" },
+        "reason": { "type": "string" },
+        "evidence": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eligible", "status", "blockingConflicts"],
+      "properties": {
+        "eligible": { "type": "boolean" },
+        "status": { "type": "string" },
+        "blockingConflicts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/blockingConflict" }
+        }
+      }
+    },
+    "adaptability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "maximum", "evidence"],
+      "properties": {
+        "score": { "type": "number", "minimum": 0, "maximum": 5 },
+        "maximum": { "const": 5 },
+        "evidence": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overall",
+        "baseScore",
+        "adaptabilityAdjustment",
+        "confidence",
+        "confidenceNumeric",
+        "confidenceReasons"
+      ],
+      "properties": {
+        "overall": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "baseScore": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "adaptabilityAdjustment": { "$ref": "#/$defs/adaptability" },
+        "confidence": { "enum": ["high", "moderate", "low", "insufficient"] },
+        "confidenceNumeric": { "type": "number", "minimum": 0, "maximum": 100 },
+        "confidenceReasons": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "maximum", "status", "evidence", "details"],
+      "properties": {
+        "score": { "type": "number", "minimum": 0 },
+        "maximum": { "type": "number", "exclusiveMinimum": 0 },
+        "status": {
+          "enum": [
+            "strong_alignment",
+            "aligned",
+            "mostly_aligned",
+            "discussion_recommended",
+            "insufficient_information"
+          ]
+        },
+        "evidence": { "$ref": "#/$defs/stringArray" },
+        "details": { "type": "object" }
+      }
+    }
+  }
+}

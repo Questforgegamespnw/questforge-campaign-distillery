@@ -1,0 +1,228 @@
+{
+  "schemaVersion": "1.0",
+  "matchId": "pair-demo-ben-demo-finn",
+  "matchType": "pair",
+  "members": [
+    "demo-ben",
+    "demo-finn"
+  ],
+  "eligibility": {
+    "eligible": true,
+    "status": "eligible",
+    "blockingConflicts": []
+  },
+  "score": {
+    "overall": 70.15,
+    "baseScore": 67.15,
+    "adaptabilityAdjustment": {
+      "score": 3,
+      "maximum": 5,
+      "evidence": [
+        "At least one applicant is open to learning with guidance.",
+        "At least one applicant has moderate scheduling flexibility.",
+        "Both applicants are comfortable with mixed-experience groups."
+      ]
+    },
+    "confidence": "high",
+    "confidenceNumeric": 90,
+    "confidenceReasons": [
+      "Both profiles were confirmed within the last 30 days.",
+      "Average profile completeness is 100%."
+    ]
+  },
+  "dimensionScores": {
+    "schedule": {
+      "score": 24,
+      "maximum": 25,
+      "status": "strong_alignment",
+      "evidence": [
+        "A recurring availability overlap of approximately 4 hours was found.",
+        "Shared play format: online.",
+        "Shared session frequency: weekly, biweekly.",
+        "Compatible session duration: 3–4 hours.",
+        "Both applicants use the same timezone."
+      ],
+      "details": {
+        "overlaps": [
+          {
+            "start": "2026-07-15T01:00:00.000Z",
+            "end": "2026-07-15T05:00:00.000Z",
+            "durationHours": 4,
+            "sourceA": {
+              "start": 1784077200000,
+              "end": 1784091600000,
+              "timezone": "America/Los_Angeles",
+              "day": "tuesday",
+              "localStart": "18:00",
+              "localEnd": "22:00"
+            },
+            "sourceB": {
+              "start": 1784077200000,
+              "end": 1784091600000,
+              "timezone": "America/Los_Angeles",
+              "day": "tuesday",
+              "localStart": "18:00",
+              "localEnd": "22:00"
+            }
+          }
+        ],
+        "formats": [
+          "online"
+        ],
+        "frequency": [
+          "weekly",
+          "biweekly"
+        ],
+        "duration": {
+          "minimum": 3,
+          "maximum": 4
+        }
+      }
+    },
+    "safety": {
+      "score": 16,
+      "maximum": 20,
+      "status": "aligned",
+      "evidence": [
+        "Both applicants use the standard content-safety mode."
+      ],
+      "details": {
+        "sharedBoundaries": [],
+        "sharedHardExclusions": []
+      }
+    },
+    "commitment": {
+      "score": 15,
+      "maximum": 15,
+      "status": "strong_alignment",
+      "evidence": [
+        "Shared campaign-length preference: medium, long.",
+        "Attendance expectations are closely aligned.",
+        "Campaign start readiness is compatible."
+      ],
+      "details": {
+        "campaignLengthOverlap": [
+          "medium",
+          "long"
+        ]
+      }
+    },
+    "tableCulture": {
+      "score": 4.65,
+      "maximum": 15,
+      "status": "discussion_recommended",
+      "evidence": [
+        "Voice-chat expectations align.",
+        "Video preferences differ but may be manageable."
+      ],
+      "details": {
+        "roleplayScore": 0.6000000000000001,
+        "tacticalScore": 1.7999999999999998,
+        "rulesScore": 0,
+        "communicationOverlap": []
+      }
+    },
+    "gameplay": {
+      "score": 0,
+      "maximum": 10,
+      "status": "insufficient_information",
+      "evidence": [],
+      "details": {
+        "gameplay interests": {
+          "overlap": [],
+          "ratio": 0
+        },
+        "overall experiences": {
+          "overlap": [],
+          "ratio": 0
+        },
+        "story setups": {
+          "overlap": [],
+          "ratio": 0
+        },
+        "player fantasies": {
+          "overlap": [],
+          "ratio": 0
+        }
+      }
+    },
+    "systems": {
+      "score": 6,
+      "maximum": 7,
+      "status": "strong_alignment",
+      "evidence": [
+        "One applicant's preferred system is acceptable to the other: dnd_5e."
+      ],
+      "details": {
+        "sharedPreferred": [],
+        "preferredAcceptable": [
+          "dnd_5e"
+        ],
+        "sharedAcceptable": []
+      }
+    },
+    "tone": {
+      "score": 1.5,
+      "maximum": 5,
+      "status": "discussion_recommended",
+      "evidence": [
+        "Campaign tone is a meaningful Session Zero discussion point."
+      ],
+      "details": {
+        "toneA": "horror",
+        "toneB": "heroic"
+      }
+    },
+    "genre": {
+      "score": 0,
+      "maximum": 3,
+      "status": "insufficient_information",
+      "evidence": [
+        "Setting and aesthetic interests differ, but this is a low-weight dimension."
+      ],
+      "details": {
+        "shared": [],
+        "ratio": 0
+      }
+    }
+  },
+  "classification": "potential_match",
+  "strongAlignment": [
+    "A recurring availability overlap of approximately 4 hours was found.",
+    "Shared play format: online.",
+    "Shared session frequency: weekly, biweekly.",
+    "Compatible session duration: 3–4 hours.",
+    "Both applicants use the same timezone.",
+    "Both applicants use the standard content-safety mode.",
+    "Shared campaign-length preference: medium, long.",
+    "Attendance expectations are closely aligned.",
+    "Campaign start readiness is compatible.",
+    "One applicant's preferred system is acceptable to the other: dnd_5e."
+  ],
+  "manageableDifferences": [
+    "At least one applicant is open to learning with guidance.",
+    "At least one applicant has moderate scheduling flexibility.",
+    "Both applicants are comfortable with mixed-experience groups."
+  ],
+  "discussionPoints": [
+    "Voice-chat expectations align.",
+    "Video preferences differ but may be manageable.",
+    "Confirm gameplay expectations during Session Zero.",
+    "Campaign tone is a meaningful Session Zero discussion point.",
+    "Setting and aesthetic interests differ, but this is a low-weight dimension."
+  ],
+  "blockingConflicts": [],
+  "operatorRecommendation": {
+    "recommendedAction": "review_for_introduction",
+    "requiresHumanApproval": true,
+    "introductionReady": true
+  },
+  "provenance": {
+    "scoringModelVersion": "1.0",
+    "profileVersions": {
+      "demo-finn": 1,
+      "demo-ben": 1
+    },
+    "evaluatedAt": "2026-07-12T23:56:56.768Z"
+  }
+}

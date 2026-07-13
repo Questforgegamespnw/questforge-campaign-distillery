@@ -1,0 +1,41 @@
+{
+  "datasetId": "questforge-matchmaking-demo-v1",
+  "expectations": [
+    {
+      "members": [
+        "demo-aria",
+        "demo-ben"
+      ],
+      "classification": "strong_match"
+    },
+    {
+      "members": [
+        "demo-aria",
+        "demo-casey"
+      ],
+      "classification": "blocked_by_schedule"
+    },
+    {
+      "members": [
+        "demo-aria",
+        "demo-devon"
+      ],
+      "classification": "blocked_by_format"
+    },
+    {
+      "members": [
+        "demo-aria",
+        "demo-erin"
+      ],
+      "classification": "low_confidence"
+    },
+    {
+      "members": [
+        "demo-aria",
+        "demo-ben",
+        "demo-finn"
+      ],
+      "classificationNot": "strong_group"
+    }
+  ]
+}

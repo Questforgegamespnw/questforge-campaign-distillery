@@ -1,38 +1,47 @@
-# QuestForge Operator Console v0.1
+# QuestForge Operator Console v0.2
 
 Private local Electron cockpit for QuestForge Campaign Distillery.
 
-The console is intentionally thin: it runs the existing Distillery CLI scripts, reads the existing `submissions/` and `exports/submissions/` folder model, displays status and validation files, and provides prompt/response/PDF workflow buttons. It is not a second pipeline and should not duplicate the deterministic campaign logic.
+The console remains a thin operator layer. Campaign actions continue to call the existing Distillery workflow, while Matchmaking views call the root matchmaking modules through narrow Electron IPC handlers. The console does not duplicate campaign or matching logic.
 
-## v0.1 status
+## Application modes
 
-v0.1 is considered good enough for current private operator use.
+```text
+Campaign Operations
+Matchmaking
+```
 
-It has already proven useful by making the workflow visible enough to expose two real pipeline issues:
+### Campaign Operations
 
-- canonical schema drift against the newer enriched intake shape
-- Phase 1 to Phase 2 metadata loss caused by using narrow validator output as a handoff source
+Supports the existing two-phase production workflow:
 
-The second issue led to the dedicated enriched identity handoff step documented below.
+- staged submission creation;
+- deterministic processing;
+- Phase 1 prompt preparation and response completion;
+- enriched Identity Pitch handoff creation;
+- Identity Selection Record creation;
+- Phase 1 and Phase 2 PDF export;
+- status and validation review;
+- legacy submission migration support.
 
-## What v0.1 does
+### Matchmaking
 
-- Lists folders under `submissions/`
-- Displays `submission-status.json`
-- Shows Phase 1 and Phase 2 round-trip files
-- Opens/copies generated prompts
-- Writes pasted AI responses to the expected response bucket files
-- Runs existing scripts from buttons
-- Exports Phase 1 and Phase 2 PDFs through existing scripts
-- Opens generated folders/files
-- Creates staged source JSON from pasted structured Formspree text
-- Supports legacy submission folders long enough to reprocess them into canonical records
-- Flags invalid canonical intake outputs as re-intake candidates
-- Builds the enriched Phase 1 Identity Pitch handoff before identity selection
+Supports:
+
+- pool overview;
+- active, paused, and invalid profile review;
+- operator-only profile details;
+- pair evaluation review;
+- manual group building;
+- grouped blockers and Session Zero topics;
+- demo dataset loading and selective cleanup;
+- controlled introduction records;
+- operator approval;
+- participant-by-participant consent;
+- contact-reference release;
+- completion, decline, archive, and audit review.
 
 ## Required repo placement
-
-Place this folder at the root of the Distillery repo:
 
 ```text
 questforge-campaign-distillery/
@@ -41,49 +50,158 @@ questforge-campaign-distillery/
   submissions/
   exports/
   templates/
+  matchmaking/
+  misc/
+    matchmaking-demo/
   operator-console/
 ```
 
-The default project root is inferred as the parent folder of `operator-console/`.
+The default project root is the parent of `operator-console/`.
 
-## Root package compatibility
+## Install and run
 
-The current root project package is CommonJS and only depends on `ajv` and `puppeteer`, so this console is intentionally a standalone nested package for v0.1. Do not convert the repo to workspaces yet unless you want that as a separate refactor.
-
-The root Puppeteer dependency requires modern Node, so use Node `>=22.12.0` for the console as well.
-
-Optional root scripts you can add later:
-
-```json
-{
-  "scripts": {
-    "console": "npm --prefix operator-console run dev",
-    "console:install": "npm --prefix operator-console install"
-  }
-}
-```
-
-## Install
-
-From inside `operator-console/`:
-
-```bash
-npm install
-npm run dev
-```
-
-On Windows PowerShell, use `npm.cmd` if script execution policy blocks `npm.ps1`:
+From `operator-console/`:
 
 ```powershell
 npm.cmd install
 npm.cmd run dev
 ```
 
-This starts Vite and launches Electron. Use the Electron desktop window, not the Vite browser tab, because the browser tab does not have the `window.questforge` bridge.
+Use the Electron desktop window. The Vite browser tab does not have access to `window.questforge`.
 
-## Current workflow strategy
+Build validation:
 
-v0.1 calls existing scripts:
+```powershell
+npm.cmd run build
+```
+
+## Architecture
+
+```text
+operator-console/
+  electron/
+    main.js
+    preload.js
+    ipc/
+      matchmakingHandlers.js
+  src/
+    App.jsx
+    campaign/
+    matchmaking/
+    shared/
+    styles/
+```
+
+### Boundary rules
+
+- `src/` at repository root contains the production pipeline and matchmaking engine.
+- `operator-console/src/` contains Electron renderer code only.
+- `operator-console/electron/` owns the desktop process and IPC boundary.
+- `templates/*.css` styles generated campaign PDFs.
+- `operator-console/src/styles/` styles the console interface.
+- Runtime matchmaking records live under root `matchmaking/`.
+- Preserved demo fixtures live under `misc/matchmaking-demo/`.
+
+## Matchmaking storage
+
+```text
+matchmaking/
+  profiles/<player-id>/
+    compatibility-profile.json
+    profile-status.json
+  evaluations/
+    pairs/
+    groups/
+  introductions/
+  pool-index.json
+```
+
+The console resolves the root project and calls the shared modules directly.
+
+## Demo dataset
+
+Preserved fixtures:
+
+```text
+misc/matchmaking-demo/
+  dataset.json
+  profiles/
+  scenarios/
+  expected/
+```
+
+Each profile fixture is wrapped:
+
+```json
+{
+  "fixture": {
+    "isDemo": true,
+    "datasetId": "questforge-matchmaking-demo-v1"
+  },
+  "profile": {
+    "...": "validated compatibility profile"
+  }
+}
+```
+
+**Load Demo Dataset** validates and copies only the `profile` payload into runtime storage, rebuilds the pool, generates pair evaluations, and creates the weak-link group example.
+
+**Clear Demo Data** removes only records associated with player IDs in that preserved demo set. It does not wipe unrelated runtime matchmaking data.
+
+## Matchmaking interpretation
+
+The console presents three distinct judgments:
+
+- **Eligibility** — whether hard blockers permit consideration.
+- **Compatibility** — how well preferences align.
+- **Confidence** — how complete and current the underlying information is.
+
+A high compatibility score with low confidence should trigger reconfirmation, not immediate introduction.
+
+For groups, the console also surfaces:
+
+- weakest pair;
+- pair average;
+- score spread;
+- shared logistics;
+- group-level blockers;
+- pair-level blockers;
+- likely Session Zero topics.
+
+## Introduction workflow
+
+```text
+draft
+→ awaiting_operator_approval
+→ awaiting_participant_consent
+→ approved
+→ contact_released
+→ introduced
+→ archived
+```
+
+A decline moves the record to:
+
+```text
+declined
+→ archived
+```
+
+### Guardrails
+
+- Drafts contain sanitized previews only.
+- Operator approval is explicit.
+- Participant responses are tracked individually.
+- Current profile version and consent are rechecked before release.
+- Contact references remain hidden until all required approvals succeed.
+- Profiles become `matched` only after completion.
+- Every transition is recorded in audit history.
+
+The current system uses opaque `contactRef` values. A later contact-directory resolver can map those references to real contact details without changing the introduction lifecycle.
+
+## Campaign workflow note
+
+The console still uses the established root scripts:
 
 ```text
 scripts/workflows/runSubmission.js
@@ -97,252 +215,34 @@ scripts/phase2/completeCampaignConceptRoundTrip.js
 scripts/phase2/exportCampaignConceptPdf.js
 ```
 
-This is deliberate. The console is not a second pipeline.
+The console remains an operator surface, not a second campaign pipeline.
 
-Future versions can extract shared workflow actions so both CLI and Electron call the same engine directly.
+## Privacy doctrine
 
-## New Submission intake
+- Operator-private fields stay inside profile review.
+- Match summaries use sanitized explanations.
+- Contact references are not displayed in pair or group previews.
+- Introduction release requires current consent.
+- Demo data must remain clearly marked and separable.
+- Runtime applicant data should not be committed to public source control.
 
-The New Submission modal can parse simple labeled Formspree text:
+## Troubleshooting
 
-```text
-Name: Example Client
-Email: example@example.com
-Player Count: 4
-Tone: Heroic, mysterious
-Avoid: heavy horror
-```
+### Browser tab shows bridge warning
+Use the Electron desktop window rather than the Vite browser tab.
 
-It creates:
+### `node` or script action fails
+Launch the console from a terminal where `node --version` succeeds.
 
-```text
-operator-console/staging/<submission-slug>.input.json
-```
+### Matchmaking views are empty
+Load the demo dataset or create runtime compatibility profiles, then rebuild the pool index.
 
-Then use `Run Deterministic Processing` to call:
+### A match looks strong but cannot proceed
+Review confidence, missing fields, consent, profile version, and introduction readiness blockers.
 
-```bash
-node scripts/workflows/runSubmission.js operator-console/staging/<slug>.input.json --submission-slug <slug>
-```
+### A group average looks high but classification is cautious
+Review the weakest pair and score spread. Group classification intentionally prevents a weak relationship from being hidden by a strong average.
 
-The normal canonical records are then written by the existing workflow:
+## Current status
 
-```text
-submissions/<slug>/
-  00_RAW_SUBMISSION.json
-  01_NORMALIZED_SUBMISSION.json
-  02_PIPELINE_RESULT.json
-  submission-status.json
-```
-
-### Intake parser note
-
-The parser maps labeled Formspree fields into the current raw form JSON shape expected by the deterministic pipeline. It handles multi-select values, including options that contain commas, such as:
-
-```text
-Coastlines, Islands & Oceans
-Strange, Dreamlike, or Reality-Warped Places
-```
-
-Always review the staged JSON before running deterministic processing, especially when recreating older submissions.
-
-## Canonical records
-
-Generated canonical records should be treated as pipeline output, not hand-edited source files.
-
-Prefer fixing or recreating the source/staged input, then rerunning deterministic processing.
-
-Canonical output folder:
-
-```text
-submissions/<slug>/
-  00_RAW_SUBMISSION.json
-  01_NORMALIZED_SUBMISSION.json
-  02_PIPELINE_RESULT.json
-  submission-status.json
-```
-
-If a folder named `submissions/submission/` appears, it is probably a fallback-slug remnant from a run where the real slug was not passed. Check whether it contains unique artifacts before archiving or deleting it.
-
-## Phase 1: Identity Pitch workflow
-
-Current Phase 1 flow:
-
-```text
-Run Deterministic Processing
-→ Prepare Phase 1 Prompt
-→ Paste/Save Phase 1 AI Response
-→ Complete Identity Polish Round Trip
-→ Build Identity Pitch Handoff
-→ Create Identity Selection Record
-→ Export Phase 1 PDF as needed
-→ Prepare Phase 2 Prompt
-```
-
-### Phase 1 round-trip files
-
-```text
-exports/submissions/<slug>/phase-1/round-trip/
-  01_IDENTITY_POLISH_PROMPT.md
-  02_PASTE_CHATGPT_RESPONSE_HERE.json
-  03_VALIDATION_RESULT.json
-  04_VALIDATED_IDENTITY_PITCHES.json
-  05_ENRICHED_IDENTITY_PITCHES.json
-  05_VALIDATION_SUMMARY.txt
-  round-trip-status.json
-```
-
-Note: `05_ENRICHED_IDENTITY_PITCHES.json` and `05_VALIDATION_SUMMARY.txt` currently share the `05_` prefix. This is acceptable for v0.1 but should be cleaned up in a future naming pass if it becomes confusing.
-
-## Enriched Identity Pitch handoff
-
-`04_VALIDATED_IDENTITY_PITCHES.json` is intentionally narrow. It contains only the validator-approved GPT-polished Identity Pitch prose:
-
-```text
-title
-pitch
-about
-playersDo
-hook
-```
-
-That file should stay narrow. It is the validation artifact, not the Phase 2 handoff source.
-
-Phase 2 needs richer deterministic context, including source frames, constraints, genre, tone, environment, safety profile, and campaign handoff guidance. To preserve that, the console now runs:
-
-```bash
-node scripts/phase1/buildIdentityPitchHandoff.js "<phase1-round-trip>/04_VALIDATED_IDENTITY_PITCHES.json" --submission-slug <slug>
-```
-
-This writes:
-
-```text
-exports/submissions/<slug>/phase-1/round-trip/05_ENRICHED_IDENTITY_PITCHES.json
-```
-
-`Create Identity Selection Record` must use the enriched handoff file:
-
-```text
-05_ENRICHED_IDENTITY_PITCHES.json
-```
-
-not the narrow validator file:
-
-```text
-04_VALIDATED_IDENTITY_PITCHES.json
-```
-
-This preserves metadata such as:
-
-```json
-"environment": [
-  "Coastal / Oceanic",
-  "Underground / Caverns"
-]
-```
-
-## Phase 2: Campaign Concept workflow
-
-Phase 2 begins after an Identity Selection Record exists.
-
-The Phase 2 prepare step uses the selected identity direction and enriched identity context to create:
-
-```text
-exports/submissions/<slug>/phase-2/<direction>/round-trip/
-  00_PHASE2_HANDOFF.json
-  01_CAMPAIGN_CONCEPT_PROMPT.md
-  02_PASTE_CHATGPT_RESPONSE_HERE.json
-  03_VALIDATION_RESULT.json
-  04_VALIDATED_CAMPAIGN_CONCEPTS.json
-  05_VALIDATION_SUMMARY.txt
-  round-trip-status.json
-```
-
-Client delivery exports go to:
-
-```text
-exports/submissions/<slug>/phase-2/<direction>/client-delivery/
-```
-
-## Legacy submission folders
-
-v0.1 can read both current canonical submission records and older submission folders that contain files such as:
-
-```text
-submissions/submission-03-johannab253/
-  submission-03-johannab253.json
-  submission-03-johannab253.result.json
-```
-
-If a folder has legacy raw/result files but no `submission-status.json`, the console marks it as `legacy_files_found` and uses the legacy raw/result files as fallbacks.
-
-Click **Run Deterministic Processing** once for that submission to create the newer canonical record set:
-
-```text
-submissions/<slug>/
-  00_RAW_SUBMISSION.json
-  01_NORMALIZED_SUBMISSION.json
-  02_PIPELINE_RESULT.json
-  submission-status.json
-```
-
-The existing legacy JSON files are not deleted. The console simply starts preferring the canonical files once they exist.
-
-## Re-intake note
-
-If a legacy or GPT-shaped submission produces `Invalid canonical intake`, the console flags it as a re-intake candidate. Use **Recreate From Formspree Paste** and paste the original Formspree response.
-
-Common causes:
-
-- the old source file was GPT-shaped instead of raw Formspree-shaped
-- the canonical schema was behind the newer intake shape
-- a multi-select value was split incorrectly before normalization
-- the run used a fallback slug such as `submission` instead of the intended client slug
-
-## Notes
-
-- This scaffold assumes the repo scripts use the folder names and file names established in v0.9.1+.
-- The Phase 2 handoff filename is `00_PHASE2_HANDOFF.json`.
-- Response buckets are edited directly in the UI but validation remains owned by the existing scripts.
-- The UI intentionally displays raw validation summaries rather than trying to interpret every possible validation error.
-- If a script button fails with `node not found`, launch the console from a terminal where `node --version` works.
-
-## Patch history
-
-### v0.1.3
-
-- Fixed the preload import so the renderer receives `window.questforge` correctly.
-- Added a visible bridge warning if the Vite browser tab is opened directly instead of the Electron desktop window.
-
-### v0.1.4
-
-- Fixed script execution so Electron calls the system `node` executable rather than the Electron binary.
-- Improved command output reporting with stdout, stderr, exit code, duration, and error state.
-
-### v0.1.5
-
-- Added detection for `Invalid canonical intake` pipeline results.
-- Added **Recreate From Formspree Paste** for legacy/GPT-shaped records.
-
-### v0.1.6
-
-- Improved multi-select parsing for pasted Formspree responses.
-- Added more aliases for group size / player count fields.
-
-### v0.1.7
-
-- Fixed multi-select options that contain commas so values like `Coastlines, Islands & Oceans` remain intact.
-
-### v0.1.8
-
-- Added the **Build Identity Pitch Handoff** Phase 1 step.
-- Added detection/viewing for `05_ENRICHED_IDENTITY_PITCHES.json`.
-- Updated Identity Selection Record creation to use enriched identity pitches instead of narrow validator output.
-- Confirmed the console is useful as a private production/debugging cockpit for the current workflow.
-
-## Future cleanup candidates
-
-- Rename Phase 1 artifacts so the enriched handoff and validation summary do not both use `05_`.
-- Add a warning when a submission slug resolves to the generic fallback `submission`.
-- Add stronger staged-input review warnings for blank or suspicious fields.
-- Eventually move repeated CLI logic into shared workflow modules and let both CLI and Electron call the same engine directly.
+v0.2 is functional for private local operator use across both campaign production and matchmaking review. The remaining work is ordinary hardening and polish rather than missing core workflow.

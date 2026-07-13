@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-12T23:56:55.460Z",
+  "profiles": [
+    {
+      "playerId": "demo-aria",
+      "displayName": "Aria Vale",
+      "status": "active",
+      "profileVersion": 1,
+      "updatedAt": "2026-07-12T20:00:00.000Z",
+      "lastConfirmedAt": "2026-07-12T20:00:00.000Z",
+      "completeness": 100,
+      "playFormats": [
+        "online"
+      ],
+      "timezone": "America/Los_Angeles"
+    },
+    {
+      "playerId": "demo-ben",
+      "displayName": "Ben Calder",
+      "status": "active",
+      "profileVersion": 1,
+      "updatedAt": "2026-07-12T20:00:00.000Z",
+      "lastConfirmedAt": "2026-07-12T20:00:00.000Z",
+      "completeness": 100,
+      "playFormats": [
+        "online"
+      ],
+      "timezone": "America/Los_Angeles"
+    },
+    {
+      "playerId": "demo-casey",
+      "displayName": "Casey Rowan",
+      "status": "active",
+      "profileVersion": 1,
+      "updatedAt": "2026-07-12T20:00:00.000Z",
+      "lastConfirmedAt": "2026-07-12T20:00:00.000Z",
+      "completeness": 100,
+      "playFormats": [
+        "online"
+      ],
+      "timezone": "America/Los_Angeles"
+    },
+    {
+      "playerId": "demo-devon",
+      "displayName": "Devon Pike",
+      "status": "active",
+      "profileVersion": 1,
+      "updatedAt": "2026-07-12T20:00:00.000Z",
+      "lastConfirmedAt": "2026-07-12T20:00:00.000Z",
+      "completeness": 100,
+      "playFormats": [
+        "in_person"
+      ],
+      "timezone": "America/Los_Angeles"
+    },
+    {
+      "playerId": "demo-erin",
+      "displayName": "Erin Moss",
+      "status": "active",
+      "profileVersion": 1,
+      "updatedAt": "2026-07-12T20:00:00.000Z",
+      "lastConfirmedAt": "2025-01-01T00:00:00.000Z",
+      "completeness": 48,
+      "playFormats": [
+        "online"
+      ],
+      "timezone": "America/Los_Angeles"
+    },
+    {
+      "playerId": "demo-finn",
+      "displayName": "Finn Mercer",
+      "status": "active",
+      "profileVersion": 1,
+      "updatedAt": "2026-07-12T20:00:00.000Z",
+      "lastConfirmedAt": "2026-07-12T20:00:00.000Z",
+      "completeness": 100,
+      "playFormats": [
+        "online"
+      ],
+      "timezone": "America/Los_Angeles"
+    }
+  ],
+  "invalidProfiles": []
+}

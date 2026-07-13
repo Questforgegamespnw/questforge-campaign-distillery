@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuestForge Introduction Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "introductionId",
+    "status",
+    "sourceMatch",
+    "members",
+    "profileVersions",
+    "readiness",
+    "preview",
+    "operatorApproval",
+    "participantResponses",
+    "consentSnapshots",
+    "releasedContacts",
+    "contactReleasedAt",
+    "completedAt",
+    "declinedAt",
+    "archivedAt",
+    "createdAt",
+    "updatedAt",
+    "history"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "introductionId": { "type": "string", "minLength": 1 },
+    "status": {
+      "enum": [
+        "draft",
+        "awaiting_operator_approval",
+        "awaiting_participant_consent",
+        "approved",
+        "contact_released",
+        "introduced",
+        "declined",
+        "archived"
+      ]
+    },
+    "sourceMatch": { "$ref": "#/$defs/sourceMatch" },
+    "members": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "profileVersions": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 1 }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ready", "errors", "warnings"],
+      "properties": {
+        "ready": { "type": "boolean" },
+        "errors": { "$ref": "#/$defs/stringArray" },
+        "warnings": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "preview": { "$ref": "#/$defs/preview" },
+    "operatorApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approved", "approvedBy", "approvedAt", "note"],
+      "properties": {
+        "approved": { "type": "boolean" },
+        "approvedBy": { "type": "string" },
+        "approvedAt": {
+          "anyOf": [
+            { "type": "string", "format": "date-time" },
+            { "const": "" }
+          ]
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "participantResponses": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/participantResponse" }
+    },
+    "consentSnapshots": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/consentSnapshot" }
+    },
+    "releasedContacts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["displayName", "contact"],
+        "properties": {
+          "displayName": { "type": "string" },
+          "contact": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "contactReleasedAt": { "$ref": "#/$defs/optionalDateTime" },
+    "completedAt": { "$ref": "#/$defs/optionalDateTime" },
+    "declinedAt": { "$ref": "#/$defs/optionalDateTime" },
+    "archivedAt": { "$ref": "#/$defs/optionalDateTime" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "history": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/historyEntry" }
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "optionalDateTime": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "const": "" }
+      ]
+    },
+    "sourceMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "matchId",
+        "matchType",
+        "classification",
+        "score",
+        "confidence",
+        "scoringModelVersion"
+      ],
+      "properties": {
+        "matchId": { "type": "string" },
+        "matchType": { "enum": ["pair", "group"] },
+        "classification": { "type": "string" },
+        "score": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "confidence": { "enum": ["high", "moderate", "low", "insufficient"] },
+        "scoringModelVersion": { "type": "string" }
+      }
+    },
+    "participantResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "respondedAt", "note"],
+      "properties": {
+        "status": { "enum": ["pending", "approved", "declined"] },
+        "respondedAt": { "$ref": "#/$defs/optionalDateTime" },
+        "note": { "type": "string" }
+      }
+    },
+    "consentSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "matchmaking",
+        "profileRetention",
+        "operatorReview",
+        "contactForIntroduction",
+        "shareableSummary",
+        "profileVersion",
+        "capturedAt"
+      ],
+      "properties": {
+        "matchmaking": { "type": "boolean" },
+        "profileRetention": { "type": "boolean" },
+        "operatorReview": { "type": "boolean" },
+        "contactForIntroduction": { "type": "boolean" },
+        "shareableSummary": { "type": "boolean" },
+        "profileVersion": { "type": "integer", "minimum": 1 },
+        "capturedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "previewMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "playerId",
+        "displayName",
+        "campaignInterests",
+        "availabilitySummary",
+        "systemSummary",
+        "tableStyleSummary",
+        "commitmentSummary",
+        "sessionZeroTopics"
+      ],
+      "properties": {
+        "playerId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "campaignInterests": { "$ref": "#/$defs/stringArray" },
+        "availabilitySummary": { "type": "string" },
+        "systemSummary": { "type": "string" },
+        "tableStyleSummary": { "type": "string" },
+        "commitmentSummary": { "type": "string" },
+        "sessionZeroTopics": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "memberCount",
+        "members",
+        "matchSummary",
+        "privacyNotice"
+      ],
+      "properties": {
+        "title": { "type": "string" },
+        "memberCount": { "type": "integer", "minimum": 2 },
+        "members": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/previewMember" }
+        },
+        "matchSummary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "compatibility",
+            "confidence",
+            "strongAlignment",
+            "manageableDifferences",
+            "discussionPoints"
+          ],
+          "properties": {
+            "classification": { "type": "string" },
+            "compatibility": { "type": ["number", "null"] },
+            "confidence": { "type": "string" },
+            "strongAlignment": { "$ref": "#/$defs/stringArray" },
+            "manageableDifferences": { "$ref": "#/$defs/stringArray" },
+            "discussionPoints": { "$ref": "#/$defs/stringArray" }
+          }
+        },
+        "privacyNotice": { "type": "string" }
+      }
+    },
+    "historyEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event", "actor", "note", "timestamp"],
+      "properties": {
+        "event": { "type": "string" },
+        "actor": { "type": "string" },
+        "note": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

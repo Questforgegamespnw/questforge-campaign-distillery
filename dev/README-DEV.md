@@ -84,6 +84,13 @@ v0.10.1 hardens the production handoff between those phases and adds a post-vali
 - shared submission lifecycle status synchronization;
 - categorized scripts, tests, shared utilities, and exporters;
 - static developer wiki generation.
+- opt-in matchmaking intake and addendum support;
+- compatibility-profile derivation and lifecycle;
+- pair eligibility, scoring, confidence, and explanations;
+- active-pool persistence, ranking, and stale-result detection;
+- group compatibility analysis with weakest-pair protection;
+- multi-mode Electron Operator Console;
+- controlled introductions with approval and audit history.
 
 ### Not Yet Implemented
 
@@ -91,7 +98,7 @@ v0.10.1 hardens the production handoff between those phases and adds a post-vali
 - automatic email delivery;
 - automatic Formspree execution;
 - final selected-concept refinement stage;
-- individual-player matchmaking and compatibility pools.
+- dedicated contact-directory resolution for released `contactRef` values.
 
 ---
 

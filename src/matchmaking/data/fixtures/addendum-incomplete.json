@@ -1,0 +1,14 @@
+{
+  "_subject": "QuestForge Matchmaking Addendum",
+  "matchmaking_source": "addendum_form",
+  "name": "Incomplete Applicant",
+  "email": "incomplete@example.com",
+  "matchmaking_submission_reference": "incomplete-applicant",
+  "matchmaking_status": "opted_in",
+  "matchmaking_play_format": ["online"],
+  "matchmaking_timezone": "America/New_York",
+  "matchmaking_availability_day": ["friday", "", ""],
+  "matchmaking_availability_start": ["19:00", "", ""],
+  "matchmaking_availability_end": ["", "", ""],
+  "matchmaking_consent_participation": "yes"
+}

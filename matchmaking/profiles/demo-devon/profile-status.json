@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "playerId": "demo-devon",
+  "status": "active",
+  "statusReason": "Demo fixture is active for matchmaking analysis.",
+  "profileVersion": 1,
+  "updatedAt": "2026-07-12T20:00:00.000Z",
+  "lastConfirmedAt": "2026-07-12T20:00:00.000Z"
+}

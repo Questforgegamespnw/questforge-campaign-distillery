@@ -44,38 +44,41 @@ GPT improvises. The Distillery creates a controlled process that can be reviewed
 
 ---
 
-## Current Runtime: v0.11.0
+## Current Runtime: v0.12.0
 
-Decomposed Genre Context Pipeline
+Matchmaking and Controlled Introduction Pipeline
 
 ### Added
-- Added end-to-end support for decomposed genre context:
-  - `eraFrames`
-  - `aestheticSkins`
-  - `worldConditions`
-- Added `genreContext` / `contextMetadata` handoff support so decomposed genre signals survive from intake through Phase 2.
-- Added enum and alias support for expanded era, aesthetic, and world-condition form layers.
-- Added Phase 2 AI prompt support for genre context as implementation guidance.
-- Added Phase 2 exporter rendering for implementation context.
+- Added an optional matchmaking branch for individuals and partial groups seeking a table.
+- Added compatibility-profile derivation with consent, lifecycle, completeness, provenance, and privacy boundaries.
+- Added pairwise eligibility gates and weighted compatibility scoring.
+- Added separate compatibility and confidence ratings.
+- Added active-pool storage, comparison, ranking, persistence, and stale-result detection.
+- Added group construction with weakest-pair protection, whole-group schedule checks, score spread, cohesion, and group-size validation.
+- Added a dedicated Matchmaking mode to the Electron Operator Console.
+- Added a wrapped demo dataset under `misc/matchmaking-demo/`.
+- Added controlled introduction records with operator approval, participant consent, contact-release gating, completion, decline, archive, and audit history.
 
 ### Changed
-- Preserved `genreSkin` as the Phase 1 flavor bridge while allowing it to percolate into the newer era/aesthetic/world-condition model.
-- Clarified the pipeline boundary:
-  - Phase 1 remains core/system-first and identity-driven.
-  - Genre remains a light client-facing flavor layer.
-  - Era, aesthetic, and world condition are preserved primarily for audit, handoff, compatibility, and Phase 2 implementation.
-- Updated Phase 2 campaign concept input/output contracts to carry `genreContext`.
-- Updated identity handoff flow so enriched identity pitches retain the restored genre context needed for Phase 2.
-- Updated selectors, resolvers, validators, schemas, builders, exporters, config, AI helpers, and test fixtures for the new context model.
+- The canonical intake may now carry an optional `matchmaking` branch without changing the normal campaign-development path.
+- The Operator Console is now a multi-mode application:
+  - Campaign Operations;
+  - Matchmaking.
+- Matchmaking remains a separate domain branch from Identity Pitch and Campaign Concept generation.
+- Runtime matchmaking records are stored separately from source code and preserved demo fixtures.
 
-### Fixed
-- Prevented richer genre metadata from being lost after AI identity pitch validation.
-- Prevented Phase 2 concept generation from losing decomposed genre context during handoff.
-- Updated stale test expectations around expanded genre-layer compatibility and Phase 2 fixture validation.
+### Safety and Privacy
+- Matchmaking consent is explicit and revocable.
+- Operator-private fields remain separate from sanitized shareable summaries.
+- Compatibility score and confidence are treated as separate signals.
+- Hard blockers are evaluated before numerical scoring.
+- Contact information is not released until operator approval, current consent checks, and participant approval all succeed.
+- Human approval remains required for every introduction.
 
 ### Notes
-- `genreSkin` is intentionally retained for now as a legacy-compatible Phase 1 flavor layer.
-- The new decomposed genre layers should not drive Phase 1 identity selection. They are context signals for later implementation, especially Phase 2 campaign concept development.
+- The matchmaking engine recommends and explains; it does not autonomously place people into groups.
+- Low-confidence matches are held for reconfirmation even when compatibility is otherwise strong.
+- Group recommendations account for the weakest pair and shared logistics rather than relying on a simple average.
 
 ---
 
@@ -163,6 +166,26 @@ node scripts/phase2/completeCampaignConceptRoundTrip.js "exports/submissions/<su
 node scripts/phase2/exportCampaignConceptPdf.js "exports/submissions/<submission-slug>/phase-2/primary/round-trip/04_VALIDATED_CAMPAIGN_CONCEPTS.json" --client "Client Name"
 ```
 
+### 10. Run matchmaking smoke tests
+
+```powershell
+node scripts/tests/matchmaking/compatibility-profile.smoke.test.js
+node scripts/tests/matchmaking/pair-compatibility.smoke.test.js
+node scripts/tests/matchmaking/matchmaking-pool.smoke.test.js
+node scripts/tests/matchmaking/group-compatibility.smoke.test.js
+node scripts/tests/matchmaking/introduction-workflow.smoke.test.js
+```
+
+### 11. Start the Operator Console
+
+```powershell
+cd operator-console
+npm.cmd install
+npm.cmd run dev
+```
+
+Use the Electron window, then switch between **Campaign Operations** and **Matchmaking**.
+
 ---
 
 ## Pipeline Overview
@@ -185,6 +208,24 @@ Raw Form Submission
 ```
 
 The enriched Identity Pitch handoff preserves deterministic metadata after validation. The **Identity Selection Record** is the authoritative client-selection bridge between Phase 1 and Phase 2.
+
+Matchmaking is a parallel branch from canonical intake:
+
+```text
+Canonical Intake
+├─ Campaign Development
+│  ├─ Phase 1 Identity Pitches
+│  └─ Phase 2 Campaign Concepts
+└─ Matchmaking
+   ├─ Compatibility Profile
+   ├─ Pair Eligibility and Scoring
+   ├─ Active Pool Comparison
+   ├─ Group Analysis
+   ├─ Operator Review
+   └─ Controlled Introduction
+```
+
+The campaign translator may inform matchmaking preferences, but it is not the matcher and does not determine placement.
 
 ---
 
@@ -218,6 +259,15 @@ The enriched Identity Pitch handoff preserves deterministic metadata after valid
     /phase1
     /phase2
   /intake
+  /matchmaking
+    /data
+    /groups
+    /handoffs
+    /pairs
+    /pool
+    /profiles
+    /scorers
+    /storage
   /parsers
   /renderers
   /resolvers
@@ -229,6 +279,15 @@ The enriched Identity Pitch handoff preserves deterministic metadata after valid
 /templates
   identity-pitch-pdf.css
   campaign-concept-pdf.css
+
+/operator-console
+  private Electron cockpit for campaign operations and matchmaking review
+
+/misc/matchmaking-demo
+  preserved wrapped demo fixtures and expected scenarios
+
+/matchmaking
+  generated runtime matchmaking profiles, evaluations, indexes, and introductions
 
 /dev
   developer documentation and generated wiki source Markdown
@@ -263,6 +322,36 @@ exports/submissions/<submission-slug>/
       round-trip/
       client-delivery/
 ```
+
+
+### Matchmaking runtime storage
+
+```text
+matchmaking/
+  profiles/<player-id>/
+    compatibility-profile.json
+    profile-status.json
+  evaluations/
+    pairs/
+    groups/
+  introductions/
+  pool-index.json
+```
+
+These are operational records and may contain private applicant information. They are not source code or public fixtures.
+
+Preserved demo fixtures live separately:
+
+```text
+misc/matchmaking-demo/
+  dataset.json
+  profiles/
+  scenarios/
+  expected/
+```
+
+The demo files use wrappers. Only the validated `profile` payload is copied into runtime storage.
+
 
 ---
 
@@ -305,20 +394,18 @@ It tracks:
 - Final selected-concept refinement/finalization is not yet implemented.
 - Email templates exist, but email delivery is not automated.
 - Formspree or other form-provider execution is not connected.
-- Matchmaking and compatibility scoring for individual players is deferred to v0.11.
-- Real client records may still require migration from legacy scratch folders.
+- Real contact resolution still uses opaque `contactRef` values rather than a dedicated contact directory.
+- Matchmaking automation intentionally stops at operator-controlled review and introduction.
 
 ---
 
 ## Next Focus
 
-1. Tag and stabilize v0.10.1.
-2. Plan v0.11 around intake scaling and individual-player matchmaking.
-3. Build the system-recommendation stage.
+1. Stabilize and tag v0.12.0.
+2. Run the full project and Electron build validation.
+3. Add a structured system-recommendation stage.
 4. Add selected-concept finalization.
-5. Continue expanding sanitized fixtures and operator documentation.
-
-For the full roadmap, see the GitHub issue tracker.
+5. Continue expanding sanitized fixtures and operational documentation.
 
 ---
 

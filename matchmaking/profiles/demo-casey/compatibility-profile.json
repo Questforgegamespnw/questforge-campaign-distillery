@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0",
+  "playerId": "demo-casey",
+  "submissionId": "demo-submission-demo-casey",
+  "status": "active",
+  "statusReason": "Demo fixture is active for matchmaking analysis.",
+  "consent": {
+    "matchmaking": true,
+    "profileRetention": true,
+    "operatorReview": true,
+    "contactForIntroduction": true,
+    "shareableSummary": true
+  },
+  "identity": {
+    "displayName": "Casey Rowan",
+    "contactRef": "demo-contact-demo-casey"
+  },
+  "logistics": {
+    "timezone": "America/Los_Angeles",
+    "playFormats": [
+      "online"
+    ],
+    "availability": [
+      {
+        "day": "friday",
+        "start": "18:00",
+        "end": "22:00"
+      }
+    ],
+    "frequencyPreferences": [
+      "weekly",
+      "biweekly"
+    ],
+    "sessionDuration": {
+      "minimumHours": 3,
+      "maximumHours": 4
+    },
+    "scheduleFlexibility": "moderate"
+  },
+  "commitment": {
+    "campaignLengths": [
+      "medium",
+      "long"
+    ],
+    "attendanceExpectation": "consistent",
+    "startReadiness": "within_one_month"
+  },
+  "systems": {
+    "preferred": [
+      "dnd_5e"
+    ],
+    "acceptable": [
+      "pathfinder_2e",
+      "draw_steel"
+    ],
+    "excluded": [],
+    "openness": "open_with_guidance"
+  },
+  "campaignPreferences": {
+    "experiences": [
+      "character_driven_drama",
+      "tactical_challenges"
+    ],
+    "setups": [
+      "expedition_team"
+    ],
+    "tone": "heroic",
+    "choiceWeight": "strong_choices",
+    "genres": [
+      "fantasy"
+    ],
+    "eras": [
+      "medieval"
+    ],
+    "aesthetics": [
+      "heroic_fantasy"
+    ],
+    "worldConditions": [
+      "frontier"
+    ],
+    "environments": [
+      "ancient_ruins"
+    ],
+    "gameplayInterests": [
+      "tactical_combat",
+      "exploration"
+    ],
+    "playerFantasy": [
+      "becoming_heroes"
+    ],
+    "mustHaves": "",
+    "avoid": "",
+    "systemPreference": "D&D 5e"
+  },
+  "tablePreferences": {
+    "roleplayIntensity": "high",
+    "tacticalIntensity": "moderate",
+    "rulesApproach": "balanced",
+    "characterCollaboration": "preferred",
+    "communicationStyles": [
+      "direct",
+      "collaborative"
+    ],
+    "voiceRequired": true,
+    "videoPreference": "optional"
+  },
+  "experience": {
+    "overallLevel": "intermediate",
+    "systemsPlayed": [
+      "dnd_5e"
+    ],
+    "gmExperience": false,
+    "mixedExperienceComfort": true
+  },
+  "safety": {
+    "contentSafetyMode": "standard",
+    "boundaries": [],
+    "hardExclusions": [],
+    "operatorPrivateNotes": [],
+    "shareableGuidance": []
+  },
+  "groupPreferences": {
+    "minimumPlayers": 3,
+    "preferredPlayers": 4,
+    "maximumPlayers": 5
+  },
+  "requirements": {
+    "mustHaves": [],
+    "hardConstraints": {
+      "schedule": [],
+      "format": [],
+      "content": [],
+      "system": [],
+      "commitment": [],
+      "tableCulture": []
+    },
+    "freeTextNotes": []
+  },
+  "shareableSummary": {
+    "campaignInterests": [
+      "heroic fantasy",
+      "exploration",
+      "character drama"
+    ],
+    "availabilitySummary": "Friday evenings, Pacific time.",
+    "systemSummary": "Prefers D&D 5e and is open to similar fantasy systems.",
+    "tableStyleSummary": "Collaborative, character-focused play with moderate tactical depth.",
+    "commitmentSummary": "Consistent attendance for a medium or long campaign.",
+    "sessionZeroTopics": []
+  },
+  "completeness": {
+    "percentage": 100,
+    "missingRequiredFields": [],
+    "warnings": [],
+    "contradictions": [],
+    "explicitFieldCount": 12,
+    "inferredFieldCount": 0
+  },
+  "provenance": {
+    "profileVersion": 1,
+    "sourceCanonicalSchemaVersion": "1.0",
+    "sourceCanonicalHash": "92d69802762927d4d136289cc1f8c5d6ed2f20cab4c06449ae64c74dea78db5b",
+    "sourceType": "main_intake",
+    "createdAt": "2026-07-12T20:00:00.000Z",
+    "updatedAt": "2026-07-12T20:00:00.000Z",
+    "lastConfirmedAt": "2026-07-12T20:00:00.000Z"
+  },
+  "lifecycle": {
+    "statusChangedAt": "2026-07-12T20:00:00.000Z",
+    "matchedReference": "",
+    "history": [
+      {
+        "status": "active",
+        "reason": "Demo fixture activated.",
+        "timestamp": "2026-07-12T20:00:00.000Z"
+      }
+    ]
+  }
+}

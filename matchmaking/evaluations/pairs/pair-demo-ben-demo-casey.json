@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0",
+  "matchId": "pair-demo-ben-demo-casey",
+  "matchType": "pair",
+  "members": [
+    "demo-ben",
+    "demo-casey"
+  ],
+  "eligibility": {
+    "eligible": false,
+    "status": "blocked_by_schedule",
+    "blockingConflicts": [
+      {
+        "dimension": "schedule",
+        "classification": "blocked_by_schedule",
+        "reason": "No recurring availability overlap was found.",
+        "evidence": []
+      }
+    ]
+  },
+  "score": {
+    "overall": null,
+    "baseScore": null,
+    "adaptabilityAdjustment": {
+      "score": 0,
+      "maximum": 5,
+      "evidence": []
+    },
+    "confidence": "high",
+    "confidenceNumeric": 90,
+    "confidenceReasons": [
+      "Both profiles were confirmed within the last 30 days.",
+      "Average profile completeness is 100%."
+    ]
+  },
+  "dimensionScores": {},
+  "classification": "blocked_by_schedule",
+  "strongAlignment": [],
+  "manageableDifferences": [],
+  "discussionPoints": [],
+  "blockingConflicts": [
+    {
+      "dimension": "schedule",
+      "classification": "blocked_by_schedule",
+      "reason": "No recurring availability overlap was found.",
+      "evidence": []
+    }
+  ],
+  "operatorRecommendation": {
+    "recommendedAction": "do_not_recommend",
+    "requiresHumanApproval": true,
+    "introductionReady": false
+  },
+  "provenance": {
+    "scoringModelVersion": "1.0",
+    "profileVersions": {
+      "demo-casey": 1,
+      "demo-ben": 1
+    },
+    "evaluatedAt": "2026-07-12T23:56:56.112Z"
+  }
+}

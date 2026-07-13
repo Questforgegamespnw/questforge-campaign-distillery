@@ -42,6 +42,9 @@
     },
     "diagnostics": {
       "$ref": "#/$defs/diagnostics"
+    },
+    "matchmaking": {
+      "$ref": "#/$defs/matchmaking"
     }
   },
   "$defs": {
@@ -370,6 +373,333 @@
         },
         "contradictionNotes": {
           "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "nullableBoolean": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "nullableNumber": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "availabilityWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "day",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "day": {
+          "type": "string",
+          "enum": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+            ""
+          ]
+        },
+        "start": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        }
+      }
+    },
+    "matchmaking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "participation",
+        "consent",
+        "logistics",
+        "commitment",
+        "systems",
+        "experience",
+        "tablePreferences",
+        "groupPreferences",
+        "hardConstraints"
+      ],
+      "properties": {
+        "participation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requested",
+            "status",
+            "source",
+            "submissionReference"
+          ],
+          "properties": {
+            "requested": {
+              "type": "boolean"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "not_eligible",
+                "not_asked",
+                "declined",
+                "opted_in",
+                "conditional",
+                "withdrawn"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "submissionReference": {
+              "type": "string"
+            }
+          }
+        },
+        "consent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "matchmaking",
+            "profileRetention",
+            "operatorReview",
+            "contactForIntroduction",
+            "shareableSummary"
+          ],
+          "properties": {
+            "matchmaking": {
+              "$ref": "#/$defs/nullableBoolean"
+            },
+            "profileRetention": {
+              "$ref": "#/$defs/nullableBoolean"
+            },
+            "operatorReview": {
+              "$ref": "#/$defs/nullableBoolean"
+            },
+            "contactForIntroduction": {
+              "$ref": "#/$defs/nullableBoolean"
+            },
+            "shareableSummary": {
+              "$ref": "#/$defs/nullableBoolean"
+            }
+          }
+        },
+        "logistics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "timezone",
+            "playFormats",
+            "availability",
+            "frequencyPreferences",
+            "sessionDuration",
+            "scheduleFlexibility"
+          ],
+          "properties": {
+            "timezone": {
+              "type": "string"
+            },
+            "playFormats": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "availability": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/availabilityWindow"
+              }
+            },
+            "frequencyPreferences": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "sessionDuration": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "minimumHours",
+                "maximumHours"
+              ],
+              "properties": {
+                "minimumHours": {
+                  "$ref": "#/$defs/nullableNumber"
+                },
+                "maximumHours": {
+                  "$ref": "#/$defs/nullableNumber"
+                }
+              }
+            },
+            "scheduleFlexibility": {
+              "type": "string"
+            }
+          }
+        },
+        "commitment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "campaignLengths",
+            "attendanceExpectation",
+            "startReadiness"
+          ],
+          "properties": {
+            "campaignLengths": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "attendanceExpectation": {
+              "type": "string"
+            },
+            "startReadiness": {
+              "type": "string"
+            }
+          }
+        },
+        "systems": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "preferred",
+            "acceptable",
+            "excluded",
+            "openness"
+          ],
+          "properties": {
+            "preferred": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "acceptable": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "excluded": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "openness": {
+              "type": "string"
+            }
+          }
+        },
+        "experience": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "overallLevel",
+            "systemsPlayed",
+            "gmExperience",
+            "mixedExperienceComfort"
+          ],
+          "properties": {
+            "overallLevel": {
+              "type": "string"
+            },
+            "systemsPlayed": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "gmExperience": {
+              "$ref": "#/$defs/nullableBoolean"
+            },
+            "mixedExperienceComfort": {
+              "$ref": "#/$defs/nullableBoolean"
+            }
+          }
+        },
+        "tablePreferences": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "roleplayIntensity",
+            "tacticalIntensity",
+            "rulesApproach",
+            "characterCollaboration",
+            "communicationStyles",
+            "voiceRequired",
+            "videoPreference"
+          ],
+          "properties": {
+            "roleplayIntensity": {
+              "type": "string"
+            },
+            "tacticalIntensity": {
+              "type": "string"
+            },
+            "rulesApproach": {
+              "type": "string"
+            },
+            "characterCollaboration": {
+              "type": "string"
+            },
+            "communicationStyles": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "voiceRequired": {
+              "$ref": "#/$defs/nullableBoolean"
+            },
+            "videoPreference": {
+              "type": "string"
+            }
+          }
+        },
+        "groupPreferences": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "minimumPlayers",
+            "preferredPlayers",
+            "maximumPlayers"
+          ],
+          "properties": {
+            "minimumPlayers": {
+              "$ref": "#/$defs/nullableNumber"
+            },
+            "preferredPlayers": {
+              "$ref": "#/$defs/nullableNumber"
+            },
+            "maximumPlayers": {
+              "$ref": "#/$defs/nullableNumber"
+            }
+          }
+        },
+        "hardConstraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schedule",
+            "format",
+            "content",
+            "system",
+            "commitment",
+            "tableCulture",
+            "freeText"
+          ],
+          "properties": {
+            "schedule": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "format": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "content": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "system": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "commitment": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "tableCulture": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "freeText": {
+              "type": "string"
+            }
+          }
         }
       }
     }

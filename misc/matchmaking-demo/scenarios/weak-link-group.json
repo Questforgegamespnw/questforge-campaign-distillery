@@ -1,0 +1,9 @@
+{
+  "scenarioId": "weak-link-group",
+  "members": [
+    "demo-aria",
+    "demo-ben",
+    "demo-finn"
+  ],
+  "purpose": "Should remain eligible but avoid a strong-group result because Finn is the weak link."
+}

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0",
+  "matchId": "pair-demo-casey-demo-erin",
+  "matchType": "pair",
+  "members": [
+    "demo-casey",
+    "demo-erin"
+  ],
+  "eligibility": {
+    "eligible": false,
+    "status": "blocked_by_schedule",
+    "blockingConflicts": [
+      {
+        "dimension": "schedule",
+        "classification": "blocked_by_schedule",
+        "reason": "No recurring availability overlap was found.",
+        "evidence": []
+      }
+    ]
+  },
+  "score": {
+    "overall": null,
+    "baseScore": null,
+    "adaptabilityAdjustment": {
+      "score": 0,
+      "maximum": 5,
+      "evidence": []
+    },
+    "confidence": "low",
+    "confidenceNumeric": 44.8,
+    "confidenceReasons": [
+      "At least one profile is more than 180 days old.",
+      "2 profile warning(s) reduce confidence.",
+      "One or both profiles are missing important matchmaking information."
+    ]
+  },
+  "dimensionScores": {},
+  "classification": "blocked_by_schedule",
+  "strongAlignment": [],
+  "manageableDifferences": [],
+  "discussionPoints": [],
+  "blockingConflicts": [
+    {
+      "dimension": "schedule",
+      "classification": "blocked_by_schedule",
+      "reason": "No recurring availability overlap was found.",
+      "evidence": []
+    }
+  ],
+  "operatorRecommendation": {
+    "recommendedAction": "do_not_recommend",
+    "requiresHumanApproval": true,
+    "introductionReady": false
+  },
+  "provenance": {
+    "scoringModelVersion": "1.0",
+    "profileVersions": {
+      "demo-erin": 1,
+      "demo-casey": 1
+    },
+    "evaluatedAt": "2026-07-12T23:56:56.566Z"
+  }
+}

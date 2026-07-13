@@ -1,8 +1,8 @@
 <!--
 QuestForge Campaign Intake Form
-File: start-your-adventure.html
-Version: v1.5
-Last Updated: 2026-07-05
+File: start-your-adventure-form.html
+Version: v1.6
+Last Updated: 2026-07-12
 Source of Truth: LOCAL (this file)
 -->
 <div class="qf-intake-builder-wrap">
@@ -87,6 +87,8 @@ Source of Truth: LOCAL (this file)
 
         .qf-intake-builder-wrap input[type="text"],
         .qf-intake-builder-wrap input[type="email"],
+        .qf-intake-builder-wrap input[type="number"],
+        .qf-intake-builder-wrap input[type="time"],
         .qf-intake-builder-wrap textarea,
         .qf-intake-builder-wrap select {
             width: 100%;
@@ -103,6 +105,8 @@ Source of Truth: LOCAL (this file)
 
         .qf-intake-builder-wrap input[type="text"]:focus,
         .qf-intake-builder-wrap input[type="email"]:focus,
+        .qf-intake-builder-wrap input[type="number"]:focus,
+        .qf-intake-builder-wrap input[type="time"]:focus,
         .qf-intake-builder-wrap textarea:focus,
         .qf-intake-builder-wrap select:focus {
             outline: none;
@@ -160,6 +164,35 @@ Source of Truth: LOCAL (this file)
             color: #d0c7b8;
             line-height: 1.5;
             font-size: 0.93rem;
+        }
+
+
+        .qf-hidden {
+            display: none !important;
+        }
+
+        .qf-callout {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(200, 159, 82, 0.08);
+            border: 1px solid rgba(200, 159, 82, 0.22);
+            color: #ded4c3;
+            line-height: 1.55;
+        }
+
+        .qf-availability-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .qf-compact-label {
+            display: block;
+            color: #d8d0c2;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
         }
 
         .qf-actions {
@@ -275,7 +308,8 @@ Source of Truth: LOCAL (this file)
         }
 
         @media (max-width: 760px) {
-            .qf-grid-2 {
+            .qf-grid-2,
+            .qf-availability-row {
                 grid-template-columns: 1fr;
             }
 
@@ -291,7 +325,36 @@ Source of Truth: LOCAL (this file)
                 margin-right: 18px;
             }
 
-            .qf-actions {
+    
+        .qf-hidden {
+            display: none !important;
+        }
+
+        .qf-callout {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(200, 159, 82, 0.08);
+            border: 1px solid rgba(200, 159, 82, 0.22);
+            color: #ded4c3;
+            line-height: 1.55;
+        }
+
+        .qf-availability-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .qf-compact-label {
+            display: block;
+            color: #d8d0c2;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+        }
+
+        .qf-actions {
                 flex-direction: column;
             }
 
@@ -312,9 +375,9 @@ Source of Truth: LOCAL (this file)
             </p>
 
             <div class="qf-progress" aria-hidden="true">
-                <div class="qf-progress-bar" id="qf-campaign-progress-bar" style="width: 12.5%;"></div>
+                <div class="qf-progress-bar" id="qf-campaign-progress-bar" style="width: 11.11%;"></div>
             </div>
-            <p class="qf-note-line" id="qf-campaign-progress-text">Step 1 of 8</p>
+            <p class="qf-note-line" id="qf-campaign-progress-text">Step 1 of 9</p>
             <p class="qf-note-line" id="qf-intake-save-status">Progress saves automatically on this device.</p>
         </div>
 
@@ -351,6 +414,16 @@ Source of Truth: LOCAL (this file)
                                 <option value="partial_group">Myself and one or more other players — we are looking to join or form a larger group</option>
                                 <option value="existing_group">An existing group — we already have the players together</option>
                                 <option value="group_organizer">I am organizing on behalf of a group</option>
+                            </select>
+                        </div>
+
+                        <div class="qf-field-group qf-hidden" id="qf-matchmaking-opt-in-wrap">
+                            <label for="qf-matchmaking-status">Would you like help finding other players or a group?</label>
+                            <select id="qf-matchmaking-status" name="matchmaking_status">
+                                <option value="">Select one...</option>
+                                <option value="opted_in">Yes — include me in matchmaking</option>
+                                <option value="conditional">Maybe — contact me if a strong match appears</option>
+                                <option value="declined">No — I only want campaign-development assistance</option>
                             </select>
                         </div>
 
@@ -416,25 +489,21 @@ Source of Truth: LOCAL (this file)
             <div class="qf-step" data-step="2">
                 <div class="qf-form-card">
                     <h3 class="qf-form-card-title">Overall Experience</h3>
-                    <p class="qf-form-card-help">Pick up to 4. These are the broad table experiences your group wants most often.</p>
+                    <p class="qf-form-card-help">Pick up to 4. These describe the broad experience you want the campaign to deliver most often.</p>
 
-                    <div class="qf-check-grid">
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Surviving against dangerous odds">Surviving against dangerous odds</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Solving mysteries and uncovering secrets">Solving mysteries and uncovering secrets</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Big heroic action and epic moments">Big heroic action and epic moments</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Political tension, factions, and tough choices">Political tension, factions, and tough choices</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Exploration and discovering strange places">Exploration and discovering strange places</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Horror, tension, and unsettling threats">Horror, tension, and unsettling threats</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Character-driven drama and meaningful personal arcs">Character-driven drama and meaningful personal arcs</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Lighthearted adventure and playful chaos">Lighthearted adventure and playful chaos</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Wonder, beauty, and magical discovery">Wonder, beauty, and magical discovery</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Tactical problem-solving and clever plans">Tactical problem-solving and clever plans</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Social drama, alliances, and rivalries">Social drama, alliances, and rivalries</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Heists, missions, and daring operations">Heists, missions, and daring operations</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Building a home, faction, or community">Building a home, faction, or community</label>
-                        <label class="qf-check"><input type="checkbox" name="experience[]" value="Travel, road adventure, and episodic discoveries">Travel, road adventure, and episodic discoveries</label>
-                    </div>
-
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Surviving against dangerous odds">Surviving against dangerous odds</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Solving mysteries and uncovering secrets">Solving mysteries and uncovering secrets</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Big heroic action and epic moments">Big heroic action and epic moments</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Political tension, factions, and hard choices">Political tension, factions, and hard choices</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Exploration and discovering strange places">Exploration and discovering strange places</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Horror, tension, and unsettling threats">Horror, tension, and unsettling threats</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Character-driven drama and personal arcs">Character-driven drama and personal arcs</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Lighthearted adventure and playful chaos">Lighthearted adventure and playful chaos</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Wonder, beauty, and magical discovery">Wonder, beauty, and magical discovery</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Tactical challenges and clever problem-solving">Tactical challenges and clever problem-solving</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Daring missions, heists, and operations">Daring missions, heists, and operations</label>
+                    <label class="qf-check"><input type="checkbox" name="experience[]" value="Building a home, faction, or community">Building a home, faction, or community</label>
+            
                     <p class="qf-note-line qf-step-error" data-step-error="2" style="display:none;"></p>
 
                     <div class="qf-actions">
@@ -774,8 +843,152 @@ Source of Truth: LOCAL (this file)
                     <div class="qf-actions">
                         <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
                         <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
+                        <button type="button" class="qf-btn qf-btn-primary qf-hidden" id="qf-matchmaking-next-btn" onclick="qfCampaignNextStep()">Continue to Matchmaking</button>
                         <button type="submit" class="qf-btn qf-btn-primary" id="qf-submit-btn">Send Campaign Request</button>
                         <button type="reset" class="qf-btn qf-btn-secondary" id="qf-reset-btn">Reset Form</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 9: MATCHMAKING ADDENDUM -->
+            <div class="qf-step" data-step="9" id="qf-matchmaking-step">
+                <div class="qf-form-card">
+                    <h3 class="qf-form-card-title">Matchmaking Preferences</h3>
+                    <p class="qf-form-card-help">
+                        These details help identify people who can realistically play together. Your raw answers and contact information are not automatically shared with other applicants.
+                    </p>
+
+                    <div class="qf-layer-block" style="margin-top:0;padding-top:0;border-top:none;">
+                        <h4 class="qf-layer-title">Format &amp; Availability</h4>
+                        <div class="qf-check-grid">
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_play_format[]" value="online">Online</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_play_format[]" value="in_person">In person</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_play_format[]" value="hybrid">Hybrid, where practical</label>
+                        </div>
+                        <div class="qf-grid-2" style="margin-top:14px;">
+                            <div class="qf-field-group">
+                                <label for="qf-matchmaking-timezone">Timezone</label>
+                                <select id="qf-matchmaking-timezone" name="matchmaking_timezone">
+                                    <option value="">Select one...</option>
+                                    <option value="America/Los_Angeles">Pacific Time</option>
+                                    <option value="America/Denver">Mountain Time</option>
+                                    <option value="America/Chicago">Central Time</option>
+                                    <option value="America/New_York">Eastern Time</option>
+                                    <option value="America/Anchorage">Alaska Time</option>
+                                    <option value="Pacific/Honolulu">Hawaii Time</option>
+                                    <option value="other">Other / discuss with operator</option>
+                                </select>
+                            </div>
+                            <div class="qf-field-group">
+                                <label for="qf-matchmaking-flexibility">Schedule Flexibility</label>
+                                <select id="qf-matchmaking-flexibility" name="matchmaking_schedule_flexibility">
+                                    <option value="">Select one...</option>
+                                    <option value="low">Low — I need a consistent fixed time</option>
+                                    <option value="moderate">Moderate — I have some flexibility</option>
+                                    <option value="high">High — several times can work</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p class="qf-note-line">Add up to three recurring windows when you are normally available.</p>
+                        <div class="qf-availability-row">
+                            <div><span class="qf-compact-label">Day</span><select name="matchmaking_availability_day[]"><option value="">Select...</option><option value="monday">Monday</option><option value="tuesday">Tuesday</option><option value="wednesday">Wednesday</option><option value="thursday">Thursday</option><option value="friday">Friday</option><option value="saturday">Saturday</option><option value="sunday">Sunday</option></select></div>
+                            <div><span class="qf-compact-label">Start</span><input type="time" name="matchmaking_availability_start[]"></div>
+                            <div><span class="qf-compact-label">End</span><input type="time" name="matchmaking_availability_end[]"></div>
+                        </div>
+                        <div class="qf-availability-row">
+                            <div><span class="qf-compact-label">Day</span><select name="matchmaking_availability_day[]"><option value="">Select...</option><option value="monday">Monday</option><option value="tuesday">Tuesday</option><option value="wednesday">Wednesday</option><option value="thursday">Thursday</option><option value="friday">Friday</option><option value="saturday">Saturday</option><option value="sunday">Sunday</option></select></div>
+                            <div><span class="qf-compact-label">Start</span><input type="time" name="matchmaking_availability_start[]"></div>
+                            <div><span class="qf-compact-label">End</span><input type="time" name="matchmaking_availability_end[]"></div>
+                        </div>
+                        <div class="qf-availability-row">
+                            <div><span class="qf-compact-label">Day</span><select name="matchmaking_availability_day[]"><option value="">Select...</option><option value="monday">Monday</option><option value="tuesday">Tuesday</option><option value="wednesday">Wednesday</option><option value="thursday">Thursday</option><option value="friday">Friday</option><option value="saturday">Saturday</option><option value="sunday">Sunday</option></select></div>
+                            <div><span class="qf-compact-label">Start</span><input type="time" name="matchmaking_availability_start[]"></div>
+                            <div><span class="qf-compact-label">End</span><input type="time" name="matchmaking_availability_end[]"></div>
+                        </div>
+                    </div>
+
+                    <div class="qf-layer-block">
+                        <h4 class="qf-layer-title">Session &amp; Commitment</h4>
+                        <div class="qf-grid-2">
+                            <div>
+                                <div class="qf-field-group"><label>Preferred Frequency</label></div>
+                                <div class="qf-check-grid">
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_frequency[]" value="weekly">Weekly</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_frequency[]" value="biweekly">Every other week</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_frequency[]" value="twice_monthly">Twice monthly</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_frequency[]" value="monthly">Monthly</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_frequency[]" value="flexible">Flexible</label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="qf-field-group"><label>Campaign Length</label></div>
+                                <div class="qf-check-grid">
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_campaign_length[]" value="one_shot">One-shot</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_campaign_length[]" value="short">Short campaign</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_campaign_length[]" value="medium">Medium campaign</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_campaign_length[]" value="long">Long campaign</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_campaign_length[]" value="open_ended">Open-ended campaign</label>
+                                    <label class="qf-check"><input type="checkbox" name="matchmaking_campaign_length[]" value="flexible">Flexible</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="qf-grid-2" style="margin-top:14px;">
+                            <div class="qf-field-group"><label for="qf-session-min">Minimum Session Length (hours)</label><input type="number" min="1" max="12" step="0.5" id="qf-session-min" name="matchmaking_session_min_hours"></div>
+                            <div class="qf-field-group"><label for="qf-session-max">Maximum Session Length (hours)</label><input type="number" min="1" max="12" step="0.5" id="qf-session-max" name="matchmaking_session_max_hours"></div>
+                            <div class="qf-field-group"><label for="qf-attendance">Attendance Expectation</label><select id="qf-attendance" name="matchmaking_attendance_expectation"><option value="">Select one...</option><option value="highly_consistent">Highly consistent attendance</option><option value="consistent">Consistent with occasional absences</option><option value="casual">Casual or flexible attendance</option><option value="unsure">Unsure</option></select></div>
+                            <div class="qf-field-group"><label for="qf-readiness">Start Readiness</label><select id="qf-readiness" name="matchmaking_start_readiness"><option value="">Select one...</option><option value="immediate">Ready immediately</option><option value="within_one_month">Within one month</option><option value="within_three_months">Within three months</option><option value="future">Browsing for future opportunities</option></select></div>
+                        </div>
+                    </div>
+
+                    <div class="qf-layer-block">
+                        <h4 class="qf-layer-title">Systems, Experience &amp; Table Style</h4>
+                        <div class="qf-grid-2">
+                            <div class="qf-field-group"><label for="qf-system-openness">Openness to Other Systems</label><select id="qf-system-openness" name="matchmaking_system_openness"><option value="">Select one...</option><option value="preferred_only">I strongly prefer my listed system</option><option value="open_to_similar">Open to similar systems</option><option value="open_with_guidance">Open to learning with guidance</option><option value="very_open">Very open to different systems</option></select></div>
+                            <div class="qf-field-group"><label for="qf-experience-level">Tabletop Experience</label><select id="qf-experience-level" name="matchmaking_experience_level"><option value="">Select one...</option><option value="new">New</option><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="experienced">Experienced</option><option value="very_experienced">Very experienced</option></select></div>
+                            <div class="qf-field-group"><label for="qf-roleplay-intensity">Roleplay Intensity</label><select id="qf-roleplay-intensity" name="matchmaking_roleplay_intensity"><option value="">Select one...</option><option value="low">Low</option><option value="moderate">Moderate</option><option value="high">High</option><option value="flexible">Flexible</option></select></div>
+                            <div class="qf-field-group"><label for="qf-tactical-intensity">Tactical Intensity</label><select id="qf-tactical-intensity" name="matchmaking_tactical_intensity"><option value="">Select one...</option><option value="low">Low</option><option value="moderate">Moderate</option><option value="high">High</option><option value="flexible">Flexible</option></select></div>
+                            <div class="qf-field-group"><label for="qf-rules-approach">Rules Approach</label><select id="qf-rules-approach" name="matchmaking_rules_approach"><option value="">Select one...</option><option value="rules_precise">Rules-precise</option><option value="balanced">Balanced</option><option value="flexible">Flexible / rulings-forward</option></select></div>
+                            <div class="qf-field-group"><label for="qf-video-preference">Video Preference</label><select id="qf-video-preference" name="matchmaking_video_preference"><option value="">Select one...</option><option value="required">Required</option><option value="preferred">Preferred</option><option value="optional">Optional</option><option value="no_video">Prefer no video</option></select></div>
+                        </div>
+                        <div class="qf-check-grid" style="margin-top:14px;">
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_communication_style[]" value="direct">Direct communication</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_communication_style[]" value="collaborative">Collaborative decision-making</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_communication_style[]" value="casual">Casual table atmosphere</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_communication_style[]" value="organized">Highly organized scheduling and communication</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_voice_required" value="yes">Voice chat is required for online play</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_mixed_experience_comfort" value="yes">Comfortable playing with mixed experience levels</label>
+                        </div>
+                    </div>
+
+                    <div class="qf-layer-block">
+                        <h4 class="qf-layer-title">Group Size &amp; Requirements</h4>
+                        <p class="qf-layer-help">Player counts exclude the GM.</p>
+                        <div class="qf-grid-2">
+                            <div class="qf-field-group"><label for="qf-min-players">Minimum Players</label><input type="number" min="1" max="12" id="qf-min-players" name="matchmaking_min_players"></div>
+                            <div class="qf-field-group"><label for="qf-preferred-players">Preferred Players</label><input type="number" min="1" max="12" id="qf-preferred-players" name="matchmaking_preferred_players"></div>
+                            <div class="qf-field-group"><label for="qf-max-players">Maximum Players</label><input type="number" min="1" max="12" id="qf-max-players" name="matchmaking_max_players"></div>
+                            <div class="qf-field-group"><label for="qf-hard-constraints">Hard Requirements / Non-Negotiables</label><textarea id="qf-hard-constraints" name="matchmaking_hard_constraints" placeholder="Examples: no PvP, online only, must end by 10 PM, no specific system..."></textarea></div>
+                        </div>
+                    </div>
+
+                    <div class="qf-layer-block">
+                        <h4 class="qf-layer-title">Consent</h4>
+                        <div class="qf-callout">Matchmaking recommendations are reviewed by the operator and are not guarantees of personal chemistry or group success.</div>
+                        <div class="qf-check-grid" style="margin-top:14px;">
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_consent_participation" value="yes">I consent to participating in the matchmaking pool.</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_consent_retention" value="yes">I consent to retaining this profile while I am seeking a group.</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_consent_operator_review" value="yes">I consent to operator review of potential matches.</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_consent_contact" value="yes">I may be contacted about a potential introduction.</label>
+                            <label class="qf-check"><input type="checkbox" name="matchmaking_consent_shareable_summary" value="yes">After operator approval, a sanitized summary of my broad preferences may be shared with a potential match.</label>
+                        </div>
+                    </div>
+
+                    <p class="qf-note-line qf-step-error" data-step-error="9" style="display:none;"></p>
+                    <div class="qf-actions">
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfCampaignPrevStep()">Back</button>
+                        <button type="button" class="qf-btn qf-btn-secondary" onclick="qfSaveCampaignDraft()">Save &amp; Continue Later</button>
+                        <button type="submit" class="qf-btn qf-btn-primary" id="qf-matchmaking-submit-btn">Send Campaign &amp; Matchmaking Request</button>
+                        <button type="reset" class="qf-btn qf-btn-secondary">Reset Form</button>
                     </div>
                 </div>
             </div>
@@ -794,11 +1007,13 @@ Source of Truth: LOCAL (this file)
             const STORAGE_KEY = "qfCampaignBuilderDraft";
             const STEP_KEY = "qfCampaignBuilderStep";
             const MAX_EXPERIENCE = 4;
-            const totalSteps = 8;
+            const CAMPAIGN_STEPS = 8;
+            const MATCHMAKING_STEP = 9;
 
-            const form = document.getElementById("qf-intake-form-v4");
+            const form = document.getElementById("qf-intake-form-v5");
             const statusBox = document.getElementById("qf-status-box");
             const submitBtn = document.getElementById("qf-submit-btn");
+            const matchmakingSubmitBtn = document.getElementById("qf-matchmaking-submit-btn");
             const summaryField = document.getElementById("qf-campaign-summary-field");
             const summaryWrap = document.getElementById("qf-summary-wrap");
             const summaryPreview = document.getElementById("qf-summary-preview");
@@ -809,6 +1024,10 @@ Source of Truth: LOCAL (this file)
             const currentGroupSizeLabel = document.getElementById("qf-current-group-size-label");
             const desiredGroupSizeLabel = document.getElementById("qf-desired-group-size-label");
             const legacyGroupSizeField = document.getElementById("qf-group-size-legacy");
+            const matchmakingOptInWrap = document.getElementById("qf-matchmaking-opt-in-wrap");
+            const matchmakingStatusField = document.getElementById("qf-matchmaking-status");
+            const matchmakingNextBtn = document.getElementById("qf-matchmaking-next-btn");
+            const matchmakingStep = document.getElementById("qf-matchmaking-step");
 
             let currentStep = 1;
 
@@ -822,19 +1041,24 @@ Source of Truth: LOCAL (this file)
                 return form.querySelectorAll(".qf-step");
             }
 
+            function getTotalSteps() {
+                return wantsMatchmakingDetails() ? MATCHMAKING_STEP : CAMPAIGN_STEPS;
+            }
+
             function showStep(step) {
                 getSteps().forEach((el) => el.classList.remove("active"));
                 const target = form.querySelector('.qf-step[data-step="' + step + '"]');
                 if (target) target.classList.add("active");
 
                 currentStep = step;
+                updateMatchmakingVisibility();
 
                 if (progressBar) {
-                    progressBar.style.width = ((step / totalSteps) * 100) + "%";
+                    progressBar.style.width = ((step / getTotalSteps()) * 100) + "%";
                 }
 
                 if (progressText) {
-                    progressText.textContent = "Step " + step + " of " + totalSteps;
+                    progressText.textContent = "Step " + step + " of " + getTotalSteps();
                 }
 
                 try {
@@ -881,6 +1105,37 @@ Source of Truth: LOCAL (this file)
                 };
 
                 return labels[value] || "Not provided";
+            }
+
+            function isMatchmakingEligibleRespondent() {
+                const respondentType = fieldValue("respondent_type");
+                return respondentType === "individual" || respondentType === "partial_group";
+            }
+
+            function wantsMatchmakingDetails() {
+                const status = fieldValue("matchmaking_status");
+                return isMatchmakingEligibleRespondent() && (status === "opted_in" || status === "conditional");
+            }
+
+            function updateMatchmakingVisibility() {
+                const eligible = isMatchmakingEligibleRespondent();
+                if (matchmakingOptInWrap) matchmakingOptInWrap.classList.toggle("qf-hidden", !eligible);
+
+                if (!eligible && matchmakingStatusField) {
+                    matchmakingStatusField.value = "";
+                }
+
+                const wantsDetails = wantsMatchmakingDetails();
+                if (matchmakingNextBtn) matchmakingNextBtn.classList.toggle("qf-hidden", !wantsDetails);
+                if (submitBtn) submitBtn.classList.toggle("qf-hidden", wantsDetails && currentStep === 8);
+                if (matchmakingStep) matchmakingStep.setAttribute("aria-hidden", wantsDetails ? "false" : "true");
+
+                if (progressBar) {
+                    progressBar.style.width = ((currentStep / getTotalSteps()) * 100) + "%";
+                }
+                if (progressText) {
+                    progressText.textContent = "Step " + currentStep + " of " + getTotalSteps();
+                }
             }
 
             function updateGroupContextLabels() {
@@ -998,7 +1253,18 @@ Source of Truth: LOCAL (this file)
                     "",
                     "CONTENT BOUNDARIES",
                     "------------------",
-                    formatList(checkedValues("content_boundaries[]"))
+                    formatList(checkedValues("content_boundaries[]")),
+                    "",
+                    "MATCHMAKING",
+                    "-----------",
+                    "Participation: " + (fieldValue("matchmaking_status") || "Not requested"),
+                    "Play Formats: \n" + formatList(checkedValues("matchmaking_play_format[]")),
+                    "Timezone: " + (fieldValue("matchmaking_timezone") || "Not provided"),
+                    "Frequency: \n" + formatList(checkedValues("matchmaking_frequency[]")),
+                    "Campaign Length: \n" + formatList(checkedValues("matchmaking_campaign_length[]")),
+                    "System Openness: " + (fieldValue("matchmaking_system_openness") || "Not provided"),
+                    "Experience Level: " + (fieldValue("matchmaking_experience_level") || "Not provided"),
+                    "Hard Requirements: " + (fieldValue("matchmaking_hard_constraints") || "None provided")
                 ].join("\n");
             }
 
@@ -1052,11 +1318,12 @@ Source of Truth: LOCAL (this file)
                     });
 
                     const savedStep = parseInt(localStorage.getItem(STEP_KEY), 10);
-                    if (savedStep && savedStep >= 1 && savedStep <= totalSteps) {
+                    if (savedStep && savedStep >= 1 && savedStep <= MATCHMAKING_STEP) {
                         currentStep = savedStep;
                     }
 
                     updateGroupContextLabels();
+                    updateMatchmakingVisibility();
                     syncDerivedFields();
 
                     setSaveStatus("Saved progress restored.");
@@ -1102,6 +1369,78 @@ Source of Truth: LOCAL (this file)
                     }
                 }
 
+                if (currentStep === 1 && isMatchmakingEligibleRespondent() && !fieldValue("matchmaking_status")) {
+                    setStepError(1, "Please indicate whether you want matchmaking assistance.");
+                    if (matchmakingStatusField) matchmakingStatusField.focus();
+                    return false;
+                }
+
+                if (currentStep === 9 && wantsMatchmakingDetails()) {
+                    if (checkedValues("matchmaking_play_format[]").length === 0) {
+                        setStepError(9, "Please select at least one play format.");
+                        return false;
+                    }
+                    if (!fieldValue("matchmaking_timezone")) {
+                        setStepError(9, "Please select your timezone.");
+                        return false;
+                    }
+                    if (checkedValues("matchmaking_frequency[]").length === 0) {
+                        setStepError(9, "Please select at least one preferred session frequency.");
+                        return false;
+                    }
+                    if (checkedValues("matchmaking_campaign_length[]").length === 0) {
+                        setStepError(9, "Please select at least one campaign-length preference.");
+                        return false;
+                    }
+                    if (!fieldValue("matchmaking_system_openness")) {
+                        setStepError(9, "Please indicate how open you are to other game systems.");
+                        return false;
+                    }
+                    const days = Array.from(form.querySelectorAll('[name="matchmaking_availability_day[]"]')).map(el => el.value);
+                    const starts = Array.from(form.querySelectorAll('[name="matchmaking_availability_start[]"]')).map(el => el.value);
+                    const ends = Array.from(form.querySelectorAll('[name="matchmaking_availability_end[]"]')).map(el => el.value);
+                    let completeWindows = 0;
+                    for (let i = 0; i < days.length; i += 1) {
+                        const parts = [days[i], starts[i], ends[i]].filter(Boolean).length;
+                        if (parts > 0 && parts < 3) {
+                            setStepError(9, "Each availability window needs a day, start time, and end time.");
+                            return false;
+                        }
+                        if (parts === 3) completeWindows += 1;
+                    }
+                    if (completeWindows === 0) {
+                        setStepError(9, "Please provide at least one recurring availability window.");
+                        return false;
+                    }
+                    const minHours = Number(fieldValue("matchmaking_session_min_hours") || 0);
+                    const maxHours = Number(fieldValue("matchmaking_session_max_hours") || 0);
+                    if (minHours && maxHours && minHours > maxHours) {
+                        setStepError(9, "Minimum session length cannot exceed maximum session length.");
+                        return false;
+                    }
+                    const minPlayers = Number(fieldValue("matchmaking_min_players") || 0);
+                    const preferredPlayers = Number(fieldValue("matchmaking_preferred_players") || 0);
+                    const maxPlayers = Number(fieldValue("matchmaking_max_players") || 0);
+                    if (minPlayers && preferredPlayers && minPlayers > preferredPlayers) {
+                        setStepError(9, "Minimum player count cannot exceed preferred player count.");
+                        return false;
+                    }
+                    if (preferredPlayers && maxPlayers && preferredPlayers > maxPlayers) {
+                        setStepError(9, "Preferred player count cannot exceed maximum player count.");
+                        return false;
+                    }
+                    const requiredConsent = [
+                        "matchmaking_consent_participation",
+                        "matchmaking_consent_retention",
+                        "matchmaking_consent_operator_review"
+                    ];
+                    const missingConsent = requiredConsent.some(name => checkedValues(name).length === 0);
+                    if (missingConsent) {
+                        setStepError(9, "Participation, profile retention, and operator-review consent are required to join matchmaking.");
+                        return false;
+                    }
+                }
+
                 if (currentStep === 2) {
                     const experience = checkedValues("experience[]");
                     if (experience.length === 0) {
@@ -1120,7 +1459,8 @@ Source of Truth: LOCAL (this file)
             window.qfCampaignNextStep = function () {
                 if (!validateCurrentStep()) return;
                 saveCampaignDraft();
-                if (currentStep < totalSteps) {
+                if (currentStep === 8 && !wantsMatchmakingDetails()) return;
+                if (currentStep < getTotalSteps()) {
                     showStep(currentStep + 1);
                 }
             };
@@ -1143,6 +1483,7 @@ Source of Truth: LOCAL (this file)
 
             form.addEventListener("change", function () {
                 updateGroupContextLabels();
+                updateMatchmakingVisibility();
                 syncDerivedFields();
                 saveCampaignDraft();
             });
@@ -1172,8 +1513,11 @@ Source of Truth: LOCAL (this file)
                 summaryPreview.value = summary;
                 summaryWrap.style.display = "block";
 
-                submitBtn.disabled = true;
-                submitBtn.textContent = "Sending...";
+                [submitBtn, matchmakingSubmitBtn].filter(Boolean).forEach((button) => {
+                    button.disabled = true;
+                    button.dataset.originalText = button.textContent;
+                    button.textContent = "Sending...";
+                });
 
                 try {
                     const response = await fetch(form.action, {
@@ -1218,13 +1562,17 @@ Source of Truth: LOCAL (this file)
                         "Unable to submit right now. Please check your connection and try again."
                     );
                 } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "Send Campaign Request";
+                    [submitBtn, matchmakingSubmitBtn].filter(Boolean).forEach((button) => {
+                        button.disabled = false;
+                        button.textContent = button.dataset.originalText || "Send Request";
+                        delete button.dataset.originalText;
+                    });
                     statusBox.scrollIntoView({ behavior: "smooth", block: "center" });
                 }
             });
 
             updateGroupContextLabels();
+            updateMatchmakingVisibility();
             syncDerivedFields();
             restoreCampaignDraft();
             showStep(currentStep);

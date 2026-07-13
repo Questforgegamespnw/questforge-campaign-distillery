@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuestForge Compatibility Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "playerId", "submissionId", "status", "statusReason",
+    "consent", "identity", "logistics", "commitment", "systems",
+    "campaignPreferences", "tablePreferences", "experience", "safety",
+    "groupPreferences", "requirements", "shareableSummary", "completeness",
+    "provenance", "lifecycle"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "playerId": { "type": "string", "minLength": 1 },
+    "submissionId": { "type": "string" },
+    "status": { "enum": ["active", "paused", "matched", "archived", "expired"] },
+    "statusReason": { "type": "string" },
+    "consent": { "$ref": "#/$defs/consent" },
+    "identity": { "$ref": "#/$defs/identity" },
+    "logistics": { "$ref": "#/$defs/logistics" },
+    "commitment": { "$ref": "#/$defs/commitment" },
+    "systems": { "$ref": "#/$defs/systems" },
+    "campaignPreferences": { "$ref": "#/$defs/campaignPreferences" },
+    "tablePreferences": { "$ref": "#/$defs/tablePreferences" },
+    "experience": { "$ref": "#/$defs/experience" },
+    "safety": { "$ref": "#/$defs/safety" },
+    "groupPreferences": { "$ref": "#/$defs/groupPreferences" },
+    "requirements": { "$ref": "#/$defs/requirements" },
+    "shareableSummary": { "$ref": "#/$defs/shareableSummary" },
+    "completeness": { "$ref": "#/$defs/completeness" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "lifecycle": { "$ref": "#/$defs/lifecycle" }
+  },
+  "$defs": {
+    "stringArray": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "nullableBoolean": { "type": ["boolean", "null"] },
+    "nullableNumber": { "type": ["number", "null"] },
+    "consent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["matchmaking", "profileRetention", "operatorReview", "contactForIntroduction", "shareableSummary"],
+      "properties": {
+        "matchmaking": { "$ref": "#/$defs/nullableBoolean" },
+        "profileRetention": { "$ref": "#/$defs/nullableBoolean" },
+        "operatorReview": { "$ref": "#/$defs/nullableBoolean" },
+        "contactForIntroduction": { "$ref": "#/$defs/nullableBoolean" },
+        "shareableSummary": { "$ref": "#/$defs/nullableBoolean" }
+      }
+    },
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["displayName", "contactRef"],
+      "properties": { "displayName": { "type": "string" }, "contactRef": { "type": "string" } }
+    },
+    "availabilityWindow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["day", "start", "end"],
+      "properties": {
+        "day": { "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] },
+        "start": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+        "end": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" }
+      }
+    },
+    "logistics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["timezone", "playFormats", "availability", "frequencyPreferences", "sessionDuration", "scheduleFlexibility"],
+      "properties": {
+        "timezone": { "type": "string" },
+        "playFormats": { "$ref": "#/$defs/stringArray" },
+        "availability": { "type": "array", "items": { "$ref": "#/$defs/availabilityWindow" } },
+        "frequencyPreferences": { "$ref": "#/$defs/stringArray" },
+        "sessionDuration": {
+          "type": "object", "additionalProperties": false,
+          "required": ["minimumHours", "maximumHours"],
+          "properties": {
+            "minimumHours": { "$ref": "#/$defs/nullableNumber" },
+            "maximumHours": { "$ref": "#/$defs/nullableNumber" }
+          }
+        },
+        "scheduleFlexibility": { "type": "string" }
+      }
+    },
+    "commitment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["campaignLengths", "attendanceExpectation", "startReadiness"],
+      "properties": {
+        "campaignLengths": { "$ref": "#/$defs/stringArray" },
+        "attendanceExpectation": { "type": "string" },
+        "startReadiness": { "type": "string" }
+      }
+    },
+    "systems": {
+      "type": "object", "additionalProperties": false,
+      "required": ["preferred", "acceptable", "excluded", "openness"],
+      "properties": {
+        "preferred": { "$ref": "#/$defs/stringArray" },
+        "acceptable": { "$ref": "#/$defs/stringArray" },
+        "excluded": { "$ref": "#/$defs/stringArray" },
+        "openness": { "type": "string" }
+      }
+    },
+    "campaignPreferences": {
+      "type": "object", "additionalProperties": false,
+      "required": ["experiences", "setups", "tone", "choiceWeight", "genres", "eras", "aesthetics", "worldConditions", "environments", "gameplayInterests", "playerFantasy", "mustHaves", "avoid", "systemPreference"],
+      "properties": {
+        "experiences": { "$ref": "#/$defs/stringArray" },
+        "setups": { "$ref": "#/$defs/stringArray" },
+        "tone": { "type": "string" },
+        "choiceWeight": { "type": "string" },
+        "genres": { "$ref": "#/$defs/stringArray" },
+        "eras": { "$ref": "#/$defs/stringArray" },
+        "aesthetics": { "$ref": "#/$defs/stringArray" },
+        "worldConditions": { "$ref": "#/$defs/stringArray" },
+        "environments": { "$ref": "#/$defs/stringArray" },
+        "gameplayInterests": { "$ref": "#/$defs/stringArray" },
+        "playerFantasy": { "$ref": "#/$defs/stringArray" },
+        "mustHaves": { "type": "string" },
+        "avoid": { "type": "string" },
+        "systemPreference": { "type": "string" }
+      }
+    },
+    "tablePreferences": {
+      "type": "object", "additionalProperties": false,
+      "required": ["roleplayIntensity", "tacticalIntensity", "rulesApproach", "characterCollaboration", "communicationStyles", "voiceRequired", "videoPreference"],
+      "properties": {
+        "roleplayIntensity": { "type": "string" },
+        "tacticalIntensity": { "type": "string" },
+        "rulesApproach": { "type": "string" },
+        "characterCollaboration": { "type": "string" },
+        "communicationStyles": { "$ref": "#/$defs/stringArray" },
+        "voiceRequired": { "$ref": "#/$defs/nullableBoolean" },
+        "videoPreference": { "type": "string" }
+      }
+    },
+    "experience": {
+      "type": "object", "additionalProperties": false,
+      "required": ["overallLevel", "systemsPlayed", "gmExperience", "mixedExperienceComfort"],
+      "properties": {
+        "overallLevel": { "type": "string" },
+        "systemsPlayed": { "$ref": "#/$defs/stringArray" },
+        "gmExperience": { "$ref": "#/$defs/nullableBoolean" },
+        "mixedExperienceComfort": { "$ref": "#/$defs/nullableBoolean" }
+      }
+    },
+    "safety": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contentSafetyMode", "boundaries", "hardExclusions", "operatorPrivateNotes", "shareableGuidance"],
+      "properties": {
+        "contentSafetyMode": { "type": "string" },
+        "boundaries": { "$ref": "#/$defs/stringArray" },
+        "hardExclusions": { "$ref": "#/$defs/stringArray" },
+        "operatorPrivateNotes": { "$ref": "#/$defs/stringArray" },
+        "shareableGuidance": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "groupPreferences": {
+      "type": "object", "additionalProperties": false,
+      "required": ["minimumPlayers", "preferredPlayers", "maximumPlayers"],
+      "properties": {
+        "minimumPlayers": { "$ref": "#/$defs/nullableNumber" },
+        "preferredPlayers": { "$ref": "#/$defs/nullableNumber" },
+        "maximumPlayers": { "$ref": "#/$defs/nullableNumber" }
+      }
+    },
+    "hardConstraints": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schedule", "format", "content", "system", "commitment", "tableCulture"],
+      "properties": {
+        "schedule": { "$ref": "#/$defs/stringArray" },
+        "format": { "$ref": "#/$defs/stringArray" },
+        "content": { "$ref": "#/$defs/stringArray" },
+        "system": { "$ref": "#/$defs/stringArray" },
+        "commitment": { "$ref": "#/$defs/stringArray" },
+        "tableCulture": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "requirements": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mustHaves", "hardConstraints", "freeTextNotes"],
+      "properties": {
+        "mustHaves": { "$ref": "#/$defs/stringArray" },
+        "hardConstraints": { "$ref": "#/$defs/hardConstraints" },
+        "freeTextNotes": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "shareableSummary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["campaignInterests", "availabilitySummary", "systemSummary", "tableStyleSummary", "commitmentSummary", "sessionZeroTopics"],
+      "properties": {
+        "campaignInterests": { "$ref": "#/$defs/stringArray" },
+        "availabilitySummary": { "type": "string" },
+        "systemSummary": { "type": "string" },
+        "tableStyleSummary": { "type": "string" },
+        "commitmentSummary": { "type": "string" },
+        "sessionZeroTopics": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "completeness": {
+      "type": "object", "additionalProperties": false,
+      "required": ["percentage", "missingRequiredFields", "warnings", "contradictions", "explicitFieldCount", "inferredFieldCount"],
+      "properties": {
+        "percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+        "missingRequiredFields": { "$ref": "#/$defs/stringArray" },
+        "warnings": { "$ref": "#/$defs/stringArray" },
+        "contradictions": { "$ref": "#/$defs/stringArray" },
+        "explicitFieldCount": { "type": "number", "minimum": 0 },
+        "inferredFieldCount": { "type": "number", "minimum": 0 }
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["profileVersion", "sourceCanonicalSchemaVersion", "sourceCanonicalHash", "sourceType", "createdAt", "updatedAt", "lastConfirmedAt"],
+      "properties": {
+        "profileVersion": { "type": "integer", "minimum": 1 },
+        "sourceCanonicalSchemaVersion": { "type": "string" },
+        "sourceCanonicalHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "sourceType": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "lastConfirmedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "historyEntry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reason", "timestamp"],
+      "properties": {
+        "status": { "enum": ["active", "paused", "matched", "archived", "expired"] },
+        "reason": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+    "lifecycle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["statusChangedAt", "matchedReference", "history"],
+      "properties": {
+        "statusChangedAt": { "type": "string", "format": "date-time" },
+        "matchedReference": { "type": "string" },
+        "history": { "type": "array", "items": { "$ref": "#/$defs/historyEntry" } }
+      }
+    }
+  }
+}

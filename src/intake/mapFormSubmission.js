@@ -1,4 +1,5 @@
 const { inferSafetySignals } = require("./inferSafetySignals");
+const { mapMatchmakingFields } = require("../matchmaking/data/parsers/mapMatchmakingFields");
 
 const {
     TONE_ALIASES,
@@ -166,6 +167,8 @@ function mapFormSubmission(raw = {}) {
                 firstPresentArray(raw, "content_boundaries", "content_boundaries[]")
             )
         },
+
+        matchmaking: mapMatchmakingFields(raw, { respondentType }),
 
         rawSignals: {
             youthMode: unique(toArray(raw.youth_mode)),

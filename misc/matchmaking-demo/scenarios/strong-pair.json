@@ -1,0 +1,8 @@
+{
+  "scenarioId": "strong-pair",
+  "members": [
+    "demo-aria",
+    "demo-ben"
+  ],
+  "purpose": "Should produce a strong, high-confidence pair."
+}

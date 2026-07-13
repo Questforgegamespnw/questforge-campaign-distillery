@@ -115,3 +115,42 @@ Tests should use:
 ```text
 scripts/fixtures/
 ```
+
+
+---
+
+## Matchmaking Runtime Records
+
+```text
+matchmaking/
+  profiles/<player-id>/
+    compatibility-profile.json
+    profile-status.json
+  evaluations/
+    pairs/
+    groups/
+  introductions/
+  pool-index.json
+```
+
+### Rules
+
+- Compatibility profiles are derived operational artifacts.
+- Pair and group evaluations are regenerable but preserve model and profile-version provenance.
+- Introduction records are durable audit records.
+- Runtime matchmaking data may contain private information and should not be committed.
+- Rebuild the pool index from authoritative stored profiles rather than hand-editing it.
+
+## Matchmaking Demo Fixtures
+
+```text
+misc/matchmaking-demo/
+  dataset.json
+  profiles/
+  scenarios/
+  expected/
+```
+
+The demo dataset is intentionally preserved in `misc` because it is a development fixture package rather than a live production record.
+
+Each profile file is wrapped with fixture metadata. The wrapper is not written into runtime profile storage.

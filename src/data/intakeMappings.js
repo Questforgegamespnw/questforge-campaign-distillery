@@ -83,6 +83,104 @@ module.exports = {
         { id: "legacy_inheritance_system", weight: 3 },
         { id: "modular_build_system", weight: 3 }
       ]
+    },
+
+    political_tension_factions_and_hard_choices: {
+      coreFrames: [
+        { id: "war_of_ideologies", weight: 5 },
+        { id: "power_vacuum", weight: 4 }
+      ],
+      systemFrames: [
+        { id: "faction_reputation", weight: 5 },
+        { id: "alliance_vs_betrayal", weight: 4 },
+        { id: "influence_social_leverage", weight: 3 }
+      ]
+    },
+
+    character_driven_drama_and_personal_arcs: {
+      coreFrames: [
+        { id: "fragmented_self", weight: 5 },
+        { id: "fate_vs_free_will", weight: 4 },
+        { id: "becoming_something_else", weight: 4 }
+      ],
+      systemFrames: [
+        { id: "corruption_transformation_track", weight: 4 },
+        { id: "legacy_inheritance_system", weight: 3 },
+        { id: "modular_build_system", weight: 3 }
+      ]
+    },
+
+    lighthearted_adventure_and_playful_chaos: {
+      coreFrames: [
+        { id: "the_world_is_alive", weight: 3 },
+        { id: "creation_vs_destruction", weight: 2 }
+      ],
+      systemFrames: [
+        { id: "mission_based_play", weight: 4 },
+        { id: "living_world_reaction", weight: 3 },
+        { id: "modular_build_system", weight: 2 }
+      ],
+      toneSkins: [
+        { id: "lighthearted_chaotic", weight: 5 }
+      ]
+    },
+
+    wonder_beauty_and_magical_discovery: {
+      coreFrames: [
+        { id: "the_world_is_alive", weight: 5 },
+        { id: "lost_knowledge", weight: 3 },
+        { id: "creation_vs_destruction", weight: 2 }
+      ],
+      systemFrames: [
+        { id: "exploration_discovery_loop", weight: 5 },
+        { id: "living_world_reaction", weight: 2 }
+      ],
+      toneSkins: [
+        { id: "mythic", weight: 2 },
+        { id: "hopeful", weight: 2 }
+      ]
+    },
+
+    tactical_challenges_and_clever_problem_solving: {
+      coreFrames: [
+        { id: "investigators_burden", weight: 3 },
+        { id: "lost_knowledge", weight: 2 }
+      ],
+      systemFrames: [
+        { id: "tactical_positioning_zone_control", weight: 5 },
+        { id: "environmental_combat", weight: 4 },
+        { id: "clue_web", weight: 2 }
+      ]
+    },
+
+    daring_missions_heists_and_operations: {
+      coreFrames: [
+        { id: "hidden_truth", weight: 3 },
+        { id: "power_vacuum", weight: 2 }
+      ],
+      systemFrames: [
+        { id: "mission_based_play", weight: 5 },
+        { id: "time_pressure_system", weight: 4 },
+        { id: "hidden_information", weight: 3 },
+        { id: "tactical_positioning_zone_control", weight: 2 }
+      ]
+    },
+
+    building_a_home_faction_or_community: {
+      coreFrames: [
+        { id: "creation_vs_destruction", weight: 4 },
+        { id: "the_world_is_alive", weight: 3 },
+        { id: "power_vacuum", weight: 2 }
+      ],
+      systemFrames: [
+        { id: "living_world_reaction", weight: 5 },
+        { id: "territory_control", weight: 5 },
+        { id: "legacy_inheritance_system", weight: 3 },
+        { id: "faction_reputation", weight: 2 }
+      ],
+      toneSkins: [
+        { id: "hopeful", weight: 2 }
+      ]
     }
   },
 
@@ -475,4 +573,6 @@ module.exports = {
       ]
     }
   }
+
+    
 };

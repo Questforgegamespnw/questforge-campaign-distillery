@@ -1,0 +1,12 @@
+{
+  "name": "Alex Example",
+  "email": "alex@example.com",
+  "respondent_type": "individual",
+  "current_group_size": "1",
+  "desired_group_size": "4-6",
+  "system": "Flexible",
+  "audience": "Adults",
+  "age_band": "adult",
+  "experience": ["Exploration and discovering strange places"],
+  "matchmaking_status": "declined"
+}
